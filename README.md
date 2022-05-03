@@ -17,67 +17,174 @@
 
 具体实现，之前已经在Bookstore中实现的 `MemoryRiver` 类，直接使用
 
-### 文件存储：`BpTree.h`
-
-//注意，此处作废，实现时仅以Limerancy的为准
+### 文件存储：`b_plus_tree.h`
 
 ```cpp
-const int M = 4; //初始数组的大小
+// the license is included in the source file
+class BPlusTree {
+  using InternalPage = BPlusTreeInternalPage<KeyType, page_id_t, KeyComparator>;
+  using LeafPage = BPlusTreeLeafPage<KeyType, ValueType, KeyComparator>;
 
-template<class Key, class T, class Compare = std::less<Key>>
-class BpTree{
-    //----------------------成员变量-------------------------
-private:    
-    class BpNode{
-        int key_num; //当前节点关键字的数目
-        Key key[M + 1]; //记录关键字
-        BpNode *parent; //指向父节点的指针
-        BpNode *son[M + 1]; //指向子节点的指针
-        BpNode* nxt; //指向单链表的下一个节点
-        T *record[M + 1]; //指向记录的指针
-        
-        //默认构造
-        BpNode() : key_num(0), parent(nullptr){
-            for (int i = 0;i <= M; ++i) {
-                son[i] = nullptr;
-                record[i] = nullptr;
-            }
-        }
-        
-        //复制构造
-        BpNode(const BpNode &other) {}
-       	
-        //析构函数
-        ~BpNode() {
-            key_num = 0;
-            for (int i = 0;i <= M; ++i) {
-                if (son[i]) delete son[i];
-            }
-            if (parent) delete parent;
-        }        
-    }
-    
-    
-    BpNode *root, *head, *rear; //head和rear用来存储单链表
-    MemoryRiver<> Tree;
-    
-    //--------------------成员函数--------------------------
-public:
-    BpTree();
-    BpTree(const BpTree &other);
-    ~BpTree();
-    
-    void init(); //初始化
-    BpNode* malloc_new_node(); //生成新的BpNode，并为其分配空间
-    BpNode* insert(const Key &_key, BpNode* p); //插入
-    BpNode* remove(const Key &_key, BpNode* p); //删除
-    BpNode* clear(BpNode* p);  //清空p和他的子树
-    void travel(BpNode* p); //遍历p的子节点的所有数据
-    BpNode* find(const Key &_key); //查找键值为_key的节点
-    BpNode* split(BpNode* X);//分裂过大的节点X
-    BpNode* merge(BpNode* X, BpNode* S);//合并过小的节点X和S
-    BpNode* find_sibling(BpNode* X);//查找兄弟节点
-}
+ public:
+  explicit BPlusTree(std::string name, BufferPoolManager *buffer_pool_manager, const KeyComparator &comparator,
+                     int leaf_max_size = LEAF_PAGE_SIZE, int internal_max_size = INTERNAL_PAGE_SIZE);
+
+  bool IsEmpty() const;
+
+  bool Insert(const KeyType &key, const ValueType &value, Transaction *transaction = nullptr);
+
+  void Remove(const KeyType &key, Transaction *transaction = nullptr);
+
+  bool GetValue(const KeyType &key, std::vector<ValueType> *result, Transaction *transaction = nullptr);
+
+  Page *FindLeafPage(const KeyType &key, bool leftMost = false);
+
+ private:
+  template <typename N>
+  N *NewNode(page_id_t parent_id);
+
+  void StartNewTree(const KeyType &key, const ValueType &value);
+
+  bool InsertIntoLeaf(const KeyType &key, const ValueType &value, Transaction *transaction = nullptr);
+
+  void InsertIntoParent(BPlusTreePage *old_node, const KeyType &key, BPlusTreePage *new_node,
+                        Transaction *transaction = nullptr);
+
+  Page *ReachLeafPage(const KeyType &key);
+
+  template <typename N>
+  N *Split(N *node);
+
+  template <typename N>
+  bool CoalesceOrRedistribute(N *node, Transaction *transaction = nullptr);
+
+  template <typename N>
+  bool Coalesce(N **neighbor_node, N **node, BPlusTreeInternalPage<KeyType, page_id_t, KeyComparator> **parent,
+                int index, Transaction *transaction = nullptr);
+
+  template <typename N>
+  void Redistribute(N *neighbor_node, N *node, int index);
+
+  bool AdjustRoot(BPlusTreePage *node);
+
+  void UpdateRootPageId(int insert_record = 0);
+
+  std::string index_name_;
+  page_id_t root_page_id_;
+  BufferPoolManager *buffer_pool_manager_;
+  KeyComparator comparator_;
+  int leaf_max_size_;
+  int internal_max_size_;
+};
+```
+
+### 文件存储：`b_plus_tree_internal_page.h`
+
+```cpp
+// the license is included in the source files
+class BPlusTreeInternalPage : public BPlusTreePage {
+ public:
+  void Init(page_id_t page_id, page_id_t parent_id = INVALID_PAGE_ID, int max_size = INTERNAL_PAGE_SIZE);
+
+  KeyType KeyAt(int index) const;
+  void SetKeyAt(int index, const KeyType &key);
+  int ValueIndex(const ValueType &value) const;
+  ValueType ValueAt(int index) const;
+
+  ValueType Lookup(const KeyType &key, const KeyComparator &comparator) const;
+  void PopulateNewRoot(const ValueType &old_value, const KeyType &new_key, const ValueType &new_value);
+  int InsertNodeAfter(const ValueType &old_value, const KeyType &new_key, const ValueType &new_value);
+  void Remove(int index);
+  int Insert(const KeyType &key, const ValueType &value, const KeyComparator &comparator);
+  ValueType RemoveAndReturnOnlyChild();
+
+  void MoveAllTo(BPlusTreeInternalPage *recipient, const KeyType &middle_key, BufferPoolManager *buffer_pool_manager);
+  void MoveHalfTo(BPlusTreeInternalPage *recipient, BufferPoolManager *buffer_pool_manager);
+  void MoveFirstToEndOf(BPlusTreeInternalPage *recipient, const KeyType &middle_key,
+                        BufferPoolManager *buffer_pool_manager);
+  void MoveLastToFrontOf(BPlusTreeInternalPage *recipient, const KeyType &middle_key,
+                         BufferPoolManager *buffer_pool_manager);
+
+ private:
+  void CopyNFrom(MappingType *items, int size, BufferPoolManager *buffer_pool_manager);
+  void CopyLastFrom(const MappingType &pair, BufferPoolManager *buffer_pool_manager);
+  void CopyFirstFrom(const MappingType &pair, BufferPoolManager *buffer_pool_manager);
+  MappingType array[0];
+};
+```
+
+### 文件存储：`b_plus_tree_leaf_page.h`
+
+```cpp
+// the license is included in the source files 
+class BPlusTreeLeafPage : public BPlusTreePage {
+ public:
+  void Init(page_id_t page_id, page_id_t parent_id = INVALID_PAGE_ID, int max_size = LEAF_PAGE_SIZE);
+  page_id_t GetNextPageId() const;
+  void SetNextPageId(page_id_t next_page_id);
+  KeyType KeyAt(int index) const;
+  int KeyIndex(const KeyType &key, const KeyComparator &comparator) const;
+  const MappingType &GetItem(int index);
+
+  int Insert(const KeyType &key, const ValueType &value, const KeyComparator &comparator);
+  bool Lookup(const KeyType &key, ValueType *value, const KeyComparator &comparator) const;
+  int RemoveAndDeleteRecord(const KeyType &key, const KeyComparator &comparator);
+  void Remove(int index);
+
+  void MoveHalfTo(BPlusTreeLeafPage *recipient);
+  void MoveAllTo(BPlusTreeLeafPage *recipient);
+  void MoveFirstToEndOf(BPlusTreeLeafPage *recipient);
+  void MoveLastToFrontOf(BPlusTreeLeafPage *recipient);
+
+ private:
+  void CopyNFrom(MappingType *items, int size);
+  void CopyLastFrom(const MappingType &item);
+  void CopyFirstFrom(const MappingType &item);
+  page_id_t next_page_id_;
+  MappingType array[0];
+};
+```
+
+### 缓存池：`buffer_pool_manager.h`
+
+```cpp
+// the license is included in the source files 
+class BufferPoolManager {
+ public:
+  BufferPoolManager(size_t pool_size, DiskManager *disk_manager, LogManager *log_manager = nullptr);
+
+  ~BufferPoolManager();
+
+  Page *FetchPage(page_id_t page_id, bufferpool_callback_fn callback = nullptr); 
+
+  bool UnpinPage(page_id_t page_id, bool is_dirty, bufferpool_callback_fn callback = nullptr);
+
+  bool FlushPage(page_id_t page_id, bufferpool_callback_fn callback = nullptr);
+
+  Page *NewPage(page_id_t *page_id, bufferpool_callback_fn callback = nullptr); 
+
+  bool DeletePage(page_id_t page_id, bufferpool_callback_fn callback = nullptr);
+
+  void FlushAllPages(bufferpool_callback_fn callback = nullptr);
+
+  Page *GetPages() { return pages_; }
+
+  size_t GetPoolSize() { return pool_size_; }
+
+ protected:
+
+  frame_id_t FindFrame();
+
+  size_t pool_size_;
+  Page *pages_;
+  DiskManager *disk_manager_;
+  LogManager *log_manager_;
+  std::unordered_map<page_id_t, frame_id_t> page_table_;
+  Replacer *replacer_;
+  std::list<frame_id_t> free_list_;
+  std::mutex latch_;
+};
+
 ```
 
 ### 指令读取：`Command.h`
@@ -276,4 +383,4 @@ int main() {
 
 ## Bonus
 
-选择的是，备份
+选择的是，备份，缓存，并发。
