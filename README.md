@@ -9,7 +9,7 @@
 ## 组员分工
 
 - 吴林昱：存储结构B+树的实现
-- 陈文韬：后端命令，用户、车票
+- 陈文韬：后端的主体逻辑
 
 ## 实现端口
 
@@ -126,9 +126,10 @@ public:
 
 class AccountManagement{
 private:
-    vector<User> login_pool;//登录池，需要查找
+    vector<User> login_pool;//登录池
+    //可以用二叉查找树实现(红黑树)，以加快查询速度
     MemoryRiver<User> user_data;//保存数据
-    BpTree id_to_pos; //索引
+    BpTree<User> name_to_pos; //索引
 
 public:
     AccountManagement() = default;
@@ -146,70 +147,133 @@ public:
 注：计算时间时，可能需要用到之前写过的 `calendar.hpp` 类。
 
 ```cpp
-class Train{ //车次
+const int maxn = 100010; //最大车站数
+
+class Train{ //一列火车
 private:    
-    char train_ID[20], stations[100010][30]; //途径车站
-    int station_num, seat_num, prices[100010]; //途径的车站数、座位数、两站间的票价
-    int start_time[2], travel_times[100010], stop_over_times[100010]; //每日出发时间（hh-mm）、两站间的行车时间、停靠时间
-    int sale_date[2][2]; //卖票的日期区间（2个mm-dd）
+    char train_ID[20], stations[maxn][30]; //途径车站
+    int station_num, total_seat_num; //途径的车站数、座位数
+    TimeType start_time, arrving_times[maxn], leaving_times[maxn]; //每日出发时间（hh-mm）
+    //把给出的两站间的行车时间、停靠时间，转换为每一站的到达和离开时间
+    TimeType start_sale_date, end_sale_date; //卖票的日期区间（2个mm-dd）
     char type; //列车类型
     bool is_released; //车次是否发布，如果未发布就不能售票
-    int sum_price[100010]; //用前缀和快速查询区间的票价和
+    int price_sum[maxn]; //用前缀和快速查询区间的票价和
 
 public:
     Train() = default;
     bool operator<(const User &rhs) const;
 }
 
-class Tickets{ //车票（一堆）
+class Station{ //属于某个车次的车站，额外存储一次信息
 private:
-    int date[2]; //出发日期（mm-dd）
-    char start_station[30], arrival_station[30]; //起点站和终点站
-    int num, price; 
+    char train_ID[20], station_name[30];
+    TimeType start_sale_time, end_sale_time, arriving_time, leaving_time; //该车次中，到站与出站时间
+    int price_sum; //继承自Train
+}
+
+class Ticket{ //车票
+private:
+    Station s, t; //起始站和终点站
+public:
+    Tickets() = default;
+    inline int time() const; //查询总时间
+    inline int cost() const; //查询总价格
+}
+
+class DayTrain{ //车次，用来维护座位信息
+private:
+    int seat_num[maxn]; //到每一站所剩的座位数
     
+public:
+    int query_seat(int l, int r); //查询[l,r]最多能坐的人数
+    int modify_seat(int l, int r, int val); //区间修改
 }
 
 class TrainManagement{ //总接口
 private:
     MemoryRiver<Train> train_data; //车次数据
     MemoryRiver<Tickets> ticket_data; //购票数据
+    
     BpTree<Train> id_to_pos; //索引
     BpTree<Tickets> time_to_pos, cost_to_pos; //按照不同关键字排序
+    BpTree<>
+    
 
 public:
     TrainManagement() = default;
-    
-    void add_train(Command &line); //增加列车
-    void release_train(Command &line); //发布列车，可售票
-    void query_train(Command &line); //查询车次
-    void query_ticket(Command &line); //查询车票
-    void query_transfer(Command &line); 
-    void buy_ticket(Command &line, AccountManagement &accounts);
-    void query_order(Command &line, AccountManagement &accounts);
-    void refund_ticket(Command &line, AccountManagement &accounts);
+    //返回值设计为string，可以传递报错信息
+    string add_train(Command &line); //增加列车
+    string release_train(Command &line); //发布列车，可售票
+    string query_train(Command &line); //查询车次
+    string query_ticket(Command &line); //查询车票
+    string query_transfer(Command &line); 
+    string buy_ticket(Command &line, AccountManagement &accounts);
+    string query_order(Command &line, AccountManagement &accounts);
+    string refund_ticket(Command &line, AccountManagement &accounts);
 
-    void rollback(Command &line, AccountManagement & accounts);
-    void clean(AccountManagement &accounts);
-    void exit(AccountManagement &accounts); //退出系统，所有用户下线
+    string rollback(Command &line, AccountManagement & accounts);
+    string clean(AccountManagement &accounts);
+    string exit(AccountManagement &accounts); //退出系统，所有用户下线
 }
 ```
 
 ### 订单记录：`Order.h`
 
 ```cpp
+enum Status {success, pending, refunded};
+class Order{
+private:
+    char user_name[20], train_ID[20]; //用户名，车次
+    int num, price, order_ID; //订单编号
+    TimeType date;
+    Ticket ticket;
+    Status status; //订单当前状态
+}
+
+class Waiting_order{ //候补的订单
+    
+}
+
+class OrderManagement{
+private:    
+    queue<Order> waiting_queue; //候补队列
+}
 ```
 
+### 其他库：`Library.h` 
 
+```cpp
+//之前写好的类
+class vector{}
+class RedBlackTree{}
+class calendar{}
 
-### ~~记录时间戳：`log.h`~~ 
-
-//直接在command中实现
+//时间类
+class TimeType{
+private:
+    int minute; //表示当前的时间距离 起始时间2021-6-1 00:00 有多少 分钟
+    
+public:
+    TimeType() = default;
+    TimeType(string s); //通过：Month-Day Hour:Minute 字符串来构造
+    string transfer(); //转化为形如：Month-Day Hour:Minute 的字符串
+    int get_month();
+    int get_day();
+    int get_hour();
+    int get_minute();
+}
+```
 
 ### 主程序实现：`main.cpp`
 
 ```cpp
 int main() {
+    Command cmd;
     
 }
 ```
 
+## Bonus
+
+选择的是，备份
