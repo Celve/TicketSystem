@@ -1,22 +1,10 @@
-//===----------------------------------------------------------------------===//
-//
-//                         BusTub
-//
-// config.h
-//
-// Identification: src/include/common/config.h
-//
-// Copyright (c) 2015-2019, Carnegie Mellon University Database Group
-//
-//===----------------------------------------------------------------------===//
 
 #pragma once
 
 #include <atomic>
-#include <chrono>  // NOLINT
 #include <cstdint>
 
-namespace bustub {
+namespace thomas {
 
 /** Cycle detection is performed every CYCLE_DETECTION_INTERVAL milliseconds. */
 extern std::chrono::milliseconds cycle_detection_interval;
@@ -43,4 +31,4 @@ using lsn_t = int32_t;         // log sequence number type
 using slot_offset_t = size_t;  // slot offset type
 using oid_t = uint16_t;
 
-}  // namespace bustub
+}  // namespace thomas

@@ -1,22 +1,10 @@
-//===----------------------------------------------------------------------===//
-//
-//                         BusTub
-//
-// buffer_pool_manager.cpp
-//
-// Identification: src/buffer/buffer_pool_manager.cpp
-//
-// Copyright (c) 2015-2019, Carnegie Mellon University Database Group
-//
-//===----------------------------------------------------------------------===//
-
 #include "buffer/buffer_pool_manager.h"
 
 #include <list>
 #include <mutex>
 #include <unordered_map>
 
-namespace bustub {
+namespace thomas {
 
 BufferPoolManager::BufferPoolManager(size_t pool_size, DiskManager *disk_manager)
     : pool_size_(pool_size), disk_manager_(disk_manager) {
@@ -243,4 +231,4 @@ void BufferPoolManager::FlushAllPagesImpl() {
   }
 }
 
-}  // namespace bustub
+}  // namespace thomas

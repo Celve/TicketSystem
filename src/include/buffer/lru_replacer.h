@@ -1,15 +1,3 @@
-//===----------------------------------------------------------------------===//
-//
-//                         BusTub
-//
-// lru_replacer.h
-//
-// Identification: src/include/buffer/lru_replacer.h
-//
-// Copyright (c) 2015-2019, Carnegie Mellon University Database Group
-//
-//===----------------------------------------------------------------------===//
-
 #pragma once
 
 #include <list>
@@ -20,7 +8,7 @@
 #include "common/config.h"
 #include "container/linked_hashmap.hpp"
 
-namespace bustub {
+namespace thomas {
 
 /**
  * LRUReplacer implements the lru replacement policy, which approximates the Least Recently Used policy.
@@ -52,4 +40,4 @@ class LRUReplacer : public Replacer {
   size_t num_pages_;
 };
 
-}  // namespace bustub
+}  // namespace thomas

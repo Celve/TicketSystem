@@ -1,6 +1,6 @@
 #pragma once
 
-namespace bustub {
+namespace thomas {
 
 class Integer {
 public: 

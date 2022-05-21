@@ -6,7 +6,7 @@
 
 #include "common/config.h"
 
-namespace bustub {
+namespace thomas {
 
 class RID {
  public:
@@ -53,4 +53,4 @@ class RID {
   uint32_t slot_num_{0};  // logical offset from 0, 1...
 };
 
-}  // namespace bustub
+}  // namespace thomas

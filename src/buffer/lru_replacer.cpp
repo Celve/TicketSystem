@@ -1,18 +1,6 @@
-//===----------------------------------------------------------------------===//
-//
-//                         BusTub
-//
-// lru_replacer.cpp
-//
-// Identification: src/buffer/lru_replacer.cpp
-//
-// Copyright (c) 2015-2019, Carnegie Mellon University Database Group
-//
-//===----------------------------------------------------------------------===//
-
 #include "buffer/lru_replacer.h"
 
-namespace bustub {
+namespace thomas {
 
 LRUReplacer::LRUReplacer(size_t num_pages) : num_pages_(num_pages) {}
 
@@ -57,4 +45,4 @@ void LRUReplacer::Unpin(frame_id_t frame_id) {
 
 size_t LRUReplacer::Size() { return queue.size(); }
 
-}  // namespace bustub
+}  // namespace thomas

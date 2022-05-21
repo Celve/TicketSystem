@@ -1,15 +1,3 @@
-//===----------------------------------------------------------------------===//
-//
-//                         BusTub
-//
-// disk_manager.cpp
-//
-// Identification: src/storage/disk/disk_manager.cpp
-//
-// Copyright (c) 2015-2019, Carnegie Mellon University Database Group
-//
-//===----------------------------------------------------------------------===//
-
 #include <sys/stat.h>
 #include <cassert>
 #include <cstring>
@@ -19,7 +7,7 @@
 
 #include "storage/disk/disk_manager.h"
 
-namespace bustub {
+namespace thomas {
 
 static char *buffer_used;
 
@@ -122,4 +110,4 @@ int DiskManager::GetFileSize(const std::string &file_name) {
   return rc == 0 ? static_cast<int>(stat_buf.st_size) : -1;
 }
 
-}  // namespace bustub
+}  // namespace thomas

@@ -1,13 +1,3 @@
-//===----------------------------------------------------------------------===//
-//
-//                         CMU-DB Project (15-445/645)
-//                         ***DO NO SHARE PUBLICLY***
-//
-// Identification: src/include/page/b_plus_tree_leaf_page.h
-//
-// Copyright (c) 2018, Carnegie Mellon University Database Group
-//
-//===----------------------------------------------------------------------===//
 #pragma once
 
 #include <utility>
@@ -16,7 +6,7 @@
 #include "type/fixed_string.h"
 #include "storage/page/b_plus_tree_page.h"
 
-namespace bustub {
+namespace thomas {
 
 #define B_PLUS_TREE_LEAF_PAGE_TYPE BPlusTreeLeafPage<KeyType, ValueType, KeyComparator>
 #define LEAF_PAGE_HEADER_SIZE 28
@@ -73,4 +63,4 @@ class BPlusTreeLeafPage : public BPlusTreePage {
   MappingType array[0];
 };
 
-}  // namespace bustub
+}  // namespace thomas

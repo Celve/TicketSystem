@@ -5,7 +5,7 @@
 
 #include "storage/index/index_iterator.h"
 
-namespace bustub {
+namespace thomas {
 
 /**
  * @brief
@@ -56,4 +56,4 @@ INDEXITERATOR_TYPE &INDEXITERATOR_TYPE::operator++() {
 
 template class IndexIterator<FixedString<48>, size_t, FixedStringComparator<48>>;
 
-}  // namespace bustub
+}  // namespace thomas

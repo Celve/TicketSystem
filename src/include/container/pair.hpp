@@ -3,7 +3,7 @@
 
 #include <utility>
 
-namespace bustub {
+namespace thomas {
 
 template <class T1, class T2>
 class pair {
@@ -29,6 +29,6 @@ class pair {
   pair(pair<U1, U2> &&other) : first(other.first), second(other.second) {}
 };
 
-}  // namespace bustub
+}  // namespace thomas
 
 #endif

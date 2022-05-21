@@ -1,15 +1,3 @@
-//===----------------------------------------------------------------------===//
-//
-//                         BusTub
-//
-// buffer_pool_manager.h
-//
-// Identification: src/include/buffer/buffer_pool_manager.h
-//
-// Copyright (c) 2015-2019, Carnegie Mellon University Database Group
-//
-//===----------------------------------------------------------------------===//
-
 #pragma once
 
 #include <list>
@@ -20,7 +8,7 @@
 #include "storage/disk/disk_manager.h"
 #include "storage/page/page.h"
 
-namespace bustub {
+namespace thomas {
 
 /**
  * BufferPoolManager reads disk pages to and from its internal buffer pool.
@@ -176,4 +164,4 @@ class BufferPoolManager {
   /** This latch protects shared data structures. We recommend updating this comment to describe what it protects. */
   std::mutex latch_;
 };
-}  // namespace bustub
+}  // namespace thomas

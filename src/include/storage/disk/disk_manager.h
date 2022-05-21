@@ -6,7 +6,7 @@
 
 #include "common/config.h"
 
-namespace bustub {
+namespace thomas {
 
 /**
  * DiskManager takes care of the allocation and deallocation of pages within a database. It performs the reading and
@@ -61,4 +61,4 @@ class DiskManager {
   std::atomic<page_id_t> next_page_id_;
 };
 
-}  // namespace bustub
+}  // namespace thomas

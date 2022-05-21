@@ -1,20 +1,9 @@
-//===----------------------------------------------------------------------===//
-//
-//                         CMU-DB Project (15-445/645)
-//                         ***DO NO SHARE PUBLICLY***
-//
-// Identification: src/page/header_page.cpp
-//
-// Copyright (c) 2018, Carnegie Mellon University Database Group
-//
-//===----------------------------------------------------------------------===//
-
 #include <cassert>
 #include <iostream>
 
 #include "storage/page/header_page.h"
 
-namespace bustub {
+namespace thomas {
 
 /**
  * Record related
@@ -101,4 +90,4 @@ int HeaderPage::FindRecord(const std::string &name) {
   }
   return -1;
 }
-}  // namespace bustub
+}  // namespace thomas

@@ -1,20 +1,10 @@
-//===----------------------------------------------------------------------===//
-//
-//                         CMU-DB Project (15-445/645)
-//                         ***DO NO SHARE PUBLICLY***
-//
-// Identification: src/include/page/header_page.h
-//
-// Copyright (c) 2018, Carnegie Mellon University Database Group
-//
-//===----------------------------------------------------------------------===//
 #pragma once
 
 #include <cstring>
 #include <string>
 #include "storage/page/page.h"
 
-namespace bustub {
+namespace thomas {
 
 /**
  * Database use the first page (page_id = 0) as header page to store metadata, in
@@ -48,4 +38,4 @@ class HeaderPage : public Page {
 
   void SetRecordCount(int record_count);
 };
-}  // namespace bustub
+}  // namespace thomas

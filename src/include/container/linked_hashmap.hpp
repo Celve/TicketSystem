@@ -11,7 +11,7 @@
 #include "container/pair.hpp"
 #include "common/exceptions.hpp"
 
-namespace bustub {
+namespace thomas {
 template <class Key, class Value, class Hash = std::hash<Key>, class Equal = std::equal_to<Key> >
 class linked_hashmap {
  public:
@@ -626,6 +626,6 @@ class linked_hashmap {
     return const_iterator(curr, this);
   }
 };
-}  // namespace bustub
+}  // namespace thomas
 
 #endif  // LINKED_HASHMAP_LINKED_HASHMAP_H

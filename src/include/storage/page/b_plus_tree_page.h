@@ -1,13 +1,3 @@
-//===----------------------------------------------------------------------===//
-//
-//                         CMU-DB Project (15-445/645)
-//                         ***DO NO SHARE PUBLICLY***
-//
-// Identification: src/include/page/b_plus_tree_page.h
-//
-// Copyright (c) 2018, Carnegie Mellon University Database Group
-//
-//===----------------------------------------------------------------------===//
 #pragma once
 
 #include <cassert>
@@ -17,7 +7,7 @@
 
 #include "buffer/buffer_pool_manager.h"
 
-namespace bustub {
+namespace thomas {
 
 #define MappingType std::pair<KeyType, ValueType>
 
@@ -74,4 +64,4 @@ class BPlusTreePage {
   page_id_t page_id_ __attribute__((__unused__));
 };
 
-}  // namespace bustub
+}  // namespace thomas

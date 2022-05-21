@@ -3,7 +3,7 @@
 #include <cstdio>
 #include <iostream>
 
-namespace bustub {
+namespace thomas {
 
 template<size_t StringSize>
 class FixedString {

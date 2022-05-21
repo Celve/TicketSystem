@@ -1,13 +1,3 @@
-//===----------------------------------------------------------------------===//
-//
-//                         CMU-DB Project (15-445/645)
-//                         ***DO NO SHARE PUBLICLY***
-//
-// Identification: src/include/index/b_plus_tree.h
-//
-// Copyright (c) 2018, Carnegie Mellon University Database Group
-//
-//===----------------------------------------------------------------------===//
 #pragma once
 
 #include <queue>
@@ -20,7 +10,7 @@
 #include "storage/page/b_plus_tree_leaf_page.h"
 #include "type/fixed_string.h"
 
-namespace bustub {
+namespace thomas {
 
 #define BPLUSTREE_TYPE BPlusTree<KeyType, ValueType, KeyComparator>
 
@@ -149,4 +139,4 @@ class BPlusTree {
   int internal_max_size_;
 };
 
-}  // namespace bustub
+}  // namespace thomas

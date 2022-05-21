@@ -1,20 +1,8 @@
-//===----------------------------------------------------------------------===//
-//
-//                         BusTub
-//
-// replacer.h
-//
-// Identification: src/include/buffer/replacer.h
-//
-// Copyright (c) 2015-2019, Carnegie Mellon University Database Group
-//
-//===----------------------------------------------------------------------===//
-
 #pragma once
 
 #include "common/config.h"
 
-namespace bustub {
+namespace thomas {
 
 /**
  * Replacer is an abstract class that tracks page usage.
@@ -47,4 +35,4 @@ class Replacer {
   virtual size_t Size() = 0;
 };
 
-}  // namespace bustub
+}  // namespace thomas

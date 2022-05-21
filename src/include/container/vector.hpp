@@ -6,7 +6,7 @@
 #include <climits>
 #include <cstddef>
 
-namespace bustub {
+namespace thomas {
 
 template<typename T>
 class vector {

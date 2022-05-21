@@ -1,14 +1,3 @@
-//===----------------------------------------------------------------------===//
-//
-//                         BusTub
-//
-// page.h
-//
-// Identification: src/include/storage/page/page.h
-//
-// Copyright (c) 2015-2019, Carnegie Mellon University Database Group
-//
-//===----------------------------------------------------------------------===//
 
 #pragma once
 
@@ -18,7 +7,7 @@
 #include "common/config.h"
 #include "common/rwlatch.h"
 
-namespace bustub {
+namespace thomas {
 
 /**
  * Page is the basic unit of storage within the database system. Page provides a wrapper for actual data pages being
@@ -90,4 +79,4 @@ class Page {
   ReaderWriterLatch rwlatch_;
 };
 
-}  // namespace bustub
+}  // namespace thomas

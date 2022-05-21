@@ -6,7 +6,7 @@
 
 #include "common/macros.h"
 
-namespace bustub {
+namespace thomas {
 
 /**
  * Reader-Writer latch backed by std::mutex.
@@ -81,4 +81,4 @@ class ReaderWriterLatch {
   bool writer_entered_{false};
 };
 
-}  // namespace bustub
+}  // namespace thomas

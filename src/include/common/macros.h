@@ -1,6 +1,6 @@
 #pragma once
 
-namespace bustub {
+namespace thomas {
 
 #define DISALLOW_COPY(class_name) \
   class_name(const class_name &) = delete; \

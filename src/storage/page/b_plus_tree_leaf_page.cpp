@@ -1,20 +1,9 @@
-//===----------------------------------------------------------------------===//
-//
-//                         CMU-DB Project (15-445/645)
-//                         ***DO NO SHARE PUBLICLY***
-//
-// Identification: src/page/b_plus_tree_leaf_page.cpp
-//
-// Copyright (c) 2018, Carnegie Mellon University Database Group
-//
-//===----------------------------------------------------------------------===//
-
 #include <sstream>
 
 #include "common/rid.h"
 #include "storage/page/b_plus_tree_leaf_page.h"
 
-namespace bustub {
+namespace thomas {
 
 /*****************************************************************************
  * HELPER METHODS AND UTILITIES
@@ -251,4 +240,4 @@ void B_PLUS_TREE_LEAF_PAGE_TYPE::CopyFirstFrom(const MappingType &item) {
 
 template class BPlusTreeLeafPage<FixedString<48>, size_t, FixedStringComparator<48>>;
 
-}  // namespace bustub
+}  // namespace thomas

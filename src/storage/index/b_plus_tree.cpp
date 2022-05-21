@@ -4,7 +4,7 @@
 #include "storage/index/b_plus_tree.h"
 #include "storage/page/header_page.h"
 
-namespace bustub {
+namespace thomas {
 
 INDEX_TEMPLATE_ARGUMENTS
 BPLUSTREE_TYPE::BPlusTree(std::string name, BufferPoolManager *buffer_pool_manager, const KeyComparator &comparator,
@@ -938,4 +938,4 @@ void BPLUSTREE_TYPE::ToString(BPlusTreePage *page, BufferPoolManager *bpm) const
 
 template class BPlusTree<FixedString<48>, size_t, FixedStringComparator<48>>;
 
-}  // namespace bustub
+}  // namespace thomas
