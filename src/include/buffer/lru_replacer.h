@@ -1,8 +1,6 @@
 #pragma once
 
-#include <list>
 #include <mutex>  // NOLINT
-#include <vector>
 
 #include "buffer/replacer.h"
 #include "common/config.h"

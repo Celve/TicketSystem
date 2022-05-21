@@ -1,6 +1,5 @@
 #include <sstream>
 
-#include "common/rid.h"
 #include "storage/page/b_plus_tree_leaf_page.h"
 
 namespace thomas {
@@ -185,7 +184,6 @@ void B_PLUS_TREE_LEAF_PAGE_TYPE::Remove(int index) {
 /*****************************************************************************
  * MERGE
  *****************************************************************************/
-
 /*
  * Remove all of key & value pairs from this page to "recipient" page. Don't forget
  * to update the next_page id in the sibling page

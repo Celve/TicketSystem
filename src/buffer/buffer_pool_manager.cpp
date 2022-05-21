@@ -14,7 +14,7 @@ BufferPoolManager::BufferPoolManager(size_t pool_size, DiskManager *disk_manager
 
   // Initially, every page is in the free list.
   for (size_t i = 0; i < pool_size_; ++i) {
-    free_list_.emplace_back(static_cast<int>(i));
+    free_list_.push_back(static_cast<int>(i));
   }
 }
 
@@ -31,8 +31,8 @@ frame_id_t BufferPoolManager::FindFrame() {
 
   if (!free_list_.empty()) {
     /* find it from free list */
-    frame_id = free_list_.front();
-    free_list_.pop_front();
+    frame_id = free_list_.back();
+    free_list_.pop_back();
   } else {
     /* find it from queue */
     Page *page = &pages_[frame_id];
@@ -56,7 +56,7 @@ frame_id_t BufferPoolManager::FindFrame() {
   return frame_id;
 }
 
-Page *BufferPoolManager::FetchPageImpl(page_id_t page_id) {
+Page *BufferPoolManager::FetchPage(page_id_t page_id) {
   std::scoped_lock lock{latch_};
 
   // 1.     Search the page table for the requested page (P).
@@ -95,7 +95,7 @@ Page *BufferPoolManager::FetchPageImpl(page_id_t page_id) {
   return page;
 }
 
-bool BufferPoolManager::UnpinPageImpl(page_id_t page_id, bool is_dirty) {
+bool BufferPoolManager::UnpinPage(page_id_t page_id, bool is_dirty) {
   std::scoped_lock lock{latch_};
 
   /* whether it's in the buffer pool */
@@ -124,7 +124,7 @@ bool BufferPoolManager::UnpinPageImpl(page_id_t page_id, bool is_dirty) {
   return true;
 }
 
-bool BufferPoolManager::FlushPageImpl(page_id_t page_id) {
+bool BufferPoolManager::FlushPage(page_id_t page_id) {
   std::scoped_lock lock{latch_};
 
   /* invalid operation */
@@ -148,7 +148,7 @@ bool BufferPoolManager::FlushPageImpl(page_id_t page_id) {
   return true;
 }
 
-Page *BufferPoolManager::NewPageImpl(page_id_t *page_id) {
+Page *BufferPoolManager::NewPage(page_id_t *page_id) {
   std::scoped_lock lock{latch_};
 
   // 0.   Make sure you call DiskManager::AllocatePage!
@@ -179,7 +179,7 @@ Page *BufferPoolManager::NewPageImpl(page_id_t *page_id) {
   return page;
 }
 
-bool BufferPoolManager::DeletePageImpl(page_id_t page_id) {
+bool BufferPoolManager::DeletePage(page_id_t page_id) {
   std::scoped_lock lock{latch_};
 
   // 0.   Make sure you call DiskManager::DeallocatePage!
@@ -219,7 +219,7 @@ bool BufferPoolManager::DeletePageImpl(page_id_t page_id) {
   return true;
 }
 
-void BufferPoolManager::FlushAllPagesImpl() {
+void BufferPoolManager::FlushAllPages() {
   std::scoped_lock lock{latch_};
 
   // You can do it!

@@ -3,7 +3,6 @@
 #include <random>
 
 #include "buffer/buffer_pool_manager.h"
-#include "common/rid.h"
 #include "storage/index/b_plus_tree.h"
 
 using namespace thomas;
