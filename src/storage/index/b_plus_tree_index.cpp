@@ -8,11 +8,11 @@ namespace thomas {
 #define BPLUSTREEINDEX_TYPE BPlusTreeIndex<KeyType, ValueType, KeyComparator>
 
 INDEX_TEMPLATE_ARGUMENTS
-BPLUSTREEINDEX_TYPE::BPlusTreeIndex(const std::string &index_name) {
+BPLUSTREEINDEX_TYPE::BPlusTreeIndex(const std::string &index_name, const KeyComparator &key_comparator, int buffer_pool_size) : key_comparator_(key_comparator) {
   assert(index_name.size() < 32);
   strcpy(index_name_, index_name.c_str());
   disk_manager_ = new DiskManager(index_name + ".db");
-  bpm_ = new BufferPoolManager(800, disk_manager_);
+  bpm_ = new BufferPoolManager(buffer_pool_size, disk_manager_);
 
   /* some restore */
   try {
@@ -22,7 +22,7 @@ BPLUSTREEINDEX_TYPE::BPlusTreeIndex(const std::string &index_name) {
       throw metadata_error();
     }
     disk_manager_->SetNextPageId(next_page_id);
-  } catch (read_less_then_a_page error) {
+  } catch (read_less_then_a_page &error) {
     bpm_->UnpinPage(HEADER_PAGE_ID, false);
     bpm_->DeletePage(HEADER_PAGE_ID);
     page_id_t header_page_id;
@@ -30,8 +30,7 @@ BPLUSTREEINDEX_TYPE::BPlusTreeIndex(const std::string &index_name) {
     header_page_->InsertRecord("index", -1);
     header_page_->InsertRecord("page_amount", 1);
   }
-  key_comparator_ = new KeyComparator();
-  tree_ = new BPLUSTREE_TYPE("index", bpm_, *key_comparator_);
+  tree_ = new BPLUSTREE_TYPE("index", bpm_, key_comparator_);
 }
 
 INDEX_TEMPLATE_ARGUMENTS
@@ -41,7 +40,6 @@ BPLUSTREEINDEX_TYPE::~BPlusTreeIndex() {
   disk_manager_->ShutDown();
   delete disk_manager_;
   delete bpm_;
-  delete key_comparator_;
   delete tree_;
 }
 
@@ -56,8 +54,8 @@ void BPLUSTREEINDEX_TYPE::DeleteEntry(const KeyType &key) {
 }
 
 INDEX_TEMPLATE_ARGUMENTS
-void BPLUSTREEINDEX_TYPE::ScanKey(const KeyType &key, vector<ValueType> *result, bool (*comp)(const KeyType &lhs, const KeyType &rhs)) {
-  tree_->GetValue(key, result, comp);
+void BPLUSTREEINDEX_TYPE::ScanKey(const KeyType &key, vector<ValueType> *result, const KeyComparator &standby_comparator) {
+  tree_->GetValue(key, result, standby_comparator);
 }
 
 INDEX_TEMPLATE_ARGUMENTS
@@ -66,6 +64,6 @@ void BPLUSTREEINDEX_TYPE::Debug() {
 }
 
 template class BPlusTreeIndex<FixedString<48>, size_t, FixedStringComparator<48>>;
-template class BPlusTreeIndex<MixedStringInt<68>, int, MixedStringIntForMixedComparator<68>>;
+template class BPlusTreeIndex<MixedStringInt<68>, int, MixedStringIntComparator<68>>;
 
 }

@@ -42,7 +42,7 @@ class BPlusTree {
   // return the value associated with a given key
   bool GetValue(const KeyType &key, vector<ValueType> *result, Transaction *transaction = nullptr);
 
-  bool GetValue(const KeyType &key, vector<ValueType> *result, bool (*new_comparator)(const KeyType &lhs, const KeyType &rhs), Transaction *transaction = nullptr);
+  bool GetValue(const KeyType &key, vector<ValueType> *result, const KeyComparator &new_comparator, Transaction *transaction = nullptr);
 
   // index iterator
   INDEXITERATOR_TYPE begin();

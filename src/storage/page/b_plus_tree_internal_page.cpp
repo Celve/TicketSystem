@@ -296,6 +296,6 @@ void B_PLUS_TREE_INTERNAL_PAGE_TYPE::CopyFirstFrom(const MappingType &pair, Buff
 }
 
 template class BPlusTreeInternalPage<FixedString<48>, page_id_t, FixedStringComparator<48>>;
-template class BPlusTreeInternalPage<MixedStringInt<68>, int, MixedStringIntForMixedComparator<68>>;
+template class BPlusTreeInternalPage<MixedStringInt<68>, int, MixedStringIntComparator<68>>;
 
 }  // namespace thomas

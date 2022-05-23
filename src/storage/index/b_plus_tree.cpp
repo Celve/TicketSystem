@@ -57,7 +57,7 @@ bool BPLUSTREE_TYPE::GetValue(const KeyType &key, vector<ValueType> *result, Tra
  * NOTE: need to be modified
  */
 INDEX_TEMPLATE_ARGUMENTS
-bool BPLUSTREE_TYPE::GetValue(const KeyType &key, vector<ValueType> *result, bool (*new_comparator)(const KeyType &lhs, const KeyType &rhs), Transaction *transaction) {
+bool BPLUSTREE_TYPE::GetValue(const KeyType &key, vector<ValueType> *result, const KeyComparator &new_comparator, Transaction *transaction) {
   Page *leaf_page = FindLeafPage(key, false);
   if (leaf_page == nullptr) {
     return false;
@@ -779,7 +779,7 @@ void BPLUSTREE_TYPE::ToString(BPlusTreePage *page, BufferPoolManager *bpm) const
 
 
 template class BPlusTree<FixedString<48>, size_t, FixedStringComparator<48>>;
-template class BPlusTree<MixedStringInt<68>, int, MixedStringIntForMixedComparator<68>>;
+template class BPlusTree<MixedStringInt<68>, int, MixedStringIntComparator<68>>;
 
 
 }  // namespace bustub

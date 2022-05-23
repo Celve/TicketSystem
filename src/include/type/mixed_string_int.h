@@ -51,11 +51,23 @@ private:
 };
 
 template<size_t StringSize> 
-class MixedStringIntForMixedComparator {
-public:
+class MixedStringIntComparator {
+ public:
+  MixedStringIntComparator(int type) : type_(type) {}
+
   int operator()(const MixedStringInt<StringSize> &lhs, const MixedStringInt<StringSize> &rhs) const {
-    return lhs.CompareMixedWith(rhs);
+    switch(type_) {
+      case 1:
+        return lhs.CompareMixedWith(rhs);
+      case 2:
+        return lhs.CompareStringWith(rhs);
+      default:
+        return 0;
+    }
   }
+
+ private:
+  int type_;
 };
 
 bool MixedStringIntForStringComparator(const MixedStringInt<68> &lhs, const MixedStringInt<68> &rhs);

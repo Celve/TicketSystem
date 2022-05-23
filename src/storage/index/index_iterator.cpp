@@ -55,6 +55,6 @@ INDEXITERATOR_TYPE &INDEXITERATOR_TYPE::operator++() {
 }
 
 template class IndexIterator<FixedString<48>, size_t, FixedStringComparator<48>>;
-template class IndexIterator<MixedStringInt<68>, int, MixedStringIntForMixedComparator<68>>;
+template class IndexIterator<MixedStringInt<68>, int, MixedStringIntComparator<68>>;
 
 }  // namespace thomas

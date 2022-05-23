@@ -11,14 +11,14 @@ namespace thomas {
 INDEX_TEMPLATE_ARGUMENTS
 class BPlusTreeIndex {
  public:
-  explicit BPlusTreeIndex(const std::string &index_name);
+  explicit BPlusTreeIndex(const std::string &index_name, const KeyComparator &key_comparator, int buffer_pool_size = 1000);
   ~BPlusTreeIndex();
 
   void InsertEntry(const KeyType &key, const ValueType &value);
 
   void DeleteEntry(const KeyType &key);
 
-  void ScanKey(const KeyType &key, vector<ValueType> *result, bool (*comp)(const KeyType &lhs, const KeyType &rhs));
+  void ScanKey(const KeyType &key, vector<ValueType> *result, const KeyComparator &standby_comparator);
 
   void Debug();
 
@@ -28,7 +28,7 @@ class BPlusTreeIndex {
   BufferPoolManager *bpm_;
   HeaderPage *header_page_;
 
-  KeyComparator *key_comparator_;
+  KeyComparator key_comparator_;
 
   BPLUSTREE_TYPE *tree_;
 };

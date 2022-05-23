@@ -232,6 +232,6 @@ void B_PLUS_TREE_LEAF_PAGE_TYPE::CopyFirstFrom(const MappingType &item) {
 }
 
 template class BPlusTreeLeafPage<FixedString<48>, size_t, FixedStringComparator<48>>;
-template class BPlusTreeLeafPage<MixedStringInt<68>, int, MixedStringIntForMixedComparator<68>>;
+template class BPlusTreeLeafPage<MixedStringInt<68>, int, MixedStringIntComparator<68>>;
 
 }  // namespace thomas
