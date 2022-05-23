@@ -24,6 +24,7 @@ BPLUSTREEINDEX_TYPE::BPlusTreeIndex(const std::string &index_name) {
     disk_manager_->SetNextPageId(next_page_id);
   } catch (read_less_then_a_page error) {
     bpm_->UnpinPage(HEADER_PAGE_ID, false);
+    bpm_->DeletePage(HEADER_PAGE_ID);
     page_id_t header_page_id;
     header_page_ = static_cast<HeaderPage *>(bpm_->NewPage(&header_page_id));
     header_page_->InsertRecord("index", -1);
@@ -36,8 +37,8 @@ BPLUSTREEINDEX_TYPE::BPlusTreeIndex(const std::string &index_name) {
 INDEX_TEMPLATE_ARGUMENTS
 BPLUSTREEINDEX_TYPE::~BPlusTreeIndex() {
   header_page_->UpdateRecord("page_amount", disk_manager_->GetNextPageId());
-  bpm_->UnpinPage(HEADER_PAGE_ID, true);
   bpm_->FlushAllPages();
+  disk_manager_->ShutDown();
   delete disk_manager_;
   delete bpm_;
   delete key_comparator_;
