@@ -15,27 +15,27 @@ BPLUSTREEINDEX_TYPE::BPlusTreeIndex(const std::string &index_name) {
   bpm_ = new BufferPoolManager(50, disk_manager_);
 
   /* some restore */
-  HeaderPage *header_page;
   try {
-    header_page = static_cast<HeaderPage *>(bpm_->FetchPage(HEADER_PAGE_ID));
+    header_page_ = static_cast<HeaderPage *>(bpm_->FetchPage(HEADER_PAGE_ID));
     page_id_t next_page_id;
-    if (!header_page->SearchRecord("page_amount", &next_page_id)) {
+    if (!header_page_->SearchRecord("page_amount", &next_page_id)) {
       throw metadata_error();
     }
     disk_manager_->SetNextPageId(next_page_id);
   } catch (read_less_then_a_page error) {
+    bpm_->UnpinPage(HEADER_PAGE_ID, false);
     page_id_t header_page_id;
-    header_page = static_cast<HeaderPage *>(bpm_->NewPage(&header_page_id));
-    header_page->InsertRecord("index", -1);
-    header_page->InsertRecord("page_amount", 1);
+    header_page_ = static_cast<HeaderPage *>(bpm_->NewPage(&header_page_id));
+    header_page_->InsertRecord("index", -1);
+    header_page_->InsertRecord("page_amount", 1);
   }
-
   key_comparator_ = new KeyComparator();
   tree_ = new BPLUSTREE_TYPE("index", bpm_, *key_comparator_);
 }
 
 INDEX_TEMPLATE_ARGUMENTS
 BPLUSTREEINDEX_TYPE::~BPlusTreeIndex() {
+  header_page_->UpdateRecord("page_amount", disk_manager_->GetNextPageId());
   bpm_->UnpinPage(HEADER_PAGE_ID, true);
   bpm_->FlushAllPages();
   delete disk_manager_;
