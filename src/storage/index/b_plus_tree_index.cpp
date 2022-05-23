@@ -19,10 +19,12 @@ BPLUSTREEINDEX_TYPE::BPlusTreeIndex(const std::string &index_name, const KeyComp
     header_page_ = static_cast<HeaderPage *>(bpm_->FetchPage(HEADER_PAGE_ID));
     page_id_t next_page_id;
     if (!header_page_->SearchRecord("page_amount", &next_page_id)) {
+      /* the metadata cannot be broken */
       throw metadata_error();
     }
     disk_manager_->SetNextPageId(next_page_id);
   } catch (read_less_then_a_page &error) {
+    /* complicated here, because the page is not fetched successfully */
     bpm_->UnpinPage(HEADER_PAGE_ID, false);
     bpm_->DeletePage(HEADER_PAGE_ID);
     page_id_t header_page_id;

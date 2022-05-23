@@ -70,6 +70,4 @@ class MixedStringIntComparator {
   int type_;
 };
 
-bool MixedStringIntForStringComparator(const MixedStringInt<68> &lhs, const MixedStringInt<68> &rhs);
-
 }

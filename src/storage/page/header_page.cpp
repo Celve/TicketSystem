@@ -26,6 +26,13 @@ bool HeaderPage::InsertRecord(const std::string &name, const page_id_t root_id) 
   return true;
 }
 
+/**
+ * @brief 
+ * Delete a particular record
+ * @param name 
+ * @return true record is found and deleted
+ * @return false record is not found
+ */
 bool HeaderPage::DeleteRecord(const std::string &name) {
   int record_num = GetRecordCount();
   assert(record_num > 0);
@@ -42,6 +49,15 @@ bool HeaderPage::DeleteRecord(const std::string &name) {
   return true;
 }
 
+/**
+ * @brief 
+ * Search the record and return as a metadata
+ * The record is stored in the root_id
+ * @param name 
+ * @param root_id 
+ * @return true record is found.
+ * @return false record is not found.
+ */
 bool HeaderPage::SearchRecord(const std::string &name, page_id_t *root_id) {
   int record_num = GetRecordCount();
   assert(record_num > 0);

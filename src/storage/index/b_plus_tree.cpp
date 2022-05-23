@@ -70,30 +70,16 @@ bool BPLUSTREE_TYPE::GetValue(const KeyType &key, vector<ValueType> *result, con
   auto ClearUp = [&]() {
     buffer_pool_manager_->UnpinPage(leaf_node->GetPageId(), false);
   };
-
-  if (index == -1) {
-    index = 0;
-    /* get next page id */
-    page_id_t next_page_id = leaf_node->GetNextPageId();
-    
-    /* unlatch and unpin */
-    ClearUp();
-
-    if (next_page_id == INVALID_PAGE_ID) {
-      return true;
-    }
-
-    leaf_page = buffer_pool_manager_->FetchPage(next_page_id);
-    leaf_node = reinterpret_cast<LeafPage *>(leaf_page->GetData()); 
-  }
-
+  
   while (true) {
-    if (new_comparator(key, leaf_node->KeyAt(index))) {
-      ClearUp();
-      return true;
+    if (index != -1) {
+      if (new_comparator(key, leaf_node->KeyAt(index))) {
+        ClearUp();
+        return true;
+      }
+      result->push_back(leaf_node->GetItem(index++).second);
     }
-    result->push_back(leaf_node->GetItem(index++).second);
-    if (index == leaf_node->GetSize()) {
+    if (index == -1 || index == leaf_node->GetSize()) {
       index = 0;
       /* get next page id */
       page_id_t next_page_id = leaf_node->GetNextPageId();

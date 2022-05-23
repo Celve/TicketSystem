@@ -13,8 +13,6 @@ add_executable(code main.cpp
     src/buffer/lru_replacer.cpp
     src/buffer/buffer_pool_manager.cpp
 
-    src/type/mixed_string_int.cpp
-    src/storage/page/metadata_page.cpp
     src/storage/page/b_plus_tree_page.cpp
     src/storage/page/b_plus_tree_internal_page.cpp
     src/storage/page/b_plus_tree_leaf_page.cpp
