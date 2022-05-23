@@ -7,7 +7,7 @@ LRUReplacer::LRUReplacer(size_t num_pages) : num_pages_(num_pages) {}
 LRUReplacer::~LRUReplacer() = default;
 
 bool LRUReplacer::Victim(frame_id_t *frame_id) {
-  std::scoped_lock lock{latch_};
+  // std::scoped_lock lock{latch_};
 
   if (queue.empty()) {
     return false;
@@ -20,7 +20,7 @@ bool LRUReplacer::Victim(frame_id_t *frame_id) {
 }
 
 void LRUReplacer::Pin(frame_id_t frame_id) {
-  std::scoped_lock lock{latch_};
+  // std::scoped_lock lock{latch_};
 
   /* it might can't be found */
   auto it = queue.find(frame_id);
@@ -30,7 +30,7 @@ void LRUReplacer::Pin(frame_id_t frame_id) {
 }
 
 void LRUReplacer::Unpin(frame_id_t frame_id) {
-  std::scoped_lock lock{latch_};
+  // std::scoped_lock lock{latch_};
 
   /* avoid being too large */
   if (queue.size() >= num_pages_) {
