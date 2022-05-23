@@ -1,0 +1,1 @@
+/usr/bin/c++   -fsanitize=leak -fsanitize=address -g   CMakeFiles/TicketSystem.dir/back_end/main.cpp.o CMakeFiles/TicketSystem.dir/back_end/src/Command.cpp.o CMakeFiles/TicketSystem.dir/back_end/src/Account.cpp.o CMakeFiles/TicketSystem.dir/back_end/src/TrainSystem.cpp.o CMakeFiles/TicketSystem.dir/back_end/database/Library.cpp.o  -o TicketSystem 
