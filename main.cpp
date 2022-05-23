@@ -27,7 +27,7 @@ int main() {
       index_tree->DeleteEntry(key);
     } else {
       scanf("%s", index);
-      key.SetValue(index, 0);
+      key.SetValue(index, -2147483648);
       vector<size_t> result;
       index_tree->ScanKey(key, &result, MixedStringIntForStringComparator);
       if (result.empty()) {
