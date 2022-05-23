@@ -7,13 +7,13 @@
 using namespace thomas;
 
 int main() {
-  BPlusTreeIndex<MixedStringInt<64>, int, MixedStringIntForMixedComparator<64>> *index_tree;
-  index_tree = new BPlusTreeIndex<MixedStringInt<64>, int, MixedStringIntForMixedComparator<64>>("index");
+  BPlusTreeIndex<MixedStringInt<68>, int, MixedStringIntForMixedComparator<68>> *index_tree;
+  index_tree = new BPlusTreeIndex<MixedStringInt<68>, int, MixedStringIntForMixedComparator<68>>("index");
   int n;
   char opt[16];
-  char index[64];
+  char index[68];
   int value;
-  MixedStringInt<64> key;
+  MixedStringInt<68> key;
   scanf("%d", &n);
   while(n--) {
     scanf("%s", opt);
