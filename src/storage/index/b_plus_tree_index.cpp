@@ -59,6 +59,11 @@ void BPLUSTREEINDEX_TYPE::ScanKey(const KeyType &key, vector<ValueType> *result,
   tree_->GetValue(key, result, comp);
 }
 
+INDEX_TEMPLATE_ARGUMENTS
+void BPLUSTREEINDEX_TYPE::Debug() {
+  tree_->Print(bpm_);
+}
+
 template class BPlusTreeIndex<FixedString<48>, size_t, FixedStringComparator<48>>;
 template class BPlusTreeIndex<MixedStringInt<68>, int, MixedStringIntForMixedComparator<68>>;
 

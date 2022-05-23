@@ -20,6 +20,8 @@ class BPlusTreeIndex {
 
   void ScanKey(const KeyType &key, vector<ValueType> *result, bool (*comp)(const KeyType &lhs, const KeyType &rhs));
 
+  void Debug();
+
  private:
   char index_name_[32];
   DiskManager *disk_manager_;

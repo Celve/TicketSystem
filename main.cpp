@@ -39,6 +39,7 @@ int main() {
         puts("");
       }
     }
+    // index_tree->Debug();
   }
   delete index_tree;
   return 0;

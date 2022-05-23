@@ -54,6 +54,7 @@ bool BPLUSTREE_TYPE::GetValue(const KeyType &key, vector<ValueType> *result, Tra
  * @param new_comparator 
  * @param transaction 
  * @return INDEX_TEMPLATE_ARGUMENTS 
+ * NOTE: need to be modified
  */
 INDEX_TEMPLATE_ARGUMENTS
 bool BPLUSTREE_TYPE::GetValue(const KeyType &key, vector<ValueType> *result, bool (*new_comparator)(const KeyType &lhs, const KeyType &rhs), Transaction *transaction) {
@@ -69,6 +70,22 @@ bool BPLUSTREE_TYPE::GetValue(const KeyType &key, vector<ValueType> *result, boo
   auto ClearUp = [&]() {
     buffer_pool_manager_->UnpinPage(leaf_node->GetPageId(), false);
   };
+
+  if (index == -1) {
+    index = 0;
+    /* get next page id */
+    page_id_t next_page_id = leaf_node->GetNextPageId();
+    
+    /* unlatch and unpin */
+    ClearUp();
+
+    if (next_page_id == INVALID_PAGE_ID) {
+      return true;
+    }
+
+    leaf_page = buffer_pool_manager_->FetchPage(next_page_id);
+    leaf_node = reinterpret_cast<LeafPage *>(leaf_page->GetData()); 
+  }
 
   while (true) {
     if (new_comparator(key, leaf_node->KeyAt(index))) {
