@@ -1,7 +1,7 @@
 #include <cassert>
 #include <iostream>
 
-#include "storage/page/Metadata_page.h"
+#include "storage/page/metadata_page.h"
 
 namespace thomas {
 
