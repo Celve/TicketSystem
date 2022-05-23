@@ -7,8 +7,8 @@
 using namespace thomas;
 
 int main() {
-  BPlusTreeIndex<MixedStringInt<64>, size_t, MixedStringIntForMixedComparator<64>> *index_tree;
-  index_tree = new BPlusTreeIndex<MixedStringInt<64>, size_t, MixedStringIntForMixedComparator<64>>("index");
+  BPlusTreeIndex<MixedStringInt<64>, int, MixedStringIntForMixedComparator<64>> *index_tree;
+  index_tree = new BPlusTreeIndex<MixedStringInt<64>, int, MixedStringIntForMixedComparator<64>>("index");
   int n;
   char opt[16];
   char index[64];
@@ -28,13 +28,13 @@ int main() {
     } else {
       scanf("%s", index);
       key.SetValue(index, -2147483648);
-      vector<size_t> result;
+      vector<int> result;
       index_tree->ScanKey(key, &result, MixedStringIntForStringComparator);
       if (result.empty()) {
         puts("null");
       } else {
         for (auto &item : result) {
-          printf("%lu ", item);
+          printf("%d ", item);
         }
         puts("");
       }

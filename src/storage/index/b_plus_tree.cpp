@@ -762,7 +762,7 @@ void BPLUSTREE_TYPE::ToString(BPlusTreePage *page, BufferPoolManager *bpm) const
 
 
 template class BPlusTree<FixedString<48>, size_t, FixedStringComparator<48>>;
-template class BPlusTree<MixedStringInt<64>, size_t, MixedStringIntForMixedComparator<64>>;
+template class BPlusTree<MixedStringInt<64>, int, MixedStringIntForMixedComparator<64>>;
 
 
 }  // namespace bustub
