@@ -287,6 +287,9 @@ void BPLUSTREE_TYPE::InsertIntoParent(BPlusTreePage *old_node, const KeyType &ke
 INDEX_TEMPLATE_ARGUMENTS
 void BPLUSTREE_TYPE::Remove(const KeyType &key, Transaction *transaction) {
   Page *leaf_page = FindLeafPage(key, false);  // leaf_page is pinned
+  if (leaf_page == nullptr) {
+    return;
+  }
   LeafPage *leaf_node = reinterpret_cast<LeafPage *>(leaf_page->GetData());
   if (leaf_node->RemoveAndDeleteRecord(key, comparator_) == -1) {
     buffer_pool_manager_->UnpinPage(leaf_page->GetPageId(), false);
