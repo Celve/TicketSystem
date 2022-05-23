@@ -2,32 +2,44 @@
 #include <cstdio>
 #include <random>
 
-#include "buffer/buffer_pool_manager.h"
-#include "storage/index/b_plus_tree.h"
+#include "storage/index/b_plus_tree_index.h"
 
 using namespace thomas;
 
-class Comparator {
-public:
-    int operator()(int a, int b) {
-        if (a < b) {
-            return -1;
-        }
-        if (a == b) {
-            return 0;
-        }
-        return 1;
-    }
-
-    Comparator() = default;
-
-    Comparator(const Comparator &comp) = default;
-};
-
 int main() {
-    DiskManager *disk_manager = new DiskManager("test.db");
-    BufferPoolManager *bpm = new BufferPoolManager(50, disk_manager);
-    FixedStringComparator<48> comparator;
-    BPlusTree<FixedString<48>, size_t, FixedStringComparator<48>> tree("foo_pk", bpm, comparator);
-    return 0;
+  BPlusTreeIndex<MixedStringInt<64>, size_t, MixedStringIntForMixedComparator<64>> *index_tree;
+  index_tree = new BPlusTreeIndex<MixedStringInt<64>, size_t, MixedStringIntForMixedComparator<64>>("index");
+  int n;
+  char opt[16];
+  char index[64];
+  int value;
+  MixedStringInt<64> key;
+  scanf("%d", &n);
+  while(n--) {
+    scanf("%s", opt);
+    if (!strcmp(opt, "insert")) {
+      scanf("%s %d", index, &value);
+      key.SetValue(index, value);
+      index_tree->InsertEntry(key, value);
+    } else if (!strcmp(opt, "delete")) {
+      scanf("%s %d", index, &value);
+      key.SetValue(index, value);
+      index_tree->DeleteEntry(key);
+    } else {
+      scanf("%s", index);
+      key.SetValue(index, 0);
+      vector<size_t> result;
+      index_tree->ScanKey(key, &result, MixedStringIntForStringComparator);
+      if (result.empty()) {
+        puts("null");
+      } else {
+        for (auto &item : result) {
+          printf("%lu ", item);
+        }
+        puts("");
+      }
+    }
+  }
+  delete index_tree;
+  return 0;
 }

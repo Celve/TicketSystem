@@ -3,7 +3,6 @@
 #include <cassert>
 #include <climits>
 #include <cstdlib>
-#include <string>
 
 #include "buffer/buffer_pool_manager.h"
 

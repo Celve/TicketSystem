@@ -53,6 +53,12 @@ class DiskManager {
    */
   void DeallocatePage(page_id_t page_id);
 
+  void SetNextPageId(page_id_t next_page_id) { next_page_id_ = next_page_id; }
+
+  page_id_t GetNextPageId() {
+      return next_page_id_;
+  }
+
  private:
   int GetFileSize(const std::string &file_name);
   // stream to write db file

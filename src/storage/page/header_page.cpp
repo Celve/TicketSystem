@@ -10,7 +10,7 @@ namespace thomas {
  */
 bool HeaderPage::InsertRecord(const std::string &name, const page_id_t root_id) {
   assert(name.length() < 32);
-  assert(root_id > INVALID_PAGE_ID);
+  // assert(root_id > INVALID_PAGE_ID);
 
   int record_num = GetRecordCount();
   int offset = 4 + record_num * 36;
@@ -39,6 +39,21 @@ bool HeaderPage::DeleteRecord(const std::string &name) {
   memmove(GetData() + offset, GetData() + offset + 36, (record_num - index - 1) * 36);
 
   SetRecordCount(record_num - 1);
+  return true;
+}
+
+bool HeaderPage::SearchRecord(const std::string &name, page_id_t *root_id) {
+  int record_num = GetRecordCount();
+  assert(record_num > 0);
+
+  int index = FindRecord(name);
+  if (index == -1) {
+    return false;
+  }
+
+  int offset = index * 36 + 4;
+  memcpy(root_id, (GetData() + offset + 32), 4);
+
   return true;
 }
 

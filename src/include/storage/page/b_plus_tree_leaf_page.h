@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "type/fixed_string.h"
+#include "type/mixed_string_int.h"
 #include "storage/page/b_plus_tree_page.h"
 
 namespace thomas {

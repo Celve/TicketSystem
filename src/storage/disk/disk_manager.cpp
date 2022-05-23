@@ -1,4 +1,3 @@
-#include <sys/stat.h>
 #include <cassert>
 #include <cstring>
 #include <iostream>
@@ -6,6 +5,7 @@
 #include <thread>  // NOLINT
 
 #include "storage/disk/disk_manager.h"
+#include "common/exceptions.hpp"
 
 namespace thomas {
 
@@ -66,25 +66,19 @@ void DiskManager::WritePage(page_id_t page_id, const char *page_data) {
  */
 void DiskManager::ReadPage(page_id_t page_id, char *page_data) {
   int offset = page_id * PAGE_SIZE;
-  // check if read beyond file length
-  if (offset > GetFileSize(file_name_)) {
-    throw std::runtime_error("I/O error reading past end of file");
-    // std::cerr << "I/O error while reading" << std::endl;
-  } else {
-    // set read cursor to offset
-    db_io_.seekp(offset);
-    db_io_.read(page_data, PAGE_SIZE);
-    if (db_io_.bad()) {
-      throw std::runtime_error("I/O error while reading");
-    }
-    // if file ends before reading PAGE_SIZE
-    int read_count = db_io_.gcount();
-    if (read_count < PAGE_SIZE) {
-      throw std::runtime_error("Read less than a page");
-      db_io_.clear();
-      // std::cerr << "Read less than a page" << std::endl;
-      memset(page_data + read_count, 0, PAGE_SIZE - read_count);
-    }
+  // set read cursor to offset
+  db_io_.seekp(offset);
+  db_io_.read(page_data, PAGE_SIZE);
+  if (db_io_.bad()) {
+    throw std::runtime_error("I/O error while reading");
+  }
+  // if file ends before reading PAGE_SIZE
+  int read_count = db_io_.gcount();
+  if (read_count < PAGE_SIZE) {
+    db_io_.clear();
+    throw read_less_then_a_page();
+    // std::cerr << "Read less than a page" << std::endl;
+    memset(page_data + read_count, 0, PAGE_SIZE - read_count);
   }
 }
 
@@ -100,14 +94,5 @@ page_id_t DiskManager::AllocatePage() { return next_page_id_++; }
  * This does not actually need to do anything for now.
  */
 void DiskManager::DeallocatePage(__attribute__((unused)) page_id_t page_id) {}
-
-/**
- * Private helper function to get disk file size
- */
-int DiskManager::GetFileSize(const std::string &file_name) {
-  struct stat stat_buf;
-  int rc = stat(file_name.c_str(), &stat_buf);
-  return rc == 0 ? static_cast<int>(stat_buf.st_size) : -1;
-}
 
 }  // namespace thomas

@@ -5,7 +5,6 @@
 #include "storage/page/b_plus_tree_internal_page.h"
 #include "storage/page/b_plus_tree_leaf_page.h"
 #include "type/fixed_string.h"
-#include "type/mixed_string_int.h"
 
 namespace thomas {
 
@@ -25,6 +24,9 @@ INDEX_TEMPLATE_ARGUMENTS
 class BPlusTree {
   using InternalPage = BPlusTreeInternalPage<KeyType, page_id_t, KeyComparator>;
   using LeafPage = BPlusTreeLeafPage<KeyType, ValueType, KeyComparator>;
+  enum class TransactionType { OPTIMISTIC_INSERT, OPTIMISTIC_DELETE, FIND, INSERT, DELETE };
+  enum class InsertState { SUCCESS, DUPLICATE_KEY, NO_ROOT, UNSAFE };
+  enum class DeleteState { SUCCESS, NO_ENTRY, PAGE_FAULT, UNSAFE };
 
  public:
   explicit BPlusTree(std::string name, BufferPoolManager *buffer_pool_manager, const KeyComparator &comparator,
@@ -40,9 +42,7 @@ class BPlusTree {
   void Remove(const KeyType &key, Transaction *transaction = nullptr);
 
   // return the value associated with a given key
-  bool GetValue(const KeyType &key, vector<ValueType> *result, Transaction *transaction = nullptr);
-
-  bool GetValue(const KeyType &key, vector<ValueType> *result, bool (*new_comparator)(const KeyType &lhs, const KeyType &rhs), Transaction *transaction = nullptr);
+  bool GetValue(const KeyType &key, std::vector<ValueType> *result, Transaction *transaction = nullptr);
 
   // index iterator
   INDEXITERATOR_TYPE begin();
@@ -67,7 +67,7 @@ class BPlusTree {
   // read data from file and remove one by one
   void RemoveFromFile(const std::string &file_name, Transaction *transaction = nullptr);
   // expose for test purpose
-  Page *FindLeafPage(const KeyType &key, bool leftMost = false, bool rightMost = false);
+  Page *FindLeafPage(const KeyType &key, bool leftMost = false, Transaction *transaction = nullptr);
 
  private:
   template <typename N>
@@ -75,10 +75,33 @@ class BPlusTree {
 
   void StartNewTree(const KeyType &key, const ValueType &value);
 
+  void OptimisticInsert(const KeyType &key, const ValueType &value, InsertState &insert_state,
+                        Transaction *transaction = nullptr);
+
   bool InsertIntoLeaf(const KeyType &key, const ValueType &value, Transaction *transaction = nullptr);
 
   void InsertIntoParent(BPlusTreePage *old_node, const KeyType &key, BPlusTreePage *new_node,
                         Transaction *transaction = nullptr);
+
+  void OptimisticRemove(const KeyType &key, DeleteState &delete_state, Transaction *transaction);
+
+  Page *CrabToLeaf(const KeyType &key, TransactionType transaction_type, bool leafMost = false,
+                   bool rootLatched = false, Transaction *transaction = nullptr);
+
+  void ReleasePages(TransactionType transaction_type, Transaction *transaction);
+  
+  void DeletePages(Transaction *transaction);
+
+  void UnlatchPage(Page *page, TransactionType transaction_type);
+
+  void LatchPage(Page *page, TransactionType transaction_type);
+
+  void LockRoot(TransactionType transaction_type);
+
+  void UnlockRoot(TransactionType transaction_type);
+
+  template <typename N>
+  void UnlatchNode(N *node, TransactionType transaction_type);
 
   template <typename N>
   N *Split(N *node);
@@ -93,7 +116,7 @@ class BPlusTree {
   template <typename N>
   void Redistribute(N *neighbor_node, N *node, int index);
 
-  bool AdjustRoot(BPlusTreePage *node);
+  bool AdjustRoot(BPlusTreePage *node, Transaction *transaction = nullptr);
 
   void UpdateRootPageId(int insert_record = 0);
 
@@ -105,10 +128,11 @@ class BPlusTree {
   // member variable
   std::string index_name_;
   page_id_t root_page_id_;
+  ReaderWriterLatch root_latch_;
   BufferPoolManager *buffer_pool_manager_;
   KeyComparator comparator_;
   int leaf_max_size_;
   int internal_max_size_;
 };
 
-}  // namespace bustub
+}  // namespace thomas

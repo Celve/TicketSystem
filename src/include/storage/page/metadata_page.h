@@ -1,9 +1,13 @@
 #pragma once
 
 #include <cstring>
-#include "storage/page/page.h"
+#include "common/config.h"
+#include "container/pair.hpp"
 
 namespace thomas {
+
+#define METADATA_PAGE_HEADER_SIZE 8
+#define METADATA_PAGE_SIZE (PAGE_SIZE - METADATA_PAGE_HEADER_SIZE)
 
 /**
  * Database use the first page (page_id = 0) as header page to store metadata, in
@@ -15,7 +19,7 @@ namespace thomas {
  * | RecordCount (4) | Entry_1 name (32) | Entry_1 root_id (4) | ... |
  *  -----------------------------------------------------------------
  */
-class HeaderPage : public Page {
+class MetadataPage {
  public:
   void Init() { SetRecordCount(0); }
   /**
@@ -24,7 +28,6 @@ class HeaderPage : public Page {
   bool InsertRecord(const std::string &name, page_id_t root_id);
   bool DeleteRecord(const std::string &name);
   bool UpdateRecord(const std::string &name, page_id_t root_id);
-  bool SearchRecord(const std::string &name, page_id_t *root_id);
 
   // return root_id if success
   bool GetRootId(const std::string &name, page_id_t *root_id);
@@ -34,7 +37,10 @@ class HeaderPage : public Page {
   /**
    * helper functions
    */
-  void SetRecordCount(int record_count);
   int FindRecord(const std::string &name);
+
+  void SetRecordCount(int record_count);
+
+  char data_[METADATA_PAGE_SIZE];
 };
 }  // namespace thomas

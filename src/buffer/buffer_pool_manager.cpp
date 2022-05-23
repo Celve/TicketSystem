@@ -57,7 +57,7 @@ frame_id_t BufferPoolManager::FindFrame() {
 }
 
 Page *BufferPoolManager::FetchPage(page_id_t page_id) {
-  std::scoped_lock lock{latch_};
+//  std::scoped_lock lock{latch_};
 
   // 1.     Search the page table for the requested page (P).
   auto it = page_table_.find(page_id);
@@ -96,7 +96,7 @@ Page *BufferPoolManager::FetchPage(page_id_t page_id) {
 }
 
 bool BufferPoolManager::UnpinPage(page_id_t page_id, bool is_dirty) {
-  std::scoped_lock lock{latch_};
+//  std::scoped_lock lock{latch_};
 
   /* whether it's in the buffer pool */
   auto it = page_table_.find(page_id);
@@ -125,7 +125,7 @@ bool BufferPoolManager::UnpinPage(page_id_t page_id, bool is_dirty) {
 }
 
 bool BufferPoolManager::FlushPage(page_id_t page_id) {
-  std::scoped_lock lock{latch_};
+//  std::scoped_lock lock{latch_};
 
   /* invalid operation */
   if (page_id == INVALID_PAGE_ID) {
@@ -149,7 +149,7 @@ bool BufferPoolManager::FlushPage(page_id_t page_id) {
 }
 
 Page *BufferPoolManager::NewPage(page_id_t *page_id) {
-  std::scoped_lock lock{latch_};
+//  std::scoped_lock lock{latch_};
 
   // 0.   Make sure you call DiskManager::AllocatePage!
   // 2.   Pick a victim page P from either the free list or the replacer. Always pick from the free list first.
@@ -180,7 +180,7 @@ Page *BufferPoolManager::NewPage(page_id_t *page_id) {
 }
 
 bool BufferPoolManager::DeletePage(page_id_t page_id) {
-  std::scoped_lock lock{latch_};
+//  std::scoped_lock lock{latch_};
 
   // 0.   Make sure you call DiskManager::DeallocatePage!
   // 1.   Search the page table for the requested page (P).
@@ -220,7 +220,7 @@ bool BufferPoolManager::DeletePage(page_id_t page_id) {
 }
 
 void BufferPoolManager::FlushAllPages() {
-  std::scoped_lock lock{latch_};
+//  std::scoped_lock lock{latch_};
 
   // You can do it!
   for (auto &item : page_table_) {

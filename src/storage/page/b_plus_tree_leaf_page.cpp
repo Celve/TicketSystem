@@ -7,7 +7,6 @@ namespace thomas {
 /*****************************************************************************
  * HELPER METHODS AND UTILITIES
  *****************************************************************************/
-
 /**
  * Init method after creating a new leaf page
  * Including set page type, set current size to zero, set page id/parent id, set
@@ -70,7 +69,6 @@ const MappingType &B_PLUS_TREE_LEAF_PAGE_TYPE::GetItem(int index) { return array
 /*****************************************************************************
  * INSERTION
  *****************************************************************************/
-
 /**
  * Insert key & value pair into leaf page ordered by key
  * @return  page size after insertion
@@ -106,7 +104,6 @@ int B_PLUS_TREE_LEAF_PAGE_TYPE::Insert(const KeyType &key, const ValueType &valu
 /*****************************************************************************
  * SPLIT
  *****************************************************************************/
-
 /*
  * Remove half of key & value pairs from this page to "recipient" page
  */
@@ -135,7 +132,6 @@ void B_PLUS_TREE_LEAF_PAGE_TYPE::CopyNFrom(MappingType *items, int size) {
 /*****************************************************************************
  * LOOKUP
  *****************************************************************************/
-
 /*
  * For the given key, check to see whether it exists in the leaf page. If it
  * does, then store its corresponding value in input "value" and return true.
@@ -155,7 +151,6 @@ bool B_PLUS_TREE_LEAF_PAGE_TYPE::Lookup(const KeyType &key, ValueType *value, co
 /*****************************************************************************
  * REMOVE
  *****************************************************************************/
-
 /*
  * First look through leaf page to see whether delete key exist or not. If
  * exist, perform deletion, otherwise return immediately.
@@ -237,5 +232,6 @@ void B_PLUS_TREE_LEAF_PAGE_TYPE::CopyFirstFrom(const MappingType &item) {
 }
 
 template class BPlusTreeLeafPage<FixedString<48>, size_t, FixedStringComparator<48>>;
+template class BPlusTreeLeafPage<MixedStringInt<64>, size_t, MixedStringIntForMixedComparator<64>>;
 
 }  // namespace thomas
