@@ -12,7 +12,7 @@ BPLUSTREEINDEX_TYPE::BPlusTreeIndex(const std::string &index_name) {
   assert(index_name.size() < 32);
   strcpy(index_name_, index_name.c_str());
   disk_manager_ = new DiskManager(index_name + ".db");
-  bpm_ = new BufferPoolManager(1000, disk_manager_);
+  bpm_ = new BufferPoolManager(800, disk_manager_);
 
   /* some restore */
   try {
