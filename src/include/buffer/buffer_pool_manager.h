@@ -2,11 +2,12 @@
 
 #include <mutex>  // NOLINT
 
-#include "container/linked_hashmap.hpp"
 #include "buffer/lru_replacer.h"
+#include "container/linked_hashmap.hpp"
+#include "container/vector.hpp"
 #include "storage/disk/disk_manager.h"
 #include "storage/page/page.h"
-#include "container/vector.hpp"
+#include "thread/thread_safe.h"
 
 namespace thomas {
 
@@ -24,7 +25,8 @@ class BufferPoolManager {
    * @param disk_manager the disk manager
    * @param log_manager the log manager (for testing only: nullptr = disable logging)
    */
-  BufferPoolManager(size_t pool_size, DiskManager *disk_manager);
+  BufferPoolManager(size_t pool_size, DiskManager *disk_manager,
+                    THREAD_SAFE_TYPE ts_type = THREAD_SAFE_TYPE::NON_THREAD_SAFE);
 
   /**
    * Destroys an existing BufferPoolManager.
@@ -32,7 +34,6 @@ class BufferPoolManager {
   ~BufferPoolManager();
 
   size_t Size() { return free_list_.size() + replacer_->Size(); }
-
 
   /** @return pointer to all the pages in the buffer pool */
   Page *GetPages() { return pages_; }
@@ -81,7 +82,13 @@ class BufferPoolManager {
    */
   void FlushAllPages();
 
-protected:
+  /**
+   * @brief
+   * Whether the algorithm is thread-safe.
+   */
+  bool IsThreadSafe() { return ts_type_ == THREAD_SAFE_TYPE::THREAD_SAFE; }
+
+ protected:
   /**
    * @brief
    * Try to find an empty frame for later use.
@@ -104,5 +111,7 @@ protected:
   vector<frame_id_t> free_list_;
   /** This latch protects shared data structures. We recommend updating this comment to describe what it protects. */
   std::mutex latch_;
+  /** Whether it needs to be thread safe*/
+  THREAD_SAFE_TYPE ts_type_;
 };
 }  // namespace thomas

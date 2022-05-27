@@ -5,6 +5,7 @@
 #include "buffer/replacer.h"
 #include "common/config.h"
 #include "container/linked_hashmap.hpp"
+#include "thread/thread_safe.h"
 
 namespace thomas {
 

@@ -6,8 +6,8 @@
 
 namespace thomas {
 
-BufferPoolManager::BufferPoolManager(size_t pool_size, DiskManager *disk_manager)
-    : pool_size_(pool_size), disk_manager_(disk_manager) {
+BufferPoolManager::BufferPoolManager(size_t pool_size, DiskManager *disk_manager, THREAD_SAFE_TYPE ts_type)
+    : pool_size_(pool_size), disk_manager_(disk_manager), ts_type_(ts_type) {
   // We allocate a consecutive memory space for the buffer pool.
   pages_ = new Page[pool_size_];
   replacer_ = new LRUReplacer(pool_size);
@@ -27,7 +27,9 @@ frame_id_t BufferPoolManager::FindFrame() {
   frame_id_t frame_id;
 
   /* none is available */
-  if (free_list_.empty() && !replacer_->Victim(&frame_id)) return -1;
+  if (free_list_.empty() && !replacer_->Victim(&frame_id)) {
+    return -1;
+  }
 
   if (!free_list_.empty()) {
     /* find it from free list */
@@ -57,7 +59,9 @@ frame_id_t BufferPoolManager::FindFrame() {
 }
 
 Page *BufferPoolManager::FetchPage(page_id_t page_id) {
-//  std::scoped_lock lock{latch_};
+  std::unique_lock<std::mutex> lock =
+      IsThreadSafe() ? std::unique_lock<std::mutex>(latch_) : std::unique_lock<std::mutex>();
+  //  std::scoped_lock lock{latch_};
 
   // 1.     Search the page table for the requested page (P).
   auto it = page_table_.find(page_id);
@@ -96,7 +100,9 @@ Page *BufferPoolManager::FetchPage(page_id_t page_id) {
 }
 
 bool BufferPoolManager::UnpinPage(page_id_t page_id, bool is_dirty) {
-//  std::scoped_lock lock{latch_};
+  std::unique_lock<std::mutex> lock =
+      IsThreadSafe() ? std::unique_lock<std::mutex>(latch_) : std::unique_lock<std::mutex>();
+  //  std::scoped_lock lock{latch_};
 
   /* whether it's in the buffer pool */
   auto it = page_table_.find(page_id);
@@ -108,7 +114,7 @@ bool BufferPoolManager::UnpinPage(page_id_t page_id, bool is_dirty) {
   Page *page = &pages_[frame_id];
 
   /* it's not pinned */
-  if (!page->pin_count_) {
+  if (page->pin_count_ == 0) {
     return false;
   }
 
@@ -117,7 +123,7 @@ bool BufferPoolManager::UnpinPage(page_id_t page_id, bool is_dirty) {
   --page->pin_count_;
 
   /* maybe it becomes the unpinned page */
-  if (!page->pin_count_) {
+  if (page->pin_count_ == 0) {
     replacer_->Unpin(frame_id);
   }
 
@@ -125,7 +131,9 @@ bool BufferPoolManager::UnpinPage(page_id_t page_id, bool is_dirty) {
 }
 
 bool BufferPoolManager::FlushPage(page_id_t page_id) {
-//  std::scoped_lock lock{latch_};
+  std::unique_lock<std::mutex> lock =
+      IsThreadSafe() ? std::unique_lock<std::mutex>(latch_) : std::unique_lock<std::mutex>();
+  //  std::scoped_lock lock{latch_};
 
   /* invalid operation */
   if (page_id == INVALID_PAGE_ID) {
@@ -149,7 +157,9 @@ bool BufferPoolManager::FlushPage(page_id_t page_id) {
 }
 
 Page *BufferPoolManager::NewPage(page_id_t *page_id) {
-//  std::scoped_lock lock{latch_};
+  std::unique_lock<std::mutex> lock =
+      IsThreadSafe() ? std::unique_lock<std::mutex>(latch_) : std::unique_lock<std::mutex>();
+  //  std::scoped_lock lock{latch_};
 
   // 0.   Make sure you call DiskManager::AllocatePage!
   // 2.   Pick a victim page P from either the free list or the replacer. Always pick from the free list first.
@@ -180,7 +190,9 @@ Page *BufferPoolManager::NewPage(page_id_t *page_id) {
 }
 
 bool BufferPoolManager::DeletePage(page_id_t page_id) {
-//  std::scoped_lock lock{latch_};
+  std::unique_lock<std::mutex> lock =
+      IsThreadSafe() ? std::unique_lock<std::mutex>(latch_) : std::unique_lock<std::mutex>();
+  //  std::scoped_lock lock{latch_};
 
   // 0.   Make sure you call DiskManager::DeallocatePage!
   // 1.   Search the page table for the requested page (P).
@@ -193,7 +205,7 @@ bool BufferPoolManager::DeletePage(page_id_t page_id) {
   Page *page = &pages_[frame_id];
 
   // 2.   If P exists, but has a non-zero pin-count, return false. Someone is using the page.
-  if (page->GetPinCount()) {
+  if (page->GetPinCount() != 0) {
     return false;
   }
 
@@ -220,9 +232,10 @@ bool BufferPoolManager::DeletePage(page_id_t page_id) {
 }
 
 void BufferPoolManager::FlushAllPages() {
-//  std::scoped_lock lock{latch_};
+  std::unique_lock<std::mutex> lock =
+      IsThreadSafe() ? std::unique_lock<std::mutex>(latch_) : std::unique_lock<std::mutex>();
+  //  std::scoped_lock lock{latch_};
 
-  // You can do it!
   for (auto &item : page_table_) {
     frame_id_t frame_id = item.second;
     Page *page = &pages_[frame_id];

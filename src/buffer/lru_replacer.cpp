@@ -7,8 +7,6 @@ LRUReplacer::LRUReplacer(size_t num_pages) : num_pages_(num_pages) {}
 LRUReplacer::~LRUReplacer() = default;
 
 bool LRUReplacer::Victim(frame_id_t *frame_id) {
-  // std::scoped_lock lock{latch_};
-
   if (queue.empty()) {
     return false;
   }
@@ -38,7 +36,7 @@ void LRUReplacer::Unpin(frame_id_t frame_id) {
   }
 
   /* maybe it's existed, maybe it's not */
-  if (!queue.count(frame_id)) {
+  if (queue.count(frame_id) == 0) {
     queue[frame_id] = frame_id;
   }
 }

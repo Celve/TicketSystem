@@ -1,6 +1,6 @@
-#include <sstream>
-
 #include "storage/page/b_plus_tree_leaf_page.h"
+
+#include <sstream>
 
 namespace thomas {
 
@@ -71,7 +71,7 @@ const MappingType &B_PLUS_TREE_LEAF_PAGE_TYPE::GetItem(int index) { return array
  *****************************************************************************/
 /**
  * Insert key & value pair into leaf page ordered by key
- * @return  page size after insertion
+ * @return  page size after insertion; -1 for duplicate key
  */
 INDEX_TEMPLATE_ARGUMENTS
 int B_PLUS_TREE_LEAF_PAGE_TYPE::Insert(const KeyType &key, const ValueType &value, const KeyComparator &comparator) {
@@ -89,6 +89,8 @@ int B_PLUS_TREE_LEAF_PAGE_TYPE::Insert(const KeyType &key, const ValueType &valu
 
   /* duplicate key */
   if (!comparator(key, KeyAt(index))) {
+    // std::cout << key << " " << KeyAt(index) << std::endl;
+    // puts("he he duplicate key");
     return -1;
   }
 

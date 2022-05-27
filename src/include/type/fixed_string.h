@@ -1,15 +1,15 @@
 #pragma once
 
 #include <cstdio>
-#include <iostream>
 #include <cstring>
+#include <iostream>
 
 namespace thomas {
 
-template<size_t StringSize>
+template <size_t StringSize>
 class FixedString {
-public:
-  void SetValue(std::string str) {
+ public:
+  void SetValue(const std::string &str) {
     memset(data_, 0, sizeof(data_));
     memcpy(data_, str.c_str(), str.size());
   }
@@ -19,9 +19,9 @@ public:
     memcpy(data_, str, size);
   }
 
-  int CompareWith(const FixedString &rhs) const {
-    return strcmp(data_, rhs.data_);
-  }
+  std::string GetValue() { return std::string(data_, data_ + strlen(data_)); }
+
+  int CompareWith(const FixedString &rhs) const { return strcmp(data_, rhs.data_); }
 
   inline int64_t ToString() const { return *reinterpret_cast<int64_t *>(const_cast<char *>(data_)); }
 
@@ -33,16 +33,16 @@ public:
     return os;
   }
 
-private: 
+ private:
   char data_[StringSize];
 };
 
-template<size_t StringSize> 
+template <size_t StringSize>
 class FixedStringComparator {
-public:
+ public:
   int operator()(const FixedString<StringSize> &lhs, const FixedString<StringSize> &rhs) const {
     return lhs.CompareWith(rhs);
   }
 };
 
-}
+}  // namespace thomas

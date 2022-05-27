@@ -347,9 +347,9 @@ public:
 	 * clears the contents
 	 */
 	void clear() {
+        Clean();
         cur_size = 0;
         max_size = 32;
-        Clean();
         data = (T *)malloc(max_size * sizeof(T));
     }
 	/**

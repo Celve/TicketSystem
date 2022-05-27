@@ -40,7 +40,7 @@ class DiskManager {
    * @param[out] page_data output buffer
    */
   void ReadPage(page_id_t page_id, char *page_data);
-  
+
   /**
    * Allocate a page on disk.
    * @return the id of the allocated page
@@ -55,9 +55,7 @@ class DiskManager {
 
   void SetNextPageId(page_id_t next_page_id) { next_page_id_ = next_page_id; }
 
-  page_id_t GetNextPageId() {
-      return next_page_id_;
-  }
+  page_id_t GetNextPageId() { return next_page_id_; }
 
  private:
   int GetFileSize(const std::string &file_name);

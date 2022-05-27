@@ -21,7 +21,11 @@ class disk_error : public std::exception {};
 
 class read_less_then_a_page : public disk_error {};
 
-class metadata_error: public disk_error {};
+class metadata_error : public disk_error {};
+
+class thread_error : public std::exception {};
+
+class terminated_queue : public thread_error {};
 
 }  // namespace thomas
 

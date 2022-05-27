@@ -9,7 +9,7 @@
 
 namespace thomas {
 
-#define BPLUSTREE_TYPE BPlusTree<KeyType, ValueType, KeyComparator>
+#define BPLUSTREENTS_TYPE BPlusTreeNTS<KeyType, ValueType, KeyComparator>
 
 /**
  * Main class providing the API for the Interactive B+ Tree.
@@ -22,13 +22,13 @@ namespace thomas {
  * (4) Implement index iterator for range scan
  */
 INDEX_TEMPLATE_ARGUMENTS
-class BPlusTree {
+class BPlusTreeNTS {
   using InternalPage = BPlusTreeInternalPage<KeyType, page_id_t, KeyComparator>;
   using LeafPage = BPlusTreeLeafPage<KeyType, ValueType, KeyComparator>;
 
  public:
-  explicit BPlusTree(std::string name, BufferPoolManager *buffer_pool_manager, const KeyComparator &comparator,
-                     int leaf_max_size = LEAF_PAGE_SIZE, int internal_max_size = INTERNAL_PAGE_SIZE);
+  explicit BPlusTreeNTS(std::string name, BufferPoolManager *buffer_pool_manager, const KeyComparator &comparator,
+                        int leaf_max_size = LEAF_PAGE_SIZE, int internal_max_size = INTERNAL_PAGE_SIZE);
 
   // Returns true if this B+ tree has no keys and values.
   bool IsEmpty() const;
@@ -42,7 +42,8 @@ class BPlusTree {
   // return the value associated with a given key
   bool GetValue(const KeyType &key, vector<ValueType> *result, Transaction *transaction = nullptr);
 
-  bool GetValue(const KeyType &key, vector<ValueType> *result, const KeyComparator &new_comparator, Transaction *transaction = nullptr);
+  bool GetValue(const KeyType &key, vector<ValueType> *result, const KeyComparator &new_comparator,
+                Transaction *transaction = nullptr);
 
   // index iterator
   INDEXITERATOR_TYPE begin();
@@ -111,4 +112,4 @@ class BPlusTree {
   int internal_max_size_;
 };
 
-}  // namespace bustub
+}  // namespace thomas

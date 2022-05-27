@@ -1,17 +1,15 @@
 #pragma once
 
 #include <cstdio>
-#include <iostream>
 #include <cstring>
+#include <iostream>
 
 namespace thomas {
 
-template<size_t StringSize>
+template <size_t StringSize>
 class MixedStringInt {
-public:
-  MixedStringInt() = default;
-
-  void SetValue(std::string str, int integer) {
+ public:
+  void SetValue(const std::string &str, int integer) {
     memset(data_str_, 0, sizeof(data_str_));
     memcpy(data_str_, str.c_str(), str.size());
     data_int_ = integer;
@@ -26,12 +24,10 @@ public:
   int CompareMixedWith(const MixedStringInt &rhs) const {
     int result_str = strcmp(data_str_, rhs.data_str_);
     int result_int = data_int_ < rhs.data_int_ ? -1 : (data_int_ == rhs.data_int_ ? 0 : 1);
-    return !result_str ? result_int : result_str;
+    return result_str == 0 ? result_int : result_str;
   }
 
-  int CompareStringWith(const MixedStringInt &rhs) const {
-    return strcmp(data_str_, rhs.data_str_);
-  }
+  int CompareStringWith(const MixedStringInt &rhs) const { return strcmp(data_str_, rhs.data_str_); }
 
   inline int64_t ToString() const { return *reinterpret_cast<int64_t *>(const_cast<char *>(data_str_)); }
 
@@ -45,18 +41,18 @@ public:
     return os;
   }
 
-private: 
+ private:
   char data_str_[StringSize];
   int data_int_;
 };
 
-template<size_t StringSize> 
+template <size_t StringSize>
 class MixedStringIntComparator {
  public:
-  MixedStringIntComparator(int type) : type_(type) {}
+  explicit MixedStringIntComparator(int type = 0) : type_(type) {}
 
   int operator()(const MixedStringInt<StringSize> &lhs, const MixedStringInt<StringSize> &rhs) const {
-    switch(type_) {
+    switch (type_) {
       case 1:
         return lhs.CompareMixedWith(rhs);
       case 2:
@@ -70,4 +66,4 @@ class MixedStringIntComparator {
   int type_;
 };
 
-}
+}  // namespace thomas

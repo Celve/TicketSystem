@@ -1,14 +1,19 @@
 #pragma once
 
+#include <queue>
+#include <string>
+#include <vector>
+
 #include "concurrency/transaction.h"
 #include "storage/index/index_iterator.h"
 #include "storage/page/b_plus_tree_internal_page.h"
 #include "storage/page/b_plus_tree_leaf_page.h"
 #include "type/fixed_string.h"
+#include "type/mixed_string_int.h"
 
 namespace thomas {
 
-#define BPLUSTREE_TYPE BPlusTree<KeyType, ValueType, KeyComparator>
+#define BPLUSTREETS_TYPE BPlusTreeTS<KeyType, ValueType, KeyComparator>
 
 /**
  * Main class providing the API for the Interactive B+ Tree.
@@ -21,16 +26,16 @@ namespace thomas {
  * (4) Implement index iterator for range scan
  */
 INDEX_TEMPLATE_ARGUMENTS
-class BPlusTree {
+class BPlusTreeTS {
   using InternalPage = BPlusTreeInternalPage<KeyType, page_id_t, KeyComparator>;
   using LeafPage = BPlusTreeLeafPage<KeyType, ValueType, KeyComparator>;
-  enum class TransactionType { OPTIMISTIC_INSERT, OPTIMISTIC_DELETE, FIND, INSERT, DELETE };
+  enum class TransactionType { OPTIMISTIC_INSERT, OPTIMISTIC_DELETE, FIND, MULTIFIND, INSERT, DELETE };
   enum class InsertState { SUCCESS, DUPLICATE_KEY, NO_ROOT, UNSAFE };
   enum class DeleteState { SUCCESS, NO_ENTRY, PAGE_FAULT, UNSAFE };
 
  public:
-  explicit BPlusTree(std::string name, BufferPoolManager *buffer_pool_manager, const KeyComparator &comparator,
-                     int leaf_max_size = LEAF_PAGE_SIZE, int internal_max_size = INTERNAL_PAGE_SIZE);
+  explicit BPlusTreeTS(std::string name, BufferPoolManager *buffer_pool_manager, const KeyComparator &comparator,
+                       int leaf_max_size = LEAF_PAGE_SIZE, int internal_max_size = INTERNAL_PAGE_SIZE);
 
   // Returns true if this B+ tree has no keys and values.
   bool IsEmpty() const;
@@ -38,11 +43,21 @@ class BPlusTree {
   // Insert a key-value pair into this B+ tree.
   bool Insert(const KeyType &key, const ValueType &value, Transaction *transaction = nullptr);
 
+  // Insert a key-alue pair into this B+ tree. It's faster. But it might get the wrong answer.
+  bool OptimisticInsert(const KeyType &key, const ValueType &value, Transaction *transaction = nullptr);
+
   // Remove a key and its value from this B+ tree.
   void Remove(const KeyType &key, Transaction *transaction = nullptr);
 
+  // Remove a key and its value from this B+ tree. It's fater. But it might get the wrong answer.
+  void OptimisticRemove(const KeyType &key, Transaction *transaction = nullptr);
+
   // return the value associated with a given key
-  bool GetValue(const KeyType &key, std::vector<ValueType> *result, Transaction *transaction = nullptr);
+  bool GetValue(const KeyType &key, vector<ValueType> *result, Transaction *transaction = nullptr);
+
+  // return the value that equal to a given key using the given rule
+  bool GetValue(const KeyType &key, vector<ValueType> *result, const KeyComparator &new_comparator,
+                Transaction *transaction);
 
   // index iterator
   INDEXITERATOR_TYPE begin();
@@ -75,21 +90,21 @@ class BPlusTree {
 
   void StartNewTree(const KeyType &key, const ValueType &value);
 
-  void OptimisticInsert(const KeyType &key, const ValueType &value, InsertState &insert_state,
-                        Transaction *transaction = nullptr);
+  void TentativeInsert(const KeyType &key, const ValueType &value, InsertState &insert_state,
+                       Transaction *transaction = nullptr);
 
   bool InsertIntoLeaf(const KeyType &key, const ValueType &value, Transaction *transaction = nullptr);
 
   void InsertIntoParent(BPlusTreePage *old_node, const KeyType &key, BPlusTreePage *new_node,
                         Transaction *transaction = nullptr);
 
-  void OptimisticRemove(const KeyType &key, DeleteState &delete_state, Transaction *transaction);
+  void TentativeRemove(const KeyType &key, DeleteState &delete_state, Transaction *transaction);
 
   Page *CrabToLeaf(const KeyType &key, TransactionType transaction_type, bool leafMost = false,
                    bool rootLatched = false, Transaction *transaction = nullptr);
 
   void ReleasePages(TransactionType transaction_type, Transaction *transaction);
-  
+
   void DeletePages(Transaction *transaction);
 
   void UnlatchPage(Page *page, TransactionType transaction_type);
