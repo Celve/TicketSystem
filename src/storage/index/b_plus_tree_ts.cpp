@@ -1,14 +1,3 @@
-//===----------------------------------------------------------------------===//
-//
-//                         CMU-DB Project (15-445/645)
-//                         ***DO NO SHARE PUBLICLY***
-//
-// Identification: src/index/b_plus_tree.cpp
-//
-// Copyright (c) 2018, Carnegie Mellon University Database Group
-//
-//===----------------------------------------------------------------------===//
-
 #include "storage/index/b_plus_tree_ts.h"
 
 #include <string>
@@ -80,7 +69,7 @@ bool BPLUSTREETS_TYPE::GetValue(const KeyType &key, vector<ValueType> *result, T
 INDEX_TEMPLATE_ARGUMENTS
 bool BPLUSTREETS_TYPE::GetValue(const KeyType &key, vector<ValueType> *result, const KeyComparator &new_comparator,
                                 Transaction *transaction) {
-  Page *leaf_page = CrabToLeaf(key, TransactionType::FIND, false, false, transaction);
+  Page *leaf_page = CrabToLeaf(key, TransactionType::MULTIFIND, false, false, transaction);
   if (leaf_page == nullptr) {
     return false;
   }
@@ -98,6 +87,7 @@ bool BPLUSTREETS_TYPE::GetValue(const KeyType &key, vector<ValueType> *result, c
     if (index != -1) {
       if (new_comparator(key, leaf_node->KeyAt(index))) {
         ClearUp();
+        transaction->Unlock();
         return true;
       }
       result->push_back(leaf_node->GetItem(index++).second);
@@ -119,6 +109,7 @@ bool BPLUSTREETS_TYPE::GetValue(const KeyType &key, vector<ValueType> *result, c
       LatchPage(leaf_page, TransactionType::FIND);
     }
   }
+  transaction->Unlock();
   return true;
 }
 
@@ -698,7 +689,9 @@ Page *BPLUSTREETS_TYPE::CrabToLeaf(const KeyType &key, TransactionType transacti
   /* if it's insertion, the root is pre-locked, otherwise the root should be locked */
   if (!rootLatched) {
     LockRoot(transaction_type);
-    transaction->Unlock();
+    if (transaction_type != TransactionType::MULTIFIND) {
+      transaction->Unlock();
+    }
   }
 
   if (root_page_id_ == INVALID_PAGE_ID) {

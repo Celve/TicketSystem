@@ -60,14 +60,14 @@ void BPLUSTREEINDEXTS_TYPE::Debug() { tree_->Print(bpm_); }
 INDEX_TEMPLATE_ARGUMENTS
 void BPLUSTREEINDEXTS_TYPE::InsertEntry(const KeyType &key, const ValueType &value) {
   Transaction *transaction = new Transaction(pool_->GetLock());
-  tree_->Insert(key, value, transaction);
+  tree_->OptimisticInsert(key, value, transaction);
   delete transaction;
 }
 
 INDEX_TEMPLATE_ARGUMENTS
 void BPLUSTREEINDEXTS_TYPE::DeleteEntry(const KeyType &key) {
   Transaction *transaction = new Transaction(pool_->GetLock());
-  tree_->Remove(key, transaction);
+  tree_->OptimisticRemove(key, transaction);
   delete transaction;
 }
 

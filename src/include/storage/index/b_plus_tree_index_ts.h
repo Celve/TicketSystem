@@ -17,7 +17,7 @@ INDEX_TEMPLATE_ARGUMENTS
 class BPlusTreeIndexTS {
  public:
   explicit BPlusTreeIndexTS(const std::string &index_name, const KeyComparator &key_comparator, ThreadPool *pool,
-                            int buffer_pool_size = 1000);
+                            int buffer_pool_size = 10000);
   ~BPlusTreeIndexTS();
 
   void InsertEntry(const KeyType &key, const ValueType &value);
