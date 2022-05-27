@@ -41,7 +41,7 @@ class BPlusTreeTS {
   bool IsEmpty() const;
 
   // Insert a key-value pair into this B+ tree.
-  bool Insert(const KeyType &key, const ValueType &value, Transaction *transaction = nullptr);
+  bool Insert(const KeyType &key, const ValueType &value, Transaction *transaction = nullptr, bool isCalled = false);
 
   // Insert a key-alue pair into this B+ tree. It's faster. But it might get the wrong answer.
   bool OptimisticInsert(const KeyType &key, const ValueType &value, Transaction *transaction = nullptr);

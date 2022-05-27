@@ -23,7 +23,7 @@ void Test4() {  // NOLINT
   BPlusTreeIndexTS<FixedString<48>, size_t, FixedStringComparator<48>> *index_tree;
   FixedStringComparator<48> comparator;
   index_tree =
-      new BPlusTreeIndexTS<FixedString<48>, size_t, FixedStringComparator<48>>("index", comparator, pool, 8000);
+      new BPlusTreeIndexTS<FixedString<48>, size_t, FixedStringComparator<48>>("index", comparator, pool, 10000);
   int NUMBER = 100000;
   std::map<std::string, size_t> remap;
   std::vector<std::future<size_t>> results;

@@ -25,7 +25,7 @@ class ThreadPool {
   THREAD_ARGS_TEMPLATE
   auto Join(F &&f, Args &&...args) -> THREAD_RETURN_TYPE;
 
-  std::mutex *GetLock();
+  std::unique_lock<std::mutex> *GetLock();
 
  private:
   void WorkerFunction();
@@ -36,7 +36,7 @@ class ThreadPool {
   std::queue<std::function<void()>> tasks_;
 
   // synchronization
-  std::mutex lock_;
+  std::unique_lock<std::mutex> *lock_;
   std::mutex latch_;
   std::condition_variable cv_;
 

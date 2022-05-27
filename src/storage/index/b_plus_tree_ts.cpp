@@ -124,9 +124,11 @@ bool BPLUSTREETS_TYPE::GetValue(const KeyType &key, vector<ValueType> *result, c
  * keys return false, otherwise return true.
  */
 INDEX_TEMPLATE_ARGUMENTS
-bool BPLUSTREETS_TYPE::Insert(const KeyType &key, const ValueType &value, Transaction *transaction) {
+bool BPLUSTREETS_TYPE::Insert(const KeyType &key, const ValueType &value, Transaction *transaction, bool isCalled) {
   root_latch_.WLock();
-  transaction->Unlock();
+  if (!isCalled) {
+    transaction->Unlock();
+  }
   if (IsEmpty()) {
     StartNewTree(key, value);
     root_latch_.WUnlock();
@@ -147,7 +149,7 @@ bool BPLUSTREETS_TYPE::OptimisticInsert(const KeyType &key, const ValueType &val
       return false;
 
     default:
-      return Insert(key, value, transaction);
+      return Insert(key, value, transaction, true);
   }
 }
 

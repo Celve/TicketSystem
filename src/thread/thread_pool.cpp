@@ -9,7 +9,7 @@
 
 namespace thomas {
 
-std::mutex *ThreadPool::GetLock() { return &lock_; }
+std::unique_lock<std::mutex> *ThreadPool::GetLock() { return lock_; }
 
 void ThreadPool::WorkerFunction() {
   while (true) {
@@ -22,9 +22,10 @@ void ThreadPool::WorkerFunction() {
       }
       task = std::move(this->tasks_.front());
       this->tasks_.pop();
-      lock_.lock();
+      lock_ = &lock;
+      // lock_.lock();
+      task();
     }
-    task();
   }
 }
 

@@ -59,31 +59,21 @@ void BPLUSTREEINDEXNTS_TYPE::Debug() { tree_->Print(bpm_); }
 
 INDEX_TEMPLATE_ARGUMENTS
 void BPLUSTREEINDEXNTS_TYPE::InsertEntry(const KeyType &key, const ValueType &value, std::mutex *mutex) {
-  Transaction *transaction = new Transaction(mutex);
-  tree_->Insert(key, value, transaction);
-  delete transaction;
+  tree_->Insert(key, value);
 }
 
 INDEX_TEMPLATE_ARGUMENTS
-void BPLUSTREEINDEXNTS_TYPE::DeleteEntry(const KeyType &key, std::mutex *mutex) {
-  Transaction *transaction = new Transaction(mutex);
-  tree_->Remove(key, transaction);
-  delete transaction;
-}
+void BPLUSTREEINDEXNTS_TYPE::DeleteEntry(const KeyType &key, std::mutex *mutex) { tree_->Remove(key); }
 
 INDEX_TEMPLATE_ARGUMENTS
 void BPLUSTREEINDEXNTS_TYPE::ScanKey(const KeyType &key, vector<ValueType> *result,
                                      const KeyComparator &standby_comparator, std::mutex *mutex) {
-  Transaction *transaction = new Transaction(mutex);
-  tree_->GetValue(key, result, standby_comparator, transaction);
-  delete transaction;
+  tree_->GetValue(key, result, standby_comparator);
 }
 
 INDEX_TEMPLATE_ARGUMENTS
 void BPLUSTREEINDEXNTS_TYPE::SearchKey(const KeyType &key, vector<ValueType> *result, std::mutex *mutex) {
-  Transaction *transaction = new Transaction(mutex);
-  tree_->GetValue(key, result, transaction);
-  delete transaction;
+  tree_->GetValue(key, result);
 }
 
 template class BPlusTreeIndexNTS<FixedString<48>, size_t, FixedStringComparator<48>>;

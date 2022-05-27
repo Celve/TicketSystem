@@ -9,7 +9,7 @@ namespace thomas {
 
 class Transaction {
  public:
-  explicit Transaction(std::mutex *latch) : latch_(latch) {}
+  explicit Transaction(std::unique_lock<std::mutex> *latch) : latch_(latch) {}
 
   void Unlock() { latch_->unlock(); }
 
@@ -23,7 +23,7 @@ class Transaction {
  private:
   vector<Page *> page_set_;
   vector<page_id_t> deleted_page_set_;
-  std::mutex *latch_;
+  std::unique_lock<std::mutex> *latch_;
 };
 
 }  // namespace thomas
