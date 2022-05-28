@@ -27,7 +27,7 @@ class ThreadPool {
 
   std::unique_lock<std::mutex> *GetLock();
 
- private:
+ public:
   void WorkerFunction();
 
   // the worker threads

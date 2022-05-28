@@ -370,7 +370,8 @@ void BPLUSTREETS_TYPE::InsertIntoParent(BPlusTreePage *old_node, const KeyType &
  */
 INDEX_TEMPLATE_ARGUMENTS
 void BPLUSTREETS_TYPE::Remove(const KeyType &key, Transaction *transaction, bool isCalled) {
-  Page *leaf_page = CrabToLeaf(key, TransactionType::DELETE, false, false, isCalled ? false : true, transaction);  // leaf_page is pinned
+  Page *leaf_page =
+      CrabToLeaf(key, TransactionType::DELETE, false, false, !isCalled, transaction);  // leaf_page is pinned
   if (leaf_page == nullptr) {
     return;
   }

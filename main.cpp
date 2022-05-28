@@ -1,5 +1,8 @@
+#include <bits/types/clock_t.h>
+
 #include <algorithm>
 #include <cassert>
+#include <chrono>
 #include <cstddef>
 #include <cstdio>
 #include <ctime>
@@ -14,24 +17,27 @@
 #include "thread/thread_pool.h"
 #include "type/fixed_string.h"
 
+#define THREAD_NUMBER 10
+
 using namespace thomas;  // NOLINT
 
 void Test4() {  // NOLINT
   srand(time(nullptr));
-  ThreadPool *pool = new ThreadPool(8);
+  ThreadPool *pool = new ThreadPool(THREAD_NUMBER);
   BPlusTreeIndexTS<FixedString<48>, size_t, FixedStringComparator<48>> *index_tree;
   FixedStringComparator<48> comparator;
   index_tree =
-      new BPlusTreeIndexTS<FixedString<48>, size_t, FixedStringComparator<48>>("index", comparator, pool, 60000);
-  int NUMBER = 1000000;
+      new BPlusTreeIndexTS<FixedString<48>, size_t, FixedStringComparator<48>>("index", comparator, pool, 50000);
+  int NUMBER = 100;
   std::map<std::string, size_t> remap;
   std::vector<std::future<size_t>> results;
 
+  auto start_time = std::chrono::system_clock::now();
   // first step: insert
   for (int i = 0; i < NUMBER; ++i) {
     std::string key_string;
     for (int i = 0; i < 10; ++i) {
-      key_string += char(rand() % 26 + 'a');
+      key_string += static_cast<char>(rand() % 26 + 'a');
     }
     FixedString<48> *key = new FixedString<48>;
     key->SetValue(key_string);
@@ -39,14 +45,19 @@ void Test4() {  // NOLINT
       pool->Join([&, key, i]() {
         index_tree->InsertEntry(*key, i);
         delete key;
+        std::cout << "b";
       });
       remap[key_string] = i;
     }
   }
-
-  delete pool;
-  delete index_tree;
-  return;
+  // delete pool;
+  auto half_time = std::chrono::system_clock::now();
+  std::this_thread::sleep_for(std::chrono::milliseconds(70));
+  std::cout << "all cost: sec_cost: " << 1.0 * (half_time - start_time).count() / 1e9  // NOLINT
+            << std::endl;
+  // pool = new ThreadPool(THREAD_NUMBER);
+  std::cout << "result of try lock: " << pool->latch_.try_lock() << std::endl;
+  pool->latch_.unlock();
 
   // second step: find
   results.reserve(NUMBER);
@@ -59,24 +70,23 @@ void Test4() {  // NOLINT
       index_tree->SearchKey(*key, &res);
       size_t temp = res.empty() ? -1 : res[0];
       delete key;
+      std::cout << "c";
       return temp;
     }));
   }
 
-  delete pool;
-  delete index_tree;
-  return;
-
-  int i = 0;
+  int iter_number = 0;
   for (auto &iter : remap) {
-    auto answer = results[i].get();  // the answer can be caught only once
+    auto answer = results[iter_number].get();  // the answer can be caught only once
     assert(answer == iter.second);
-    ++i;
+    ++iter_number;
   }
 
-  
   delete pool;
   delete index_tree;
+  auto end_time = std::chrono::system_clock::now();
+  std::cout << "all cost: sec_cost: " << 1.0 * (end_time - start_time).count() / 1e9  // NOLINT
+            << std::endl;
   return;
 
   // third step: clean all

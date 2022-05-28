@@ -102,7 +102,7 @@ class BufferPoolManager {
   /** Array of buffer pool pages. */
   Page *pages_;
   /** Pointer to the disk manager. */
-  DiskManager *disk_manager_ __attribute__((__unused__));
+  DiskManager *disk_manager_;
   /** Page table for keeping track of buffer pool pages. */
   linked_hashmap<page_id_t, frame_id_t> page_table_;
   /** Replacer to find unpinned pages for replacement. */

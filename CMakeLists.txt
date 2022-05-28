@@ -8,7 +8,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS True)
 
 project(Database)
 
-set(CMAKE_CXX_FLAGS "-pthread")
+set(CMAKE_CXX_FLAGS "-pthread -g")
 
 set(SOURCE_CPPS
     src/storage/disk/disk_manager.cpp

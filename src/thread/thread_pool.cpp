@@ -2,6 +2,7 @@
 
 #include <functional>
 #include <future>
+#include <iostream>
 #include <memory>
 #include <mutex>
 
@@ -17,13 +18,13 @@ void ThreadPool::WorkerFunction() {
     {
       std::unique_lock<std::mutex> lock(latch_);
       this->cv_.wait(lock, [this] { return this->isTerminated || !this->tasks_.empty(); });
+      std::cout << "a";
       if (this->isTerminated && this->tasks_.empty()) {
         return;
       }
       task = std::move(this->tasks_.front());
       this->tasks_.pop();
       lock_ = &lock;
-      // lock_.lock();
       task();
     }
   }
@@ -36,6 +37,7 @@ ThreadPool::ThreadPool(size_t number_of_threads) {
   for (size_t i = 0; i < number_of_threads; ++i) {
     workers_.emplace_back(&ThreadPool::WorkerFunction, this);
   }
+  isTerminated = false;
 }
 
 ThreadPool::~ThreadPool() {
