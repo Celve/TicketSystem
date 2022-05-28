@@ -47,7 +47,7 @@ class BPlusTreeTS {
   bool OptimisticInsert(const KeyType &key, const ValueType &value, Transaction *transaction = nullptr);
 
   // Remove a key and its value from this B+ tree.
-  void Remove(const KeyType &key, Transaction *transaction = nullptr);
+  void Remove(const KeyType &key, Transaction *transaction = nullptr, bool isCalled = false);
 
   // Remove a key and its value from this B+ tree. It's fater. But it might get the wrong answer.
   void OptimisticRemove(const KeyType &key, Transaction *transaction = nullptr);
@@ -57,7 +57,7 @@ class BPlusTreeTS {
 
   // return the value that equal to a given key using the given rule
   bool GetValue(const KeyType &key, vector<ValueType> *result, const KeyComparator &new_comparator,
-                Transaction *transaction);
+                Transaction *transaction = nullptr);
 
   // index iterator
   INDEXITERATOR_TYPE begin();
@@ -101,7 +101,7 @@ class BPlusTreeTS {
   void TentativeRemove(const KeyType &key, DeleteState &delete_state, Transaction *transaction);
 
   Page *CrabToLeaf(const KeyType &key, TransactionType transaction_type, bool leafMost = false,
-                   bool rootLatched = false, Transaction *transaction = nullptr);
+                   bool rootLatched = false, bool isLocked = true, Transaction *transaction = nullptr);
 
   void ReleasePages(TransactionType transaction_type, Transaction *transaction);
 

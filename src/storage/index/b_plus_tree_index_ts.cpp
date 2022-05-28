@@ -67,7 +67,7 @@ void BPLUSTREEINDEXTS_TYPE::InsertEntry(const KeyType &key, const ValueType &val
 INDEX_TEMPLATE_ARGUMENTS
 void BPLUSTREEINDEXTS_TYPE::DeleteEntry(const KeyType &key) {
   Transaction *transaction = new Transaction(pool_->GetLock());
-  tree_->Remove(key, transaction);
+  tree_->OptimisticRemove(key, transaction);
   delete transaction;
 }
 

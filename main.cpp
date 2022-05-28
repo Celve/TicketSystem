@@ -18,13 +18,12 @@ using namespace thomas;  // NOLINT
 
 void Test4() {  // NOLINT
   srand(time(nullptr));
-  ThreadPool *pool = new ThreadPool(8);
-  clock_t start = clock();
+  ThreadPool *pool = new ThreadPool(16);
   BPlusTreeIndexTS<FixedString<48>, size_t, FixedStringComparator<48>> *index_tree;
   FixedStringComparator<48> comparator;
   index_tree =
-      new BPlusTreeIndexTS<FixedString<48>, size_t, FixedStringComparator<48>>("index", comparator, pool, 10000);
-  int NUMBER = 100000;
+      new BPlusTreeIndexTS<FixedString<48>, size_t, FixedStringComparator<48>>("index", comparator, pool, 100000);
+  int NUMBER = 1000000;
   std::map<std::string, size_t> remap;
   std::vector<std::future<size_t>> results;
 
@@ -41,16 +40,9 @@ void Test4() {  // NOLINT
         index_tree->InsertEntry(*key, i);
         delete key;
       });
-      // remap[key_string] = i;
+      remap[key_string] = i;
     }
   }
-  clock_t half = clock();
-  std::cout << double(half - start) / CLOCKS_PER_SEC << std::endl;
-  puts("first finish");
-  delete pool;
-  std::cout << double(clock() - half) / CLOCKS_PER_SEC << std::endl;
-  delete index_tree;
-  return;
 
   // second step: find
   results.reserve(NUMBER);
@@ -66,12 +58,22 @@ void Test4() {  // NOLINT
       return temp;
     }));
   }
+
+  delete pool;
+  delete index_tree;
+  return;
+
   int i = 0;
   for (auto &iter : remap) {
     auto answer = results[i].get();  // the answer can be caught only once
     assert(answer == iter.second);
     ++i;
   }
+
+  
+  delete pool;
+  delete index_tree;
+  return;
 
   // third step: clean all
   for (auto &iter : remap) {

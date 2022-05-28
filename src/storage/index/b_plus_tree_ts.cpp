@@ -37,7 +37,7 @@ bool BPLUSTREETS_TYPE::IsEmpty() const { return root_page_id_ == INVALID_PAGE_ID
  */
 INDEX_TEMPLATE_ARGUMENTS
 bool BPLUSTREETS_TYPE::GetValue(const KeyType &key, vector<ValueType> *result, Transaction *transaction) {
-  Page *leaf_page = CrabToLeaf(key, TransactionType::FIND, false, false, transaction);
+  Page *leaf_page = CrabToLeaf(key, TransactionType::FIND, false, false, true, transaction);
   if (leaf_page == nullptr) {
     return false;
   }
@@ -69,7 +69,7 @@ bool BPLUSTREETS_TYPE::GetValue(const KeyType &key, vector<ValueType> *result, T
 INDEX_TEMPLATE_ARGUMENTS
 bool BPLUSTREETS_TYPE::GetValue(const KeyType &key, vector<ValueType> *result, const KeyComparator &new_comparator,
                                 Transaction *transaction) {
-  Page *leaf_page = CrabToLeaf(key, TransactionType::MULTIFIND, false, false, transaction);
+  Page *leaf_page = CrabToLeaf(key, TransactionType::MULTIFIND, false, false, true, transaction);
   if (leaf_page == nullptr) {
     return false;
   }
@@ -164,7 +164,7 @@ bool BPLUSTREETS_TYPE::OptimisticInsert(const KeyType &key, const ValueType &val
 INDEX_TEMPLATE_ARGUMENTS
 void BPLUSTREETS_TYPE::TentativeInsert(const KeyType &key, const ValueType &value, InsertState &insert_state,
                                        Transaction *transaction) {
-  Page *leaf_page = CrabToLeaf(key, TransactionType::OPTIMISTIC_INSERT, false, false, transaction);
+  Page *leaf_page = CrabToLeaf(key, TransactionType::OPTIMISTIC_INSERT, false, false, true, transaction);
   if (leaf_page == nullptr) {
     insert_state = InsertState::NO_ROOT;
     return;
@@ -240,7 +240,7 @@ void BPLUSTREETS_TYPE::StartNewTree(const KeyType &key, const ValueType &value) 
  */
 INDEX_TEMPLATE_ARGUMENTS
 bool BPLUSTREETS_TYPE::InsertIntoLeaf(const KeyType &key, const ValueType &value, Transaction *transaction) {
-  Page *leaf_page = CrabToLeaf(key, TransactionType::INSERT, false, true, transaction);
+  Page *leaf_page = CrabToLeaf(key, TransactionType::INSERT, false, true, false, transaction);
   LeafPage *leaf_node = reinterpret_cast<LeafPage *>(leaf_page->GetData());
 
   if (leaf_node->Insert(key, value, comparator_) == -1) {
@@ -369,8 +369,8 @@ void BPLUSTREETS_TYPE::InsertIntoParent(BPlusTreePage *old_node, const KeyType &
  * necessary.
  */
 INDEX_TEMPLATE_ARGUMENTS
-void BPLUSTREETS_TYPE::Remove(const KeyType &key, Transaction *transaction) {
-  Page *leaf_page = CrabToLeaf(key, TransactionType::DELETE, false, false, transaction);  // leaf_page is pinned
+void BPLUSTREETS_TYPE::Remove(const KeyType &key, Transaction *transaction, bool isCalled) {
+  Page *leaf_page = CrabToLeaf(key, TransactionType::DELETE, false, false, isCalled ? false : true, transaction);  // leaf_page is pinned
   if (leaf_page == nullptr) {
     return;
   }
@@ -403,14 +403,14 @@ void BPLUSTREETS_TYPE::OptimisticRemove(const KeyType &key, Transaction *transac
       break;
 
     case DeleteState::UNSAFE:
-      Remove(key, transaction);
+      Remove(key, transaction, true);
       break;
   }
 }
 
 INDEX_TEMPLATE_ARGUMENTS void BPLUSTREETS_TYPE::TentativeRemove(const KeyType &key, DeleteState &delete_state,
                                                                 Transaction *transaction) {
-  Page *leaf_page = CrabToLeaf(key, TransactionType::OPTIMISTIC_DELETE, false, false, transaction);
+  Page *leaf_page = CrabToLeaf(key, TransactionType::OPTIMISTIC_DELETE, false, false, true, transaction);
   if (leaf_page == nullptr) {
     delete_state = DeleteState::PAGE_FAULT;
     return;
@@ -687,11 +687,11 @@ INDEXITERATOR_TYPE BPLUSTREETS_TYPE::end() { return INDEXITERATOR_TYPE(nullptr, 
  */
 INDEX_TEMPLATE_ARGUMENTS
 Page *BPLUSTREETS_TYPE::CrabToLeaf(const KeyType &key, TransactionType transaction_type, bool leftMost,
-                                   bool rootLatched, Transaction *transaction) {
+                                   bool rootLatched, bool isLocked, Transaction *transaction) {
   /* if it's insertion, the root is pre-locked, otherwise the root should be locked */
   if (!rootLatched) {
     LockRoot(transaction_type);
-    if (transaction_type != TransactionType::MULTIFIND) {
+    if (isLocked) {
       transaction->Unlock();
     }
   }
@@ -760,7 +760,7 @@ void BPLUSTREETS_TYPE::UnlatchPage(Page *page, TransactionType transaction_type)
     UnlockRoot(transaction_type);
   }
 
-  if ((transaction_type == TransactionType::INSERT || transaction_type == TransactionType::DELETE) ||
+  if (transaction_type == TransactionType::INSERT || transaction_type == TransactionType::DELETE ||
       ((transaction_type == TransactionType::OPTIMISTIC_INSERT ||
         transaction_type == TransactionType::OPTIMISTIC_DELETE) &&
        node->IsLeafPage())) {
@@ -837,7 +837,7 @@ void BPLUSTREETS_TYPE::UnlockRoot(TransactionType transaction_type) {
  */
 INDEX_TEMPLATE_ARGUMENTS
 Page *BPLUSTREETS_TYPE::FindLeafPage(const KeyType &key, bool leftMost, Transaction *transaction) {
-  return CrabToLeaf(key, TransactionType::FIND, leftMost, false, transaction);
+  return CrabToLeaf(key, TransactionType::FIND, leftMost, false, true, transaction);
 }
 
 /*
