@@ -18,11 +18,11 @@ using namespace thomas;  // NOLINT
 
 void Test4() {  // NOLINT
   srand(time(nullptr));
-  ThreadPool *pool = new ThreadPool(16);
+  ThreadPool *pool = new ThreadPool(8);
   BPlusTreeIndexTS<FixedString<48>, size_t, FixedStringComparator<48>> *index_tree;
   FixedStringComparator<48> comparator;
   index_tree =
-      new BPlusTreeIndexTS<FixedString<48>, size_t, FixedStringComparator<48>>("index", comparator, pool, 100000);
+      new BPlusTreeIndexTS<FixedString<48>, size_t, FixedStringComparator<48>>("index", comparator, pool, 60000);
   int NUMBER = 1000000;
   std::map<std::string, size_t> remap;
   std::vector<std::future<size_t>> results;
@@ -43,6 +43,10 @@ void Test4() {  // NOLINT
       remap[key_string] = i;
     }
   }
+
+  delete pool;
+  delete index_tree;
+  return;
 
   // second step: find
   results.reserve(NUMBER);
