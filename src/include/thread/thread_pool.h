@@ -41,7 +41,7 @@ class ThreadPool {
   std::condition_variable cv_;
 
   // terminated signal
-  bool isTerminated;
+  bool isTerminated{false};
 };
 
 THREAD_ARGS_TEMPLATE

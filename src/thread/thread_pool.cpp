@@ -17,8 +17,8 @@ void ThreadPool::WorkerFunction() {
     std::function<void()> task;
     {
       std::unique_lock<std::mutex> lock(latch_);
+      // printf("enter %p\n", &lock);
       this->cv_.wait(lock, [this] { return this->isTerminated || !this->tasks_.empty(); });
-      std::cout << "a";
       if (this->isTerminated && this->tasks_.empty()) {
         return;
       }
@@ -26,6 +26,7 @@ void ThreadPool::WorkerFunction() {
       this->tasks_.pop();
       lock_ = &lock;
       task();
+      // printf("leave %p\n", &lock);
     }
   }
 }
@@ -37,7 +38,6 @@ ThreadPool::ThreadPool(size_t number_of_threads) {
   for (size_t i = 0; i < number_of_threads; ++i) {
     workers_.emplace_back(&ThreadPool::WorkerFunction, this);
   }
-  isTerminated = false;
 }
 
 ThreadPool::~ThreadPool() {

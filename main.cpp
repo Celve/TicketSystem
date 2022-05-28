@@ -44,20 +44,20 @@ void Test4() {  // NOLINT
     if (remap.count(key_string) == 0) {
       pool->Join([&, key, i]() {
         index_tree->InsertEntry(*key, i);
-        delete key;
         std::cout << "b";
+        delete key;
       });
       remap[key_string] = i;
     }
   }
-  // delete pool;
+  delete pool;
   auto half_time = std::chrono::system_clock::now();
   std::this_thread::sleep_for(std::chrono::milliseconds(70));
   std::cout << "all cost: sec_cost: " << 1.0 * (half_time - start_time).count() / 1e9  // NOLINT
             << std::endl;
-  // pool = new ThreadPool(THREAD_NUMBER);
-  std::cout << "result of try lock: " << pool->latch_.try_lock() << std::endl;
-  pool->latch_.unlock();
+  pool = new ThreadPool(THREAD_NUMBER);
+  // std::cout << "result of try lock: " << pool->latch_.try_lock() << std::endl;
+  // pool->latch_.unlock();
 
   // second step: find
   results.reserve(NUMBER);
