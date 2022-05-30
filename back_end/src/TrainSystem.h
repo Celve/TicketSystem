@@ -7,7 +7,7 @@
 //extern bool time_cmp();
 //extern bool cost_cmp();
 
-const int maxn = 1010; //最大车站数
+const int maxn = 100010; //最大车站数
 const int MAX_INT = 0x7fffffff;
 
 class TrainID{
@@ -97,13 +97,13 @@ private:
     char user_name[25], train_ID[25]; //用户名，车次
     int num, price, order_ID; //订单编号,从1开始(充当下单时间，用来排序)
     //num是票数, price 是单价
-    char id[64];
+    char id[64], pos;
     //todo: 实际上，ull中的关键字是 user_name + order_ID，应该修改为pair类型
 
     TimeType start_day, leaving_time, arriving_time;
     Status status; //订单当前状态
     int from, to; //起点和终点的 index
-    char from_station[25], to_station[25]; //起点和终点
+    char from_station[32], to_station[32]; //起点和终点
 
 public:
     Order() = default;
@@ -119,13 +119,14 @@ private:
     char train_ID[25], user_name[25];
     TimeType start_day;
     int num, from, to, order_ID;
-    char id[64];
+    char id[64], pos;
     //todo: 关键字是 train_ID + start_sale_date + order_ID
 
 public:
     PendingOrder() = default;
     PendingOrder(const string &_train_ID, const string &_user_name, const TimeType &_start_day,
-                 const int &_num, const int &_from, const int &_to, const int _order_ID);
+                 const int &_num, const int &_from, const int &_to, const int &_order_ID);
+    friend bool pending_order_cmp(const PendingOrder &a, const PendingOrder &b);
 };
 
 //------------------------------------------总接口----------------------------------------
@@ -147,6 +148,8 @@ private:
     Ticket tickets[maxn]; //临时存储 query_ticket 的结果
     Order orders[maxn]; //临时存储 query_order 结果
     PendingOrder pending_orders[maxn];
+    pair<string, int> starts[maxn], ends[maxn]; //临时存储 query_transfer 2趟车次的 所有车站
+    int order_num; //临时存储 order 总数
 
 public:
     TrainManagement();

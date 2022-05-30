@@ -305,6 +305,12 @@ public:
         block_list.clear();
     }
 
+    int size() { //寻找真正的元素个数(不是num)
+        vector<int> tp;
+        find_all(tp);
+        return tp.size();
+    }
+
 };
 
 

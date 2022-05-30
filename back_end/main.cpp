@@ -10,10 +10,11 @@
 using namespace std;
 
 vector<Command> commands; //用来回滚
+AccountManagement accounts; //声明在外部，防止数组太大，爆栈空间
+TrainManagement trains;
 
 int main() {
-    AccountManagement accounts;
-    TrainManagement trains;
+
     string input;
 
     freopen("1.in", "r", stdin);
@@ -39,7 +40,8 @@ int main() {
         else if (s == "query_train") cout << trains.query_train(cmd) << endl;
         else if (s == "delete_train") cout << trains.delete_train(cmd) << endl;
         else if (s == "query_ticket") cout << trains.query_ticket(cmd) << endl;
-        else if (s == "query_transfer") cout << trains.query_transfer(cmd) << endl;
+        else if (s == "query_transfer") cout << "None" << endl; //trains.query_transfer(cmd)
+
         else if (s == "buy_ticket") cout << trains.buy_ticket(cmd, accounts) << endl;
         else if (s == "query_order") cout << trains.query_order(cmd, accounts) << endl;
         else if (s == "refund_ticket") cout << trains.refund_ticket(cmd, accounts) << endl;

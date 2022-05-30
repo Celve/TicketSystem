@@ -32,6 +32,13 @@
       <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
     </file-type-list>
   </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/back_end/src/TrainSystem.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/CMakeLists.txt" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file:////wsl$/Ubuntu-20.04/usr/include/c++/9/bits/basic_string.h" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/back_end/src/TrainSystem.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/back_end/main.cpp" root0="FORCE_HIGHLIGHTING" />
+  </component>
   <component name="ProjectId" id="28eDJziVgTQmOIe4Sfytc5Rq1Z1" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -47,21 +54,19 @@
     <property name="cmake.loaded.for.project" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/back_end/output.txt" />
     <property name="nodejs_package_manager_path" value="npm" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
     <property name="two.files.diff.last.used.file" value="$PROJECT_DIR$/back_end/output.txt" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\Coding\ACM_Big_Homework\TicketSystem\back_end" />
+      <recent name="D:\Coding\ACM_Big_Homework\TicketSystem\data\normal\basic_2" />
+      <recent name="D:\Coding\ACM_Big_Homework\TicketSystem\Cmake" />
+      <recent name="D:\Coding\ACM_Big_Homework\TicketSystem\cmake-build-debug" />
       <recent name="D:\Coding\ACM_Big_Homework\TicketSystem\back_end\database" />
-      <recent name="D:\Coding\ACM_Big_Homework\TicketSystem\back_end\src" />
     </key>
   </component>
   <component name="RunManager">
-    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="TicketSystem" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" WORKING_DIR="file://$PROJECT_DIR$/back_end" PASS_PARENT_ENVS_2="true" PROJECT_NAME="TicketSystem" TARGET_NAME="TicketSystem" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="TicketSystem" RUN_TARGET_NAME="TicketSystem">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -91,7 +96,12 @@
       <workItem from="1653095156455" duration="2361000" />
       <workItem from="1653097546413" duration="30176000" />
       <workItem from="1653228051061" duration="365000" />
-      <workItem from="1653228431715" duration="15417000" />
+      <workItem from="1653228431715" duration="39229000" />
+      <workItem from="1653484082741" duration="6000" />
+      <workItem from="1653703140066" duration="1147000" />
+      <workItem from="1653794881635" duration="3844000" />
+      <workItem from="1653808903458" duration="8364000" />
+      <workItem from="1653893891026" duration="6177000" />
     </task>
     <servers />
   </component>
@@ -114,21 +124,17 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <condition expression="cmd.timestamp == 3431" language="ObjectiveC" />
+          <condition expression="cmd.timestamp == 5994" language="ObjectiveC" />
           <url>file://$PROJECT_DIR$/back_end/main.cpp</url>
           <line>29</line>
-          <option name="timeStamp" value="7" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/back_end/src/TrainSystem.cpp</url>
-          <line>468</line>
-          <option name="timeStamp" value="16" />
+          <option name="timeStamp" value="35" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
     <watches-manager>
       <configuration name="CMakeRunConfiguration">
-        <watch expression="i.transfer()" language="ObjectiveC" />
+        <watch expression="line" language="ObjectiveC" />
+        <watch expression="tickets" language="ObjectiveC" />
       </configuration>
     </watches-manager>
   </component>

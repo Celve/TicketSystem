@@ -14,6 +14,16 @@ void Sort(T *a, int l, int r, bool cmp(const T &u, const T &v)) {
     if (pl < r) Sort(a, pl, r, cmp);
 }
 
+bool is_legal(const string &s) { //判断该日期是否合法
+    int month = string_to_int(s.substr(0, 2));
+    int day = string_to_int(s.substr(3, 2));
+    int hour = string_to_int(s.substr(6, 2));
+    int min = string_to_int(s.substr(9, 2));
+
+    if (month < 6 || month > 8) return false;
+    return true;
+}
+
 //-------------------------------------------------class Train
 
 Train::Train(const string &_train_ID, const int &_station_num, const int &_total_seat_num, const string &_stations,
@@ -71,7 +81,7 @@ void DayTrain::modify_seat(int l, int r, int val) {
 }
 
 int DayTrain::query_seat(int l, int r) {
-    int ans = 100000;
+    int ans = maxn;
     for (int i = l; i <= r; ++i) ans = min(ans, seat_num[i]);
     return ans;
 }
@@ -111,8 +121,19 @@ bool cost_cmp(const Ticket &a, const Ticket &b) {
     return a.cost() < b.cost();
 }
 
-bool order_cmp(const Order &a, const Order &b) { //todo: 按照新的规则
+bool order_cmp(const Order &a, const Order &b) { //按ID排序 order
+    return a.order_ID > b.order_ID;
 }
+
+bool pending_order_cmp(const PendingOrder &a, const PendingOrder &b) { //按ID排序 order
+    return a.order_ID < b.order_ID; //越早买的越早补票
+}
+
+bool station_cmp(const pair<string, int> &a, const pair<string, int> &b) { //按名字排序
+    return a.first < b.first;
+}
+
+//bool transfer_cmp(const tran)
 
 //-------------------------------------------------class Order
 
@@ -120,8 +141,8 @@ Order::Order(const string &_user_name, const string &_train_ID, const int &_num,
              const int &_order_ID, const TimeType &_start_day, const TimeType &_leaving_time,
              const TimeType &_arriving_time, const Status &_status, const int &_from, const int &_to,
              const string &_from_station, const string &_to_station)
-             : num(_num), price(_price), order_ID(_order_ID), start_day(_start_day), leaving_time(_leaving_time),
-               arriving_time(_arriving_time), status(_status), from(_from), to(_to) {
+        : num(_num), price(_price), order_ID(_order_ID), start_day(_start_day), leaving_time(_leaving_time),
+          arriving_time(_arriving_time), status(_status), from(_from), to(_to) {
     strcpy(user_name, _user_name.c_str());
     strcpy(train_ID, _train_ID.c_str());
     strcpy(from_station, _from_station.c_str());
@@ -131,8 +152,8 @@ Order::Order(const string &_user_name, const string &_train_ID, const int &_num,
 //---------------------------------------------------class PendingOrder
 
 PendingOrder::PendingOrder(const string &_train_ID, const string &_user_name, const TimeType &_start_day,
-                           const int &_num, const int &_from, const int &_to, const int _order_ID)
-                           : start_day(_start_day), num(_num), from(_from), to(_from), order_ID(_order_ID) {
+                           const int &_num, const int &_from, const int &_to, const int &_order_ID)
+        : start_day(_start_day), num(_num), from(_from), to(_from), order_ID(_order_ID) {
     strcpy(train_ID, _train_ID.c_str());
     strcpy(user_name, _user_name.c_str());
 }
@@ -151,6 +172,8 @@ TrainManagement::TrainManagement() {
     station_id_to_pos.init("station_id_to_pos");
     order_id_to_pos.init("order_id_to_pos");
     pending_order_id_to_pos.init("pending_order_id_to_pos");
+
+    order_num = order_id_to_pos.size();
 }
 
 string TrainManagement::add_train(Command &line) {
@@ -191,7 +214,6 @@ string TrainManagement::release_train(Command &line) {
     vector<int> ans;
     train_id_to_pos.find_node(t_id, ans);
     if (ans.empty()) return "-1"; //车次不存在，失败
-
     Train target_train;
     train_data.read(target_train, ans[0]);
     if (target_train.is_released) return "-1"; //重复发布，失败
@@ -203,12 +225,11 @@ string TrainManagement::release_train(Command &line) {
         DayTrain tp_daytrain;
         for (int j = 1; j <= target_train.station_num; ++j) tp_daytrain.seat_num[j] = target_train.total_seat_num;
 
-        int pos = day_train_data.write(tp_daytrain);
-
         //todo: 要修改，可能用 pair<> + hash 实现
         string key = t_id + i.transfer();
         //目前直接用 train_id + time 替代
         strcpy(tp_daytrain.id, key.c_str());
+        int pos = day_train_data.write(tp_daytrain);
         daytrain_id_to_pos.add_node(UllNode(key, pos));
     }
 
@@ -217,12 +238,11 @@ string TrainManagement::release_train(Command &line) {
         Station tp_station(t_id, target_train.stations[i], target_train.price_sum[i],
                            target_train.start_sale_date, target_train.end_sale_date,
                            target_train.arriving_times[i], target_train.leaving_times[i], i);
-        int pos = station_data.write(tp_station);
-
         //todo: 要修改，不能直接暴力连接
         string key = t_id + string(target_train.stations[i]);
         //同理，目前直接用 train_id + station_name 替代
         strcpy(tp_station.id, key.c_str());
+        int pos = station_data.write(tp_station);
         station_id_to_pos.add_node(UllNode(key, pos));
     }
 
@@ -237,6 +257,7 @@ string TrainManagement::query_train(Command &line) {
 
         opt = line.next_token();
     }
+    if (!is_legal(date + " 00:00")) return "-1"; //查询，要判断读入的日期是否合法
 
     vector<int> ans;
     TimeType day(date + " 00:00");
@@ -245,10 +266,13 @@ string TrainManagement::query_train(Command &line) {
     Train target_train;
     train_data.read(target_train, ans[0]);
 
+    //不在售票日期内，不存在
+    if (day < target_train.start_sale_date || day > target_train.end_sale_date) return "-1";
+
     DayTrain current_daytrain;
-    vector<int> ans2;
-    daytrain_id_to_pos.find_node(string(t_id + day.transfer()), ans2);
-    day_train_data.read(current_daytrain, ans2[0]);
+    ans.clear();
+    daytrain_id_to_pos.find_node(string(t_id + day.transfer()), ans);
+    day_train_data.read(current_daytrain, ans[0]);
 
     //第一行
     output = t_id + " " + target_train.type + "\n";
@@ -310,6 +334,7 @@ string TrainManagement::query_ticket(Command &line) {
 
         opt = line.next_token();
     }
+    if (!is_legal(date + " 00:00")) return "0"; //查询，要判断读入的日期是否合法
 
     if (s == t) return "0"; //起点等于终点，显然无票
     TimeType day(date + " 00:00");
@@ -359,10 +384,10 @@ string TrainManagement::query_ticket(Command &line) {
     for (int i = 1; i <= cnt; ++i) {
         TimeType start_day = day - tickets[i].s.leaving_time.get_date();
         string key = string(tickets[i].s.train_ID) + start_day.transfer();
-        vector<int> ans3;
-        daytrain_id_to_pos.find_node(key, ans3);
+        all.clear();
+        daytrain_id_to_pos.find_node(key, all);
         DayTrain tp_daytrain;
-        day_train_data.read(tp_daytrain, ans3[0]);
+        day_train_data.read(tp_daytrain, all[0]);
 
         string seat = to_string(tp_daytrain.query_seat(tickets[i].s.index, tickets[i].t.index - 1)); //终点站的座位数不影响
 
@@ -377,7 +402,7 @@ string TrainManagement::query_ticket(Command &line) {
 }
 
 string TrainManagement::query_transfer(Command &line) {
-    string opt = line.next_token(), s, t, date, type = "time"; //默认按时间排序
+    string opt = line.next_token(), s, t, date, type = "time", output; //默认按时间排序
     while (!opt.empty()) {
         if (opt == "-s") s = line.next_token();
         else if (opt == "-t") t = line.next_token();
@@ -386,9 +411,11 @@ string TrainManagement::query_transfer(Command &line) {
 
         opt = line.next_token();
     }
-
+    if (!is_legal(date + " 00:00")) return "0"; //查询，要判断读入的日期是否合法
     if (s == t) return "0"; //起点和终点相同
     TimeType day(date + " 00:00");
+    int COST = MAX_INT, TIME = MAX_INT, FIRST_TIME = MAX_INT; //用来比较答案
+    //总花费，总时间，第一段列车的运行时间（越小表示 Train1_ID 也越小）
 
     vector<int> all, ans1, ans2;
     //todo:区间查找，查找所有 站点为 s 和 t 的 station 车站
@@ -405,26 +432,115 @@ string TrainManagement::query_transfer(Command &line) {
 
     if (ans1.empty() || ans2.empty()) return "0"; //无票
     int cnt = 0;
-    Station s1, t1; //起点和终点
+    Station s1, t1; //起点，终点
 
-    for (int i = 0;i < ans1.size(); ++i) {
+    for (int i = 0;i < ans1.size(); ++i) {  //枚举不同车次的   起点s1
         station_data.read(s1, ans1[i]);
         TimeType start_day1 = day - s1.leaving_time.get_date();
         if (start_day1 < s1.start_sale_time || start_day1 > s1.end_sale_time) continue;
 
-        Train train1;
-        vector<int> pos;
-        train_id_to_pos.find_node(s1.train_ID, pos);
-        train_data.read(train1, pos[0]);
+        Train train1; //出发的车次
+        all.clear();
+        train_id_to_pos.find_node(s1.train_ID, all);
+        train_data.read(train1, all[0]);
 
-        for (int j = 0;j < ans2.size(); ++j) {
+        for (int j = 0;j < ans2.size(); ++j) { //枚举不同车次的    终点t1
             station_data.read(t1, ans2[j]);
-            if (!strcmp(s1.train_ID, t1.train_ID)) continue; //换乘要求不同车
+            if (!strcmp(s1.train_ID, t1.train_ID)) continue; //换乘要求不同车次
 
-            TimeType start_day2 = day - t1.leaving_time.get_date();
+            Train train2; //到达的车次
+            vector<int> pos2;
+            train_id_to_pos.find_node(t1.train_ID, pos2);
+            train_data.read(train2, pos2[0]);
+
+            //把车站全部读取出来，方便查询
+            int cnt1 = 0, cnt2 = 0;
+            for (int k = s1.index + 1; k <= train1.station_num; ++k) starts[++cnt1] = std::make_pair(train1.stations[k], k);
+            for (int k = 1; k <= train2.station_num; ++k) ends[++cnt2] = std::make_pair(train2.stations[k], k);
+            if (!cnt1 || !cnt2) continue;
+            Sort(starts, 1, cnt1, station_cmp);
+            Sort(ends, 1, cnt2, station_cmp); //先排序，可以加快查找
+
+            //枚举中转站
+            for (int i1 = 1, i2 = 1; i1 <= cnt1 && i2 <= cnt2; ) {
+                if (starts[i1].first < ends[i2].first) i1++; //找到相同的一站
+                else if (starts[i1].first > ends[i2].first) i2++;
+                else {
+                    int k = starts[i1].second, l = ends[i2].second; //找到中转站
+                    i1++, i2++;
+
+                    TimeType fast_start_day2; //train2的最快发车日期
+                    if (train1.arriving_times[k].get_time() <= train2.leaving_times[l].get_time()) //当天能赶上
+                        fast_start_day2 = start_day1 + train1.arriving_times[k].get_date() - train2.leaving_times[l].get_date();
+                    else //赶不上，多等一天
+                        fast_start_day2 = start_day1 + train1.arriving_times[k].get_date()
+                                          - train2.leaving_times[l].get_date() + 1440;
+
+                    if (t1.end_sale_time < fast_start_day2) continue; //还是赶不上
+                    TimeType start_day2 = max(fast_start_day2, t1.start_sale_time);//真正的日期，发车且发售
+                    bool updated = false;
+
+                    //按照关键字更新答案
+                    if (type == "cost") {
+                        if (//第一关键字cost
+                                (COST > train1.price_sum[k] - s1.price_sum + t1.price_sum - train2.price_sum[l]) ||
+                                //第二关键字time
+                                ( (COST == train1.price_sum[k] - s1.price_sum + t1.price_sum - train2.price_sum[l]) &&
+                                  (TIME > (start_day2 + t1.arriving_time) - (start_day1 + s1.leaving_time)) ) ||
+                                //第三关键字 train1_ID
+                                ( (COST == train1.price_sum[k] - s1.price_sum + t1.price_sum - train2.price_sum[l]) &&
+                                  (TIME == (start_day2 + t1.arriving_time) - (start_day1 + s1.leaving_time)) &&
+                                  (FIRST_TIME > (train1.arriving_times[k] - s1.leaving_time)) )
+                                ) {
+                            COST = train1.price_sum[k] - s1.price_sum + t1.price_sum - train2.price_sum[l];
+                            TIME = (start_day2 + t1.arriving_time) - (start_day1 + s1.leaving_time);
+                            FIRST_TIME = (train1.arriving_times[k] - s1.leaving_time);
+                            updated = true;
+                        }
+                    } else {
+                        if (//第一关键字time
+                                (TIME > (start_day2 + t1.arriving_time) - (start_day1 + s1.leaving_time)) ||
+                                //第二关键字cost
+                                ( (TIME == (start_day2 + t1.arriving_time) - (start_day1 + s1.leaving_time)) &&
+                                  (COST > train1.price_sum[k] - s1.price_sum + t1.price_sum - train2.price_sum[l]) ) ||
+                                //第三关键字 train1_ID
+                                ( (COST == train1.price_sum[k] - s1.price_sum + t1.price_sum - train2.price_sum[l]) &&
+                                  (TIME == (start_day2 + t1.arriving_time) - (start_day1 + s1.leaving_time)) &&
+                                  (FIRST_TIME > (train1.arriving_times[k] - s1.leaving_time)) )
+                                ) {
+                            COST = train1.price_sum[k] - s1.price_sum + t1.price_sum - train2.price_sum[l];
+                            TIME = (start_day2 + t1.arriving_time) - (start_day1 + s1.leaving_time);
+                            FIRST_TIME = (train1.arriving_times[k] - s1.leaving_time);
+                            updated = true;
+                        }
+                    }
+                    if (updated) { //如果更新答案，就保存结果
+                        output.clear();
+                        vector<int> f1, f2;
+                        DayTrain S, T; //读出当前的座位
+                        daytrain_id_to_pos.find_node(string(train1.train_ID) + start_day1.transfer(), f1);
+                        daytrain_id_to_pos.find_node(string(train2.train_ID) + start_day2.transfer(), f2);
+                        day_train_data.read(S, f1[0]), day_train_data.read(T, f2[0]);
+
+                        output += string(s1.train_ID) + " " + string(s1.station_name) + " "
+                                  + (start_day1 + s1.leaving_time).transfer() + " -> "
+                                  + string(train1.stations[k]) + " "
+                                  + (start_day1 + train1.arriving_times[k]).transfer() + " "
+                                  + to_string(train1.price_sum[k] - s1.price_sum) + " "
+                                  + to_string(S.query_seat(s1.index, k - 1)) + "\n";
+                        output += string(t1.train_ID) + " " + string(train2.stations[l]) + " "
+                                  + (start_day2 + train2.leaving_times[l]).transfer() + " -> "
+                                  + string(t1.station_name) + " "
+                                  + (start_day2 + t1.arriving_time).transfer() + " "
+                                  + to_string(t1.price_sum - train2.price_sum[l]) + " "
+                                  + to_string(T.query_seat(l, t1.index - 1));
+                    }
+                }
+            }
+
         }
     }
-
+    if (FIRST_TIME != MAX_INT) return output;
     return "0";
 }
 
@@ -476,9 +592,10 @@ string TrainManagement::buy_ticket(Command &line, AccountManagement &accounts) {
     if (!is_pending && remain_seat < num) return "-1"; //不补票且座位不够
 
     int price = target_train.price_sum[t] - target_train.price_sum[s]; //刚好不是 s-1
-    int order_ID;
-    order_data.get_info(order_ID, 1); //相当于size操作，求有几个元素
-    order_ID++; //从1开始
+
+//    order_data.get_info(order_ID, 1); //相当于size操作，求有几个元素
+    order_num++; //不能用 get_info
+    int order_ID = order_num;
 
     Order new_order(user_name, train_ID, num, price, order_ID, start_day,
                     target_train.leaving_times[s], target_train.arriving_times[t], Status(success),
@@ -492,7 +609,8 @@ string TrainManagement::buy_ticket(Command &line, AccountManagement &accounts) {
         day_train_data.update(tp, ans2[0]);
         int pos = order_data.write(new_order);
         order_id_to_pos.add_node(UllNode(key, pos));
-        return to_string((long long) num * price);
+        long long total = num * price;
+        return to_string(total);
     } else { //要候补
         new_order.status = pending;
         PendingOrder pending_order(train_ID, user_name, start_day, num, s, t, order_ID);
@@ -519,23 +637,24 @@ string TrainManagement::query_order(Command &line, AccountManagement &accounts) 
     if (all.empty()) return "0"; //没有订单
     for (int i = 0; i < all.size(); ++i) {
         Order tp_order;
-        order_data.read(tp_order, all[i]);
+        order_data.read(tp_order, all[i]); //按顺序读出每一个order，应该按照 ID 排序好了？
         if (!strcmp(tp_order.user_name, user_name.c_str()))
             orders[++cnt] = tp_order;
     }
 
     //从新到旧排序 , 可能不需要？
-//    Sort(orders, 1, cnt, order_cmp);
+    //todo: 修改为 bpt 后，按照关键字 Order_ID 读取，就不用排序
+    Sort(orders, 1, cnt, order_cmp);
     string output = to_string(cnt);
-    for (int i = cnt;i >= 1; --i) {
-        if (orders[i].status == success) output += "\n [success] ";
-        else if (orders[i].status == pending) output += "\n [pending] ";
-        else output += "\n [refunded] ";
+    for (int i = 1;i <= cnt; ++i) {
+        if (orders[i].status == success) output += "\n[success] ";
+        else if (orders[i].status == pending) output += "\n[pending] ";
+        else output += "\n[refunded] ";
 
         output += string(orders[i].train_ID) + " " + string(orders[i].from_station) + " "
-                + (orders[i].leaving_time + orders[i].start_day).transfer()+ " -> "
-                + string(orders[i].to_station) + " " + (orders[i].arriving_time + orders[i].start_day).transfer()
-                + to_string(orders[i].price) + " " + to_string(orders[i].num);
+                  + (orders[i].leaving_time + orders[i].start_day).transfer()+ " -> "
+                  + string(orders[i].to_station) + " " + (orders[i].arriving_time + orders[i].start_day).transfer() + " "
+                  + to_string(orders[i].price) + " " + to_string(orders[i].num);
     }
     return output;
 }
@@ -553,7 +672,7 @@ string TrainManagement::refund_ticket(Command &line, AccountManagement &accounts
     if (!accounts.login_pool.count(user_name)) return "-1"; //未登录
 
     // todo: 区间查询
-    int cnt = 0, pos[maxn];
+    int cnt = 0;
     vector<int> all;
     order_id_to_pos.find_all(all);
     if (all.empty()) return "-1"; //没有订单
@@ -562,34 +681,39 @@ string TrainManagement::refund_ticket(Command &line, AccountManagement &accounts
         order_data.read(tp_order, all[i]);
         if (!strcmp(tp_order.user_name, user_name.c_str())) {
             orders[++cnt] = tp_order;
-            pos[cnt] = all[i];
+            orders[cnt].pos = all[i];
         }
     }
+
+    //todo: 修改为 bpt 后，按照关键字 Order_ID 读取，就不用排序
+    //从大到小排序，保证从新到旧
+    Sort(orders, 1, cnt, order_cmp);
+
     if (x > cnt) return "-1"; //显然超出订单总数
-    if (orders[cnt - x + 1].status == refunded) return "-1"; //重复退款
+    if (orders[x].status == refunded) return "-1"; //重复退款
 
-    Order refund_order = orders[cnt - x + 1]; //临时存储
-    orders[cnt - x + 1].status = refunded;
-    order_data.update(orders[cnt - x + 1], pos[cnt - x + 1]);
+    Order refund_order = orders[x]; //临时存储
+    orders[x].status = refunded;
+    order_data.update(orders[x], orders[x].pos);
 
-    if (orders[cnt - x + 1].status == pending) { //候补的票要修改 pending_database
-        vector<int> ans;
-        string key = (string)orders[cnt - x + 1].train_ID + orders[cnt - x + 1].start_day.transfer()
-                    + to_string(orders[cnt - x + 1].order_ID);
+    vector<int> ans;
+    if (refund_order.status == pending) { //候补的票要修改 pending_database
+        string key = string(refund_order.train_ID) + refund_order.start_day.transfer()
+                     + to_string(refund_order.order_ID);
         pending_order_id_to_pos.find_node(key, ans);
         pending_order_id_to_pos.delete_node(UllNode(key, ans[0]));
         pending_order_data.Delete(ans[0]);
         return "0";
     }
 
-    //如果原来的订单success，要修改座位，先增加
+    //如果原来的订单success，要修改座位，增加
     string key = string(refund_order.train_ID) + refund_order.start_day.transfer();
-    vector<int> ans;
+    ans.clear();
     daytrain_id_to_pos.find_node(key, ans);
     DayTrain tp_daytrain;
     day_train_data.read(tp_daytrain, ans[0]);
     tp_daytrain.modify_seat(refund_order.from, refund_order.to - 1, refund_order.num);
-    day_train_data.update(tp_daytrain, ans[0]);
+//    day_train_data.update(tp_daytrain, ans[0]);
 
     //退票后有空缺，判断候补的订单现在是否能买
     int CNT = 0;
@@ -600,9 +724,12 @@ string TrainManagement::refund_ticket(Command &line, AccountManagement &accounts
         pending_order_data.read(tp, all[i]);
         if (tp.start_day == refund_order.start_day && !strcmp(tp.train_ID, refund_order.train_ID)) {
             pending_orders[++CNT] = tp;
-            pos[CNT] = all[i];
+            pending_orders[CNT].pos = all[i];
         }
     }
+
+    //todo: 同理的排序修改，但是是从小到大，因为早买票就早补票
+    Sort(pending_orders, 1, CNT, pending_order_cmp);
 
     for (int i = 1;i <= CNT; ++i) {
         //只有候补的起点和终点范围，包括新增加的票的范围，才有意义
@@ -613,18 +740,18 @@ string TrainManagement::refund_ticket(Command &line, AccountManagement &accounts
             tp_daytrain.modify_seat(pending_orders[i].from, pending_orders[i].to - 1, -pending_orders[i].num);
             //相应地删除pending_database
             key = string(pending_orders[i].train_ID) + pending_orders[i].start_day.transfer()
-                    + to_string(pending_orders[i].order_ID);
-            pending_order_id_to_pos.delete_node(UllNode(key, pos[i]));
-            pending_order_data.Delete(pos[i]);
+                  + to_string(pending_orders[i].order_ID);
+            pending_order_id_to_pos.delete_node(UllNode(key, pending_orders[i].pos));
+            pending_order_data.Delete(pending_orders[i].pos);
 
             //修改 order 中的状态
             Order success_order;
             key = string(pending_orders[i].user_name) + to_string(pending_orders[i].order_ID);
-            vector<int> ans2;
-            order_id_to_pos.find_node(key, ans2);
-            order_data.read(success_order, ans2[0]);
+            all.clear();
+            order_id_to_pos.find_node(key, all);
+            order_data.read(success_order, all[0]);
             success_order.status = success;
-            order_data.update(success_order, ans2[0]);
+            order_data.update(success_order, all[0]);
         }
     }
     //把新补票后减少的座位，写入文件中
