@@ -97,8 +97,9 @@ private:
     char user_name[25], train_ID[25]; //用户名，车次
     int num, price, order_ID; //订单编号,从1开始(充当下单时间，用来排序)
     //num是票数, price 是单价
-    char id[64], pos;
+    char id[64];
     //todo: 实际上，ull中的关键字是 user_name + order_ID，应该修改为pair类型
+    int pos; // refund_ticket 时临时用来存储位置
 
     TimeType start_day, leaving_time, arriving_time;
     Status status; //订单当前状态
@@ -119,8 +120,9 @@ private:
     char train_ID[25], user_name[25];
     TimeType start_day;
     int num, from, to, order_ID;
-    char id[64], pos;
+    char id[64];
     //todo: 关键字是 train_ID + start_sale_date + order_ID
+    int pos; // refund_ticket 时临时用来存储位置
 
 public:
     PendingOrder() = default;

@@ -72,11 +72,6 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="com.jetbrains.cidr.cpp.gradle.execution.GradleNativeBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -101,7 +96,7 @@
       <workItem from="1653703140066" duration="1147000" />
       <workItem from="1653794881635" duration="3844000" />
       <workItem from="1653808903458" duration="8364000" />
-      <workItem from="1653893891026" duration="6177000" />
+      <workItem from="1653893891026" duration="7752000" />
     </task>
     <servers />
   </component>
@@ -124,7 +119,7 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <condition expression="cmd.timestamp == 5994" language="ObjectiveC" />
+          <condition expression="cmd.timestamp == 3896" language="ObjectiveC" />
           <url>file://$PROJECT_DIR$/back_end/main.cpp</url>
           <line>29</line>
           <option name="timeStamp" value="35" />
@@ -135,6 +130,7 @@
       <configuration name="CMakeRunConfiguration">
         <watch expression="line" language="ObjectiveC" />
         <watch expression="tickets" language="ObjectiveC" />
+        <watch expression="orders" language="ObjectiveC" />
       </configuration>
     </watches-manager>
   </component>
