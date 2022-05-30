@@ -81,7 +81,7 @@ void DayTrain::modify_seat(int l, int r, int val) {
 }
 
 int DayTrain::query_seat(int l, int r) {
-    int ans = maxn;
+    int ans = MAX_INT;
     for (int i = l; i <= r; ++i) ans = min(ans, seat_num[i]);
     return ans;
 }
@@ -222,7 +222,7 @@ string TrainManagement::release_train(Command &line) {
 
     //维护 每天的车次座位数
     for (auto i = target_train.start_sale_date; i <= target_train.end_sale_date; i += 1440) {
-        DayTrain tp_daytrain;
+        DayTrain tp_daytrain; //todo: 可能要开在外面，不然会炸
         for (int j = 1; j <= target_train.station_num; ++j) tp_daytrain.seat_num[j] = target_train.total_seat_num;
 
         //todo: 要修改，可能用 pair<> + hash 实现
@@ -421,6 +421,7 @@ string TrainManagement::query_transfer(Command &line) {
     //todo:区间查找，查找所有 站点为 s 和 t 的 station 车站
     //因为关键字是直接拼接的，所以不好查，直接暴力遍历
     train_id_to_pos.find_all(all); //全部读取出来，是按照 train_ID 升序排列的
+
     for (int i = 0; i < all.size(); ++i) {
         Train tp_train;
         train_data.read(tp_train, all[i]);
@@ -439,8 +440,8 @@ string TrainManagement::query_transfer(Command &line) {
         TimeType start_day1 = day - s1.leaving_time.get_date();
         if (start_day1 < s1.start_sale_time || start_day1 > s1.end_sale_time) continue;
 
-        Train train1; //出发的车次
         all.clear();
+        Train train1;
         train_id_to_pos.find_node(s1.train_ID, all);
         train_data.read(train1, all[0]);
 
@@ -564,7 +565,7 @@ string TrainManagement::buy_ticket(Command &line, AccountManagement &accounts) {
     if (!accounts.login_pool.count(user_name)) return "-1"; //用户未登录
 
     vector<int> ans;
-    Train target_train;
+    Train target_train; //todo: 可能要开在外面
     train_id_to_pos.find_node(train_ID, ans);
     if (ans.empty()) return "-1"; //车次不存在
     train_data.read(target_train, ans[0]);

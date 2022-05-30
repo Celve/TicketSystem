@@ -40,7 +40,7 @@ int main() {
         else if (s == "query_train") cout << trains.query_train(cmd) << endl;
         else if (s == "delete_train") cout << trains.delete_train(cmd) << endl;
         else if (s == "query_ticket") cout << trains.query_ticket(cmd) << endl;
-        else if (s == "query_transfer") cout << "None" << endl; //trains.query_transfer(cmd)
+        else if (s == "query_transfer") cout << trains.query_transfer(cmd) << endl; //trains.query_transfer(cmd)
 
         else if (s == "buy_ticket") cout << trains.buy_ticket(cmd, accounts) << endl;
         else if (s == "query_order") cout << trains.query_order(cmd, accounts) << endl;

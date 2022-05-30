@@ -7,8 +7,8 @@
 //extern bool time_cmp();
 //extern bool cost_cmp();
 
-const int maxn = 100010; //最大车站数
-const int MAX_INT = 0x7fffffff;
+const int maxn = 110; //最大车站数，不是1e6...
+const int MAX_INT = 0x7fffffff; //最大座位数/日期
 
 class TrainID{
     friend class Train;
