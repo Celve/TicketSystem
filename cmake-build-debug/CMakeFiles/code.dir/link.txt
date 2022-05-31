@@ -1,0 +1,1 @@
+/usr/bin/c++   -fsanitize=leak -fsanitize=address -ftrapv -g   CMakeFiles/code.dir/back_end/main.cpp.o CMakeFiles/code.dir/back_end/src/Command.cpp.o CMakeFiles/code.dir/back_end/src/Account.cpp.o CMakeFiles/code.dir/back_end/src/TrainSystem.cpp.o CMakeFiles/code.dir/back_end/database/Library.cpp.o  -o code 

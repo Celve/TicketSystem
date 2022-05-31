@@ -16,9 +16,9 @@ void Sort(T *a, int l, int r, bool cmp(const T &u, const T &v)) {
 
 bool is_legal(const string &s) { //判断该日期是否合法
     int month = string_to_int(s.substr(0, 2));
-    int day = string_to_int(s.substr(3, 2));
-    int hour = string_to_int(s.substr(6, 2));
-    int min = string_to_int(s.substr(9, 2));
+//    int day = string_to_int(s.substr(3, 2));
+//    int hour = string_to_int(s.substr(6, 2));
+//    int min = string_to_int(s.substr(9, 2));
 
     if (month < 6 || month > 8) return false;
     return true;
@@ -455,9 +455,8 @@ string TrainManagement::query_transfer(Command &line) {
     //todo:区间查找，查找所有 站点为 s 和 t 的 station 车站
     //因为关键字是直接拼接的，所以不好查，直接暴力遍历
     train_id_to_pos.find_all(all); //全部读取出来，是按照 train_ID 升序排列的
-
+    Train tp_train;
     for (int i = 0; i < all.size(); ++i) {
-        Train tp_train;
         train_data.read(tp_train, all[i]);
         string key1 = string(tp_train.train_ID) + s, key2 = string(tp_train.train_ID) + t;
 
@@ -469,17 +468,17 @@ string TrainManagement::query_transfer(Command &line) {
     int cnt = 0;
     Station s1, t1; //起点，终点
 
-    for (int i = 0;i < ans1.size(); ++i) {  //枚举不同车次的   起点s1
+    for (int i = 0;i < ans1.size(); ++i) {  //枚举经过起点s1的不同车次
         station_data.read(s1, ans1[i]);
         TimeType start_day1 = day - s1.leaving_time.get_date();
-        if (start_day1 < s1.start_sale_time || start_day1 > s1.end_sale_time) continue;
+        if (start_day1 < s1.start_sale_time || start_day1 > s1.end_sale_time) continue;//买不到票
 
         all.clear();
         Train train1;
         train_id_to_pos.find_node(s1.train_ID, all);
         train_data.read(train1, all[0]);
 
-        for (int j = 0;j < ans2.size(); ++j) { //枚举不同车次的    终点t1
+        for (int j = 0;j < ans2.size(); ++j) { //枚举经过终点t1的不同车次
             station_data.read(t1, ans2[j]);
             if (!strcmp(s1.train_ID, t1.train_ID)) continue; //换乘要求不同车次
 
@@ -488,13 +487,14 @@ string TrainManagement::query_transfer(Command &line) {
             train_id_to_pos.find_node(t1.train_ID, pos2);
             train_data.read(train2, pos2[0]);
 
-            //把车站全部读取出来，方便查询
+            //把可能途径的车站全部读取出来，方便查询
+            //注意循环的范围
             int cnt1 = 0, cnt2 = 0;
             for (int k = s1.index + 1; k <= train1.station_num; ++k) starts[++cnt1] = std::make_pair(train1.stations[k], k);
-            for (int k = 1; k <= train2.station_num; ++k) ends[++cnt2] = std::make_pair(train2.stations[k], k);
+            for (int k = 1; k < t1.index; ++k) ends[++cnt2] = std::make_pair(train2.stations[k], k);
             if (!cnt1 || !cnt2) continue;
             Sort(starts, 1, cnt1, station_cmp);
-            Sort(ends, 1, cnt2, station_cmp); //先排序，可以加快查找
+            Sort(ends, 1, cnt2, station_cmp); //先按车站名称排序，可以加快查找
 
             //枚举中转站
             for (int i1 = 1, i2 = 1; i1 <= cnt1 && i2 <= cnt2; ) {
@@ -505,13 +505,14 @@ string TrainManagement::query_transfer(Command &line) {
                     i1++, i2++;
 
                     TimeType fast_start_day2; //train2的最快发车日期
+                    //保证第二辆车的上车时间，为第一辆车到达当天
                     if (train1.arriving_times[k].get_time() <= train2.leaving_times[l].get_time()) //当天能赶上
                         fast_start_day2 = start_day1 + train1.arriving_times[k].get_date() - train2.leaving_times[l].get_date();
                     else //赶不上，多等一天
                         fast_start_day2 = start_day1 + train1.arriving_times[k].get_date()
                                           - train2.leaving_times[l].get_date() + 1440;
 
-                    if (t1.end_sale_time < fast_start_day2) continue; //还是赶不上
+                    if (t1.end_sale_time < fast_start_day2) continue; //赶不上买票
                     TimeType start_day2 = max(fast_start_day2, t1.start_sale_time);//真正的日期，发车且发售
                     bool updated = false;
 

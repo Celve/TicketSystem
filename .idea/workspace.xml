@@ -2,7 +2,7 @@
 <project version="4">
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
     <generated>
-      <config projectName="TicketSystem" targetName="TicketSystem" />
+      <config projectName="TicketSystem" targetName="code" />
     </generated>
   </component>
   <component name="CMakeSettings" AUTO_RELOAD="true">
@@ -64,9 +64,22 @@
       <recent name="D:\Coding\ACM_Big_Homework\TicketSystem\cmake-build-debug" />
       <recent name="D:\Coding\ACM_Big_Homework\TicketSystem\back_end\database" />
     </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Coding\ACM_Big_Homework\TicketSystem\back_end" />
+    </key>
   </component>
-  <component name="RunManager">
-    <configuration name="TicketSystem" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" WORKING_DIR="file://$PROJECT_DIR$/back_end" PASS_PARENT_ENVS_2="true" PROJECT_NAME="TicketSystem" TARGET_NAME="TicketSystem" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="TicketSystem" RUN_TARGET_NAME="TicketSystem">
+  <component name="RunManager" selected="CMake Application.TicketSystem">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TicketSystem" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" WORKING_DIR="file://$PROJECT_DIR$/back_end" PASS_PARENT_ENVS_2="true" PROJECT_NAME="TicketSystem" TARGET_NAME="code" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="TicketSystem" RUN_TARGET_NAME="code">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="code" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="TicketSystem" TARGET_NAME="code" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="TicketSystem" RUN_TARGET_NAME="code">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -76,6 +89,10 @@
         <option name="com.jetbrains.cidr.cpp.gradle.execution.GradleNativeBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
+    <list>
+      <item itemvalue="CMake Application.TicketSystem" />
+      <item itemvalue="CMake Application.code" />
+    </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -106,7 +123,7 @@
       <workItem from="1653922095284" duration="658000" />
       <workItem from="1653922784515" duration="147000" />
       <workItem from="1653922977368" duration="17000" />
-      <workItem from="1653965384955" duration="13951000" />
+      <workItem from="1653965384955" duration="18814000" />
     </task>
     <servers />
   </component>

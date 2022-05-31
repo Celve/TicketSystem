@@ -37,8 +37,8 @@
 					<DistClean command="/usr/bin/make -j16 -f &quot;/mnt/d/Coding/ACM_Big_Homework/TicketSystem/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
-			<Target title="TicketSystem">
-				<Option output="/mnt/d/Coding/ACM_Big_Homework/TicketSystem/cmake-build-debug/TicketSystem" prefix_auto="0" extension_auto="0"/>
+			<Target title="code">
+				<Option output="/mnt/d/Coding/ACM_Big_Homework/TicketSystem/cmake-build-debug/code" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="/mnt/d/Coding/ACM_Big_Homework/TicketSystem/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
@@ -55,14 +55,14 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j16 -f &quot;/mnt/d/Coding/ACM_Big_Homework/TicketSystem/cmake-build-debug/Makefile&quot;  VERBOSE=1 TicketSystem"/>
+					<Build command="/usr/bin/make -j16 -f &quot;/mnt/d/Coding/ACM_Big_Homework/TicketSystem/cmake-build-debug/Makefile&quot;  VERBOSE=1 code"/>
 					<CompileFile command="/usr/bin/make -j16 -f &quot;/mnt/d/Coding/ACM_Big_Homework/TicketSystem/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
 					<Clean command="/usr/bin/make -j16 -f &quot;/mnt/d/Coding/ACM_Big_Homework/TicketSystem/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 					<DistClean command="/usr/bin/make -j16 -f &quot;/mnt/d/Coding/ACM_Big_Homework/TicketSystem/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
-			<Target title="TicketSystem/fast">
-				<Option output="/mnt/d/Coding/ACM_Big_Homework/TicketSystem/cmake-build-debug/TicketSystem" prefix_auto="0" extension_auto="0"/>
+			<Target title="code/fast">
+				<Option output="/mnt/d/Coding/ACM_Big_Homework/TicketSystem/cmake-build-debug/code" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="/mnt/d/Coding/ACM_Big_Homework/TicketSystem/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
@@ -79,7 +79,7 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j16 -f &quot;/mnt/d/Coding/ACM_Big_Homework/TicketSystem/cmake-build-debug/Makefile&quot;  VERBOSE=1 TicketSystem/fast"/>
+					<Build command="/usr/bin/make -j16 -f &quot;/mnt/d/Coding/ACM_Big_Homework/TicketSystem/cmake-build-debug/Makefile&quot;  VERBOSE=1 code/fast"/>
 					<CompileFile command="/usr/bin/make -j16 -f &quot;/mnt/d/Coding/ACM_Big_Homework/TicketSystem/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
 					<Clean command="/usr/bin/make -j16 -f &quot;/mnt/d/Coding/ACM_Big_Homework/TicketSystem/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 					<DistClean command="/usr/bin/make -j16 -f &quot;/mnt/d/Coding/ACM_Big_Homework/TicketSystem/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
@@ -87,43 +87,43 @@
 			</Target>
 		</Build>
 		<Unit filename="/mnt/d/Coding/ACM_Big_Homework/TicketSystem/back_end/database/FileStorage.h">
-			<Option target="TicketSystem"/>
+			<Option target="code"/>
 		</Unit>
 		<Unit filename="/mnt/d/Coding/ACM_Big_Homework/TicketSystem/back_end/database/Library.cpp">
-			<Option target="TicketSystem"/>
+			<Option target="code"/>
 		</Unit>
 		<Unit filename="/mnt/d/Coding/ACM_Big_Homework/TicketSystem/back_end/database/Library.h">
-			<Option target="TicketSystem"/>
+			<Option target="code"/>
 		</Unit>
 		<Unit filename="/mnt/d/Coding/ACM_Big_Homework/TicketSystem/back_end/database/map.hpp">
-			<Option target="TicketSystem"/>
+			<Option target="code"/>
 		</Unit>
 		<Unit filename="/mnt/d/Coding/ACM_Big_Homework/TicketSystem/back_end/database/ull.h">
-			<Option target="TicketSystem"/>
+			<Option target="code"/>
 		</Unit>
 		<Unit filename="/mnt/d/Coding/ACM_Big_Homework/TicketSystem/back_end/database/vector.hpp">
-			<Option target="TicketSystem"/>
+			<Option target="code"/>
 		</Unit>
 		<Unit filename="/mnt/d/Coding/ACM_Big_Homework/TicketSystem/back_end/main.cpp">
-			<Option target="TicketSystem"/>
+			<Option target="code"/>
 		</Unit>
 		<Unit filename="/mnt/d/Coding/ACM_Big_Homework/TicketSystem/back_end/src/Account.cpp">
-			<Option target="TicketSystem"/>
+			<Option target="code"/>
 		</Unit>
 		<Unit filename="/mnt/d/Coding/ACM_Big_Homework/TicketSystem/back_end/src/Account.h">
-			<Option target="TicketSystem"/>
+			<Option target="code"/>
 		</Unit>
 		<Unit filename="/mnt/d/Coding/ACM_Big_Homework/TicketSystem/back_end/src/Command.cpp">
-			<Option target="TicketSystem"/>
+			<Option target="code"/>
 		</Unit>
 		<Unit filename="/mnt/d/Coding/ACM_Big_Homework/TicketSystem/back_end/src/Command.h">
-			<Option target="TicketSystem"/>
+			<Option target="code"/>
 		</Unit>
 		<Unit filename="/mnt/d/Coding/ACM_Big_Homework/TicketSystem/back_end/src/TrainSystem.cpp">
-			<Option target="TicketSystem"/>
+			<Option target="code"/>
 		</Unit>
 		<Unit filename="/mnt/d/Coding/ACM_Big_Homework/TicketSystem/back_end/src/TrainSystem.h">
-			<Option target="TicketSystem"/>
+			<Option target="code"/>
 		</Unit>
 		<Unit filename="/mnt/d/Coding/ACM_Big_Homework/TicketSystem/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>

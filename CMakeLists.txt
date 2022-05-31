@@ -10,7 +10,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=leak -fsanitize=address -ftra
 include_directories(back_end/src
         back_end/database)
 
-add_executable(TicketSystem
+add_executable(code     # 生成的可执行文件名称
         back_end/main.cpp
         back_end/src/Command.cpp
         back_end/src/Account.cpp

@@ -111,17 +111,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named TicketSystem
+# Target rules for targets named code
 
 # Build rule for target.
-TicketSystem: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 TicketSystem
-.PHONY : TicketSystem
+code: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 code
+.PHONY : code
 
 # fast build rule for target.
-TicketSystem/fast:
-	$(MAKE) -f CMakeFiles/TicketSystem.dir/build.make CMakeFiles/TicketSystem.dir/build
-.PHONY : TicketSystem/fast
+code/fast:
+	$(MAKE) -f CMakeFiles/code.dir/build.make CMakeFiles/code.dir/build
+.PHONY : code/fast
 
 back_end/database/Library.o: back_end/database/Library.cpp.o
 
@@ -129,7 +129,7 @@ back_end/database/Library.o: back_end/database/Library.cpp.o
 
 # target to build an object file
 back_end/database/Library.cpp.o:
-	$(MAKE) -f CMakeFiles/TicketSystem.dir/build.make CMakeFiles/TicketSystem.dir/back_end/database/Library.cpp.o
+	$(MAKE) -f CMakeFiles/code.dir/build.make CMakeFiles/code.dir/back_end/database/Library.cpp.o
 .PHONY : back_end/database/Library.cpp.o
 
 back_end/database/Library.i: back_end/database/Library.cpp.i
@@ -138,7 +138,7 @@ back_end/database/Library.i: back_end/database/Library.cpp.i
 
 # target to preprocess a source file
 back_end/database/Library.cpp.i:
-	$(MAKE) -f CMakeFiles/TicketSystem.dir/build.make CMakeFiles/TicketSystem.dir/back_end/database/Library.cpp.i
+	$(MAKE) -f CMakeFiles/code.dir/build.make CMakeFiles/code.dir/back_end/database/Library.cpp.i
 .PHONY : back_end/database/Library.cpp.i
 
 back_end/database/Library.s: back_end/database/Library.cpp.s
@@ -147,7 +147,7 @@ back_end/database/Library.s: back_end/database/Library.cpp.s
 
 # target to generate assembly for a file
 back_end/database/Library.cpp.s:
-	$(MAKE) -f CMakeFiles/TicketSystem.dir/build.make CMakeFiles/TicketSystem.dir/back_end/database/Library.cpp.s
+	$(MAKE) -f CMakeFiles/code.dir/build.make CMakeFiles/code.dir/back_end/database/Library.cpp.s
 .PHONY : back_end/database/Library.cpp.s
 
 back_end/main.o: back_end/main.cpp.o
@@ -156,7 +156,7 @@ back_end/main.o: back_end/main.cpp.o
 
 # target to build an object file
 back_end/main.cpp.o:
-	$(MAKE) -f CMakeFiles/TicketSystem.dir/build.make CMakeFiles/TicketSystem.dir/back_end/main.cpp.o
+	$(MAKE) -f CMakeFiles/code.dir/build.make CMakeFiles/code.dir/back_end/main.cpp.o
 .PHONY : back_end/main.cpp.o
 
 back_end/main.i: back_end/main.cpp.i
@@ -165,7 +165,7 @@ back_end/main.i: back_end/main.cpp.i
 
 # target to preprocess a source file
 back_end/main.cpp.i:
-	$(MAKE) -f CMakeFiles/TicketSystem.dir/build.make CMakeFiles/TicketSystem.dir/back_end/main.cpp.i
+	$(MAKE) -f CMakeFiles/code.dir/build.make CMakeFiles/code.dir/back_end/main.cpp.i
 .PHONY : back_end/main.cpp.i
 
 back_end/main.s: back_end/main.cpp.s
@@ -174,7 +174,7 @@ back_end/main.s: back_end/main.cpp.s
 
 # target to generate assembly for a file
 back_end/main.cpp.s:
-	$(MAKE) -f CMakeFiles/TicketSystem.dir/build.make CMakeFiles/TicketSystem.dir/back_end/main.cpp.s
+	$(MAKE) -f CMakeFiles/code.dir/build.make CMakeFiles/code.dir/back_end/main.cpp.s
 .PHONY : back_end/main.cpp.s
 
 back_end/src/Account.o: back_end/src/Account.cpp.o
@@ -183,7 +183,7 @@ back_end/src/Account.o: back_end/src/Account.cpp.o
 
 # target to build an object file
 back_end/src/Account.cpp.o:
-	$(MAKE) -f CMakeFiles/TicketSystem.dir/build.make CMakeFiles/TicketSystem.dir/back_end/src/Account.cpp.o
+	$(MAKE) -f CMakeFiles/code.dir/build.make CMakeFiles/code.dir/back_end/src/Account.cpp.o
 .PHONY : back_end/src/Account.cpp.o
 
 back_end/src/Account.i: back_end/src/Account.cpp.i
@@ -192,7 +192,7 @@ back_end/src/Account.i: back_end/src/Account.cpp.i
 
 # target to preprocess a source file
 back_end/src/Account.cpp.i:
-	$(MAKE) -f CMakeFiles/TicketSystem.dir/build.make CMakeFiles/TicketSystem.dir/back_end/src/Account.cpp.i
+	$(MAKE) -f CMakeFiles/code.dir/build.make CMakeFiles/code.dir/back_end/src/Account.cpp.i
 .PHONY : back_end/src/Account.cpp.i
 
 back_end/src/Account.s: back_end/src/Account.cpp.s
@@ -201,7 +201,7 @@ back_end/src/Account.s: back_end/src/Account.cpp.s
 
 # target to generate assembly for a file
 back_end/src/Account.cpp.s:
-	$(MAKE) -f CMakeFiles/TicketSystem.dir/build.make CMakeFiles/TicketSystem.dir/back_end/src/Account.cpp.s
+	$(MAKE) -f CMakeFiles/code.dir/build.make CMakeFiles/code.dir/back_end/src/Account.cpp.s
 .PHONY : back_end/src/Account.cpp.s
 
 back_end/src/Command.o: back_end/src/Command.cpp.o
@@ -210,7 +210,7 @@ back_end/src/Command.o: back_end/src/Command.cpp.o
 
 # target to build an object file
 back_end/src/Command.cpp.o:
-	$(MAKE) -f CMakeFiles/TicketSystem.dir/build.make CMakeFiles/TicketSystem.dir/back_end/src/Command.cpp.o
+	$(MAKE) -f CMakeFiles/code.dir/build.make CMakeFiles/code.dir/back_end/src/Command.cpp.o
 .PHONY : back_end/src/Command.cpp.o
 
 back_end/src/Command.i: back_end/src/Command.cpp.i
@@ -219,7 +219,7 @@ back_end/src/Command.i: back_end/src/Command.cpp.i
 
 # target to preprocess a source file
 back_end/src/Command.cpp.i:
-	$(MAKE) -f CMakeFiles/TicketSystem.dir/build.make CMakeFiles/TicketSystem.dir/back_end/src/Command.cpp.i
+	$(MAKE) -f CMakeFiles/code.dir/build.make CMakeFiles/code.dir/back_end/src/Command.cpp.i
 .PHONY : back_end/src/Command.cpp.i
 
 back_end/src/Command.s: back_end/src/Command.cpp.s
@@ -228,7 +228,7 @@ back_end/src/Command.s: back_end/src/Command.cpp.s
 
 # target to generate assembly for a file
 back_end/src/Command.cpp.s:
-	$(MAKE) -f CMakeFiles/TicketSystem.dir/build.make CMakeFiles/TicketSystem.dir/back_end/src/Command.cpp.s
+	$(MAKE) -f CMakeFiles/code.dir/build.make CMakeFiles/code.dir/back_end/src/Command.cpp.s
 .PHONY : back_end/src/Command.cpp.s
 
 back_end/src/TrainSystem.o: back_end/src/TrainSystem.cpp.o
@@ -237,7 +237,7 @@ back_end/src/TrainSystem.o: back_end/src/TrainSystem.cpp.o
 
 # target to build an object file
 back_end/src/TrainSystem.cpp.o:
-	$(MAKE) -f CMakeFiles/TicketSystem.dir/build.make CMakeFiles/TicketSystem.dir/back_end/src/TrainSystem.cpp.o
+	$(MAKE) -f CMakeFiles/code.dir/build.make CMakeFiles/code.dir/back_end/src/TrainSystem.cpp.o
 .PHONY : back_end/src/TrainSystem.cpp.o
 
 back_end/src/TrainSystem.i: back_end/src/TrainSystem.cpp.i
@@ -246,7 +246,7 @@ back_end/src/TrainSystem.i: back_end/src/TrainSystem.cpp.i
 
 # target to preprocess a source file
 back_end/src/TrainSystem.cpp.i:
-	$(MAKE) -f CMakeFiles/TicketSystem.dir/build.make CMakeFiles/TicketSystem.dir/back_end/src/TrainSystem.cpp.i
+	$(MAKE) -f CMakeFiles/code.dir/build.make CMakeFiles/code.dir/back_end/src/TrainSystem.cpp.i
 .PHONY : back_end/src/TrainSystem.cpp.i
 
 back_end/src/TrainSystem.s: back_end/src/TrainSystem.cpp.s
@@ -255,7 +255,7 @@ back_end/src/TrainSystem.s: back_end/src/TrainSystem.cpp.s
 
 # target to generate assembly for a file
 back_end/src/TrainSystem.cpp.s:
-	$(MAKE) -f CMakeFiles/TicketSystem.dir/build.make CMakeFiles/TicketSystem.dir/back_end/src/TrainSystem.cpp.s
+	$(MAKE) -f CMakeFiles/code.dir/build.make CMakeFiles/code.dir/back_end/src/TrainSystem.cpp.s
 .PHONY : back_end/src/TrainSystem.cpp.s
 
 # Help Target
@@ -266,7 +266,7 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
-	@echo "... TicketSystem"
+	@echo "... code"
 	@echo "... back_end/database/Library.o"
 	@echo "... back_end/database/Library.i"
 	@echo "... back_end/database/Library.s"
