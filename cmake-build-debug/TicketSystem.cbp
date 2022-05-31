@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="TicketSystem"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/mnt/d/Coding/ACM_Big_Homework/TicketSystem/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j16 -f &quot;/mnt/d/Coding/ACM_Big_Homework/TicketSystem/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j16 -f &quot;/mnt/d/Coding/ACM_Big_Homework/TicketSystem/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j16 -f &quot;/mnt/d/Coding/ACM_Big_Homework/TicketSystem/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j16 -f &quot;/mnt/d/Coding/ACM_Big_Homework/TicketSystem/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/mnt/d/Coding/ACM_Big_Homework/TicketSystem/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j16 -f &quot;/mnt/d/Coding/ACM_Big_Homework/TicketSystem/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j16 -f &quot;/mnt/d/Coding/ACM_Big_Homework/TicketSystem/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j16 -f &quot;/mnt/d/Coding/ACM_Big_Homework/TicketSystem/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j16 -f &quot;/mnt/d/Coding/ACM_Big_Homework/TicketSystem/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/mnt/d/Coding/ACM_Big_Homework/TicketSystem/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j16 -f &quot;/mnt/d/Coding/ACM_Big_Homework/TicketSystem/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j16 -f &quot;/mnt/d/Coding/ACM_Big_Homework/TicketSystem/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j16 -f &quot;/mnt/d/Coding/ACM_Big_Homework/TicketSystem/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j16 -f &quot;/mnt/d/Coding/ACM_Big_Homework/TicketSystem/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="code">
+				<Option output="/mnt/d/Coding/ACM_Big_Homework/TicketSystem/cmake-build-debug/code" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/mnt/d/Coding/ACM_Big_Homework/TicketSystem/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/mnt/d/Coding/ACM_Big_Homework/TicketSystem/back_end/src"/>
+					<Add directory="/mnt/d/Coding/ACM_Big_Homework/TicketSystem/back_end/database"/>
+					<Add directory="/usr/include/c++/9"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/9"/>
+					<Add directory="/usr/include/c++/9/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/9/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j16 -f &quot;/mnt/d/Coding/ACM_Big_Homework/TicketSystem/cmake-build-debug/Makefile&quot;  VERBOSE=1 code"/>
+					<CompileFile command="/usr/bin/make -j16 -f &quot;/mnt/d/Coding/ACM_Big_Homework/TicketSystem/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j16 -f &quot;/mnt/d/Coding/ACM_Big_Homework/TicketSystem/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j16 -f &quot;/mnt/d/Coding/ACM_Big_Homework/TicketSystem/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="code/fast">
+				<Option output="/mnt/d/Coding/ACM_Big_Homework/TicketSystem/cmake-build-debug/code" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/mnt/d/Coding/ACM_Big_Homework/TicketSystem/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/mnt/d/Coding/ACM_Big_Homework/TicketSystem/back_end/src"/>
+					<Add directory="/mnt/d/Coding/ACM_Big_Homework/TicketSystem/back_end/database"/>
+					<Add directory="/usr/include/c++/9"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/9"/>
+					<Add directory="/usr/include/c++/9/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/9/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j16 -f &quot;/mnt/d/Coding/ACM_Big_Homework/TicketSystem/cmake-build-debug/Makefile&quot;  VERBOSE=1 code/fast"/>
+					<CompileFile command="/usr/bin/make -j16 -f &quot;/mnt/d/Coding/ACM_Big_Homework/TicketSystem/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j16 -f &quot;/mnt/d/Coding/ACM_Big_Homework/TicketSystem/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j16 -f &quot;/mnt/d/Coding/ACM_Big_Homework/TicketSystem/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/mnt/d/Coding/ACM_Big_Homework/TicketSystem/back_end/database/FileStorage.h">
+			<Option target="code"/>
+		</Unit>
+		<Unit filename="/mnt/d/Coding/ACM_Big_Homework/TicketSystem/back_end/database/Library.cpp">
+			<Option target="code"/>
+		</Unit>
+		<Unit filename="/mnt/d/Coding/ACM_Big_Homework/TicketSystem/back_end/database/Library.h">
+			<Option target="code"/>
+		</Unit>
+		<Unit filename="/mnt/d/Coding/ACM_Big_Homework/TicketSystem/back_end/database/map.hpp">
+			<Option target="code"/>
+		</Unit>
+		<Unit filename="/mnt/d/Coding/ACM_Big_Homework/TicketSystem/back_end/database/ull.h">
+			<Option target="code"/>
+		</Unit>
+		<Unit filename="/mnt/d/Coding/ACM_Big_Homework/TicketSystem/back_end/database/vector.hpp">
+			<Option target="code"/>
+		</Unit>
+		<Unit filename="/mnt/d/Coding/ACM_Big_Homework/TicketSystem/back_end/main.cpp">
+			<Option target="code"/>
+		</Unit>
+		<Unit filename="/mnt/d/Coding/ACM_Big_Homework/TicketSystem/back_end/src/Account.cpp">
+			<Option target="code"/>
+		</Unit>
+		<Unit filename="/mnt/d/Coding/ACM_Big_Homework/TicketSystem/back_end/src/Account.h">
+			<Option target="code"/>
+		</Unit>
+		<Unit filename="/mnt/d/Coding/ACM_Big_Homework/TicketSystem/back_end/src/Command.cpp">
+			<Option target="code"/>
+		</Unit>
+		<Unit filename="/mnt/d/Coding/ACM_Big_Homework/TicketSystem/back_end/src/Command.h">
+			<Option target="code"/>
+		</Unit>
+		<Unit filename="/mnt/d/Coding/ACM_Big_Homework/TicketSystem/back_end/src/TrainSystem.cpp">
+			<Option target="code"/>
+		</Unit>
+		<Unit filename="/mnt/d/Coding/ACM_Big_Homework/TicketSystem/back_end/src/TrainSystem.h">
+			<Option target="code"/>
+		</Unit>
+		<Unit filename="/mnt/d/Coding/ACM_Big_Homework/TicketSystem/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>
