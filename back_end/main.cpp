@@ -17,8 +17,8 @@ int main() {
 
     string input;
 
-//    freopen("1.in", "r", stdin);
-//    freopen("output.txt", "w", stdout);
+    freopen("1.in", "r", stdin);
+    freopen("output.txt", "w", stdout);
 
     while (getline(cin, input)) {
         Command cmd(input);
