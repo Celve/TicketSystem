@@ -10,14 +10,14 @@
 const int maxn = 110; //最大车站数，不是1e6...
 const int MAX_INT = 0x7fffffff; //最大座位数/日期
 
-class TrainID{
-    friend class Train;
-    friend class TrainManagement;
-
-private:
-    char s;
-};
-
+//class TrainID{
+//    friend class Train;
+//    friend class TrainManagement;
+//
+//private:
+//    char s;
+//};
+class TrainManagement;
 class Train{ //一列火车
     friend class TrainManagement;
 private:
@@ -38,6 +38,7 @@ public:
           const string &_travel_time, const string &_stop_over_times, const string &_sale_date,
           const string &_type);
     bool operator<(const Train &rhs) const; //不需要？
+    friend void OUTPUT(TrainManagement &all, const string &train_ID);
 };
 
 class Ticket;
@@ -88,6 +89,8 @@ public:
     DayTrain() = default;
     int query_seat(int l, int r); //查询第l站到第r站,最多能坐的人数
     void modify_seat(int l, int r, int val); //区间修改
+
+    friend void OUTPUT(TrainManagement &all, const string &train_ID);
 };
 
 enum Status {success, pending, refunded};
@@ -154,6 +157,8 @@ private:
     int order_num; //临时存储 order 总数
 
 public:
+    friend void OUTPUT(TrainManagement &all, const string &train_ID);
+
     TrainManagement();
 //    TrainManagement(const string &file_name);
 

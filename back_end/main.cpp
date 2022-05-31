@@ -17,7 +17,7 @@ int main() {
 
     string input;
 
-    freopen("1.in", "r", stdin);
+    freopen("4.in", "r", stdin);
     freopen("output.txt", "w", stdout);
 
     while (getline(cin, input)) {

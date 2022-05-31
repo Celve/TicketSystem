@@ -24,6 +24,38 @@ bool is_legal(const string &s) { //判断该日期是否合法
     return true;
 }
 
+void OUTPUT(TrainManagement &all, const string &train_ID) {//用来调试
+    Train a;
+    vector<int> tmp1;
+    all.train_id_to_pos.find_node(train_ID, tmp1);
+    all.train_data.read(a, tmp1[0]);
+
+    cout << "~~~~ " << a.train_ID << " ~~~~" << endl;
+    cout << "stationNum=" << a.station_num << endl;
+    for (int i=1;i <= a.station_num; i++) cout << a.stations[i] << " ";
+    cout << endl << "seatNum" << endl;
+
+    for (auto i = a.start_sale_date; i <= a.end_sale_date;  i+= 1440) {
+        string key = a.train_ID + i.transfer();
+
+        DayTrain tp;
+        vector<int> ans;
+        all.daytrain_id_to_pos.find_node(key, ans);
+        all.day_train_data.read(tp, ans[0]);
+
+        for (int j = 1; j < a.station_num; ++j) {
+            cout << tp.seat_num[j] << " ";
+        }
+        cout << endl;
+    }
+
+//    cout << "prices" << endl;
+//    for(int i = 1;i <= a.station_num;i++) cout << a.price_sum[i] << " ";
+//    cout << endl;
+
+    cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"<<endl;
+}
+
 //-------------------------------------------------class Train
 
 Train::Train(const string &_train_ID, const int &_station_num, const int &_total_seat_num, const string &_stations,
@@ -147,15 +179,17 @@ Order::Order(const string &_user_name, const string &_train_ID, const int &_num,
     strcpy(train_ID, _train_ID.c_str());
     strcpy(from_station, _from_station.c_str());
     strcpy(to_station, _to_station.c_str());
+    strcpy(id, (_user_name + to_string(order_ID)).c_str());
 }
 
 //---------------------------------------------------class PendingOrder
 
 PendingOrder::PendingOrder(const string &_train_ID, const string &_user_name, const TimeType &_start_day,
                            const int &_num, const int &_from, const int &_to, const int &_order_ID)
-        : start_day(_start_day), num(_num), from(_from), to(_from), order_ID(_order_ID) {
+        : start_day(_start_day), num(_num), from(_from), to(_to), order_ID(_order_ID) { //注意...
     strcpy(train_ID, _train_ID.c_str());
     strcpy(user_name, _user_name.c_str());
+    strcpy(id, (_train_ID + _start_day.transfer() + to_string(order_ID)).c_str());
 }
 
 //-------------------------------------------------class TrainManagement
@@ -565,7 +599,7 @@ string TrainManagement::buy_ticket(Command &line, AccountManagement &accounts) {
     if (!accounts.login_pool.count(user_name)) return "-1"; //用户未登录
 
     vector<int> ans;
-    Train target_train; //todo: 可能要开在外面
+    Train target_train;
     train_id_to_pos.find_node(train_ID, ans);
     if (ans.empty()) return "-1"; //车次不存在
     train_data.read(target_train, ans[0]);
@@ -601,6 +635,7 @@ string TrainManagement::buy_ticket(Command &line, AccountManagement &accounts) {
     Order new_order(user_name, train_ID, num, price, order_ID, start_day,
                     target_train.leaving_times[s], target_train.arriving_times[t], Status(success),
                     s, t, target_train.stations[s], target_train.stations[t]);
+//    strcpy(new_order.id, (user_name + to_string(order_ID)).c_str());
 
     //todo: 要修改为pair
     key = user_name + to_string(order_ID);
@@ -611,10 +646,15 @@ string TrainManagement::buy_ticket(Command &line, AccountManagement &accounts) {
         int pos = order_data.write(new_order);
         order_id_to_pos.add_node(UllNode(key, pos));
         long long total = num * price;
+
+//        cout << to_string(total) << endl;
+//        OUTPUT(*this, target_train.train_ID);
+
         return to_string(total);
     } else { //要候补
         new_order.status = pending;
         PendingOrder pending_order(train_ID, user_name, start_day, num, s, t, order_ID);
+//        strcpy(pending_order.id , (train_ID + start_day.transfer() + to_string(order_ID)).c_str());
 
         int pos = order_data.write(new_order), pos2 = pending_order_data.write(pending_order);
         order_id_to_pos.add_node(UllNode(key, pos));
@@ -622,6 +662,10 @@ string TrainManagement::buy_ticket(Command &line, AccountManagement &accounts) {
         // todo: 要修改，3个关键字复合成的 key
         string key2 = train_ID + start_day.transfer() + to_string(order_ID);
         pending_order_id_to_pos.add_node(UllNode(key2, pos2));
+
+//        cout << "queue" << endl;
+//        OUTPUT(*this, target_train.train_ID);
+
         return "queue";
     }
 }
@@ -704,6 +748,11 @@ string TrainManagement::refund_ticket(Command &line, AccountManagement &accounts
         pending_order_id_to_pos.find_node(key, ans);
         pending_order_id_to_pos.delete_node(UllNode(key, ans[0]));
         pending_order_data.Delete(ans[0]);
+
+        //todo:
+//        cout << "0" << endl;
+//        OUTPUT(*this, refund_order.train_ID);
+
         return "0";
     }
 
@@ -733,16 +782,13 @@ string TrainManagement::refund_ticket(Command &line, AccountManagement &accounts
     Sort(pending_orders, 1, CNT, pending_order_cmp);
 
     for (int i = 1;i <= CNT; ++i) {
-        //只有候补的起点和终点范围，包括新增加的票的范围，才有意义
-        //概括地说，就是不花冤枉钱，不买超出旅程的票
-        if (pending_orders[i].from > refund_order.from || pending_orders[i].to < refund_order.to) continue;
+        //之前写错了，只要候补订单的区间和退掉的票有交集，就可以买
+        if (pending_orders[i].from > refund_order.to || pending_orders[i].to < refund_order.from) continue;
         if (tp_daytrain.query_seat(pending_orders[i].from, pending_orders[i].to - 1) >= pending_orders[i].num) {
             //座位足够，而且只能全买
             tp_daytrain.modify_seat(pending_orders[i].from, pending_orders[i].to - 1, -pending_orders[i].num);
             //相应地删除pending_database
-            key = string(pending_orders[i].train_ID) + pending_orders[i].start_day.transfer()
-                  + to_string(pending_orders[i].order_ID);
-            pending_order_id_to_pos.delete_node(UllNode(key, pending_orders[i].pos));
+            pending_order_id_to_pos.delete_node(UllNode(pending_orders[i].id, pending_orders[i].pos));
             pending_order_data.Delete(pending_orders[i].pos);
 
             //修改 order 中的状态
@@ -757,6 +803,10 @@ string TrainManagement::refund_ticket(Command &line, AccountManagement &accounts
     }
     //把新补票后减少的座位，写入文件中
     day_train_data.update(tp_daytrain, ans[0]);
+
+//    cout << "0" << endl;
+//    OUTPUT(*this, refund_order.train_ID);
+
     return "0";
 }
 
