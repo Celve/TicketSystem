@@ -8,6 +8,8 @@ set(CMAKE_CXX_STANDARD 17)
 #MATH(EXPR stack_size "512*1024*1024")
 #set(CMAKE_EXE_LINKER_FLAGS "-Wl,-stack,${stack_size}")
 
+add_subdirectory(database)
+
 add_executable(code     # 生成的可执行文件名称
         back_end/main.cpp
         back_end/src/Command.cpp
@@ -21,5 +23,7 @@ add_executable(code     # 生成的可执行文件名称
         back_end/database/Library.cpp
         back_end/database/ull.h
         )
+
+target_link_libraries(code database)
 
 include_directories(back_end/src back_end/database)
