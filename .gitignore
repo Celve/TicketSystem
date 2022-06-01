@@ -1,4 +1,6 @@
 database/build
+build
+
 cmake-build-debug
 .idea
 .vscode
