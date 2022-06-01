@@ -14,6 +14,7 @@ set(SOURCE_CPPS
     src/storage/disk/disk_manager.cpp
 
     src/buffer/lru_replacer.cpp
+    src/buffer/innodb_replacer.cpp
     src/buffer/buffer_pool_manager.cpp
 
     src/storage/page/b_plus_tree_page.cpp

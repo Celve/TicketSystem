@@ -13,7 +13,7 @@ namespace thomas {
  * next page id and set max size
  */
 INDEX_TEMPLATE_ARGUMENTS
-void B_PLUS_TREE_LEAF_PAGE_TYPE::Init(page_id_t page_id, page_id_t parent_id, int max_size) {
+void B_PLUS_TREE_LEAF_PAGE_TYPE::Init(page_id_t page_id, page_id_t parent_id, int max_size) {  // NOLINT
   SetPageId(page_id);
   SetParentPageId(parent_id);
   SetMaxSize(max_size);

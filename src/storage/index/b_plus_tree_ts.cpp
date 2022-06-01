@@ -69,8 +69,9 @@ bool BPLUSTREETS_TYPE::GetValue(const KeyType &key, vector<ValueType> *result, T
 INDEX_TEMPLATE_ARGUMENTS
 bool BPLUSTREETS_TYPE::GetValue(const KeyType &key, vector<ValueType> *result, const KeyComparator &new_comparator,
                                 Transaction *transaction) {
-  Page *leaf_page = CrabToLeaf(key, TransactionType::MULTIFIND, false, false, true, transaction);
+  Page *leaf_page = CrabToLeaf(key, TransactionType::MULTIFIND, false, false, false, transaction);
   if (leaf_page == nullptr) {
+    transaction->Unlock();
     return false;
   }
   LeafPage *leaf_node = reinterpret_cast<LeafPage *>(leaf_page);
@@ -79,7 +80,7 @@ bool BPLUSTREETS_TYPE::GetValue(const KeyType &key, vector<ValueType> *result, c
   int index = leaf_node->KeyIndex(key, comparator_);
 
   auto ClearUp = [&]() {
-    UnlatchPage(leaf_page, TransactionType::FIND);
+    UnlatchPage(leaf_page, TransactionType::MULTIFIND);
     buffer_pool_manager_->UnpinPage(leaf_node->GetPageId(), false);
   };
 
@@ -106,7 +107,7 @@ bool BPLUSTREETS_TYPE::GetValue(const KeyType &key, vector<ValueType> *result, c
 
       leaf_page = buffer_pool_manager_->FetchPage(next_page_id);
       leaf_node = reinterpret_cast<LeafPage *>(leaf_page->GetData());
-      LatchPage(leaf_page, TransactionType::FIND);
+      LatchPage(leaf_page, TransactionType::MULTIFIND);
     }
   }
   transaction->Unlock();
@@ -857,7 +858,15 @@ void BPLUSTREETS_TYPE::UpdateRootPageId(int insert_record) {
     header_page->InsertRecord(index_name_, root_page_id_);
   } else {
     // update root_page_id in header_page
+    page_id_t last_root_page_id;
+    header_page->SearchRecord(index_name_, &last_root_page_id);
+    if (last_root_page_id != -1) {
+      buffer_pool_manager_->UnpinPage(last_root_page_id, false);
+    }
     header_page->UpdateRecord(index_name_, root_page_id_);
+    if (root_page_id_ != -1) {
+      buffer_pool_manager_->FetchPage(root_page_id_);
+    }
   }
   buffer_pool_manager_->UnpinPage(HEADER_PAGE_ID, true);
 }

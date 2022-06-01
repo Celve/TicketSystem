@@ -8,14 +8,15 @@
 // only for std::equal_to<T> and std::hash<T>
 #include <cstddef>
 #include <functional>
-#include "container/pair.hpp"
+
 #include "common/exceptions.hpp"
+#include "container/pair.hpp"
 
 namespace thomas {
 template <class Key, class Value, class Hash = std::hash<Key>, class Equal = std::equal_to<Key> >
 class linked_hashmap {
  public:
-  typedef pair<const Key, Value> value_type;
+  using value_type = pair<const Key, Value>;
 
  private:
   /* a set of fundamental functions */
@@ -24,7 +25,7 @@ class linked_hashmap {
 
   /* if load factor * capacity < current size, then expand the space */
   const size_t LOAD_FACTOR = 1;
-  const size_t INIT_SIZE = 19;
+  const size_t INIT_SIZE = 8192;
 
   /* the sum of entry in the hash table */
   size_t capacity;
@@ -80,6 +81,16 @@ class linked_hashmap {
       this->next_hash = next;
       prev->next_hash = this;
       this->prev_hash = prev;
+    }
+
+    void InsertAfterLink(Node *const &prev) {
+      Node *next = prev->next_list;
+      if (next) {
+        next->prev_list = this;
+      }
+      this->next_list = next;
+      prev->next_list = this;
+      this->prev_list = prev;
     }
 
     /*
@@ -144,6 +155,16 @@ class linked_hashmap {
 
     curr->InsertAfterHash(&table[hash_value]);
     curr->InsertBeforeLink(tail);
+
+    return curr;
+  }
+
+  Node *InsertInFront(const value_type &packet) {
+    size_t hash_value = (*hash)(packet.first) % capacity;
+    Node *curr = new Node(packet);
+
+    curr->InsertAfterHash(&table[hash_value]);
+    curr->InsertAfterLink(head);
 
     return curr;
   }
@@ -575,6 +596,18 @@ class linked_hashmap {
     bool flag = false;
     if (!curr) {
       curr = Insert(value);
+      flag = true;
+      ++sum;
+      Expand();
+    }
+    return pair<iterator, bool>(iterator(curr, this), flag);
+  }
+
+  pair<iterator, bool> front_insert(const value_type &value) {
+    Node *curr = Find(value.first);
+    bool flag = false;
+    if (!curr) {
+      curr = InsertInFront(value);
       flag = true;
       ++sum;
       Expand();

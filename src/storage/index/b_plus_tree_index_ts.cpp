@@ -47,6 +47,11 @@ BPLUSTREEINDEXTS_TYPE::BPlusTreeIndexTS(const std::string &index_name, const Key
 INDEX_TEMPLATE_ARGUMENTS
 BPLUSTREEINDEXTS_TYPE::~BPlusTreeIndexTS() {
   header_page_->UpdateRecord("page_amount", disk_manager_->GetNextPageId());
+  page_id_t root_page_id;
+  header_page_->SearchRecord("index", &root_page_id);
+  if (root_page_id != -1) {
+    bpm_->UnpinPage(root_page_id, false);
+  }
   bpm_->UnpinPage(HEADER_PAGE_ID, true);
   bpm_->FlushAllPages();
   disk_manager_->ShutDown();
