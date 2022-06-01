@@ -1,36 +1,26 @@
 cmake_minimum_required(VERSION 3.16)
+project(TicketSystem)
 
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_EXPORT_COMPILE_COMMANDS True)
-# set(CMAKE_CXX_COMPILER /usr/bin/clang++)
-# set(CMAKE_C_COMPILER /usr/bin/clang)
+set(CMAKE_CXX_STANDARD 14)
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=leak -fsanitize=address -ftrapv")
+# 删除编译选项
 
-project(Database)
+#MATH(EXPR stack_size "512*1024*1024")
+#set(CMAKE_EXE_LINKER_FLAGS "-Wl,-stack,${stack_size}")
 
-set(CMAKE_CXX_FLAGS "-pthread -g")
+include_directories(back_end/src
+        back_end/database)
 
-set(SOURCE_CPPS
-    src/storage/disk/disk_manager.cpp
+add_executable(code     # 生成的可执行文件名称
+        back_end/main.cpp
+        back_end/src/Command.cpp
+        back_end/src/Account.cpp
+        back_end/src/TrainSystem.cpp
 
-    src/buffer/lru_replacer.cpp
-    src/buffer/innodb_replacer.cpp
-    src/buffer/buffer_pool_manager.cpp
-
-    src/storage/page/b_plus_tree_page.cpp
-    src/storage/page/b_plus_tree_internal_page.cpp
-    src/storage/page/b_plus_tree_leaf_page.cpp
-    src/storage/index/index_iterator.cpp
-    src/storage/index/b_plus_tree_nts.cpp
-    src/storage/index/b_plus_tree_ts.cpp
-    src/storage/index/b_plus_tree_index_ts.cpp
-    src/storage/index/b_plus_tree_index_nts.cpp
-    src/storage/page/header_page.cpp
-
-    src/thread/thread_pool.cpp
-)
-
-add_executable(code main.cpp ${SOURCE_CPPS})
-
-include_directories(src/include)
-
+        back_end/database/FileStorage.h
+        back_end/database/map.hpp
+        back_end/database/vector.hpp
+        back_end/database/Library.h
+        back_end/database/Library.cpp
+        back_end/database/ull.h
+        )

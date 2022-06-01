@@ -1,6 +1,5 @@
-build
+database/build
 cmake-build-debug
-test.db
 .idea
 .vscode
 code
@@ -8,3 +7,8 @@ Makefile
 .cache
 index.db
 test.out
+Debug_record.md
+Cmake
+data
+
+

@@ -223,7 +223,7 @@ public:
 class User{
 private:    
     char user_name[20], password[30], mail_addr[30], name[20]; 
-    int priviledge; //优先等级
+    int privilege; //优先等级
     vector<Tickets> ticket; //购买的车票
     
 public:
@@ -322,29 +322,6 @@ public:
     string rollback(Command &line, AccountManagement & accounts);
     string clean(AccountManagement &accounts);
     string exit(AccountManagement &accounts); //退出系统，所有用户下线
-}
-```
-
-### 订单记录：`Order.h`
-
-```cpp
-enum Status {success, pending, refunded};
-class Order{
-private:
-    char user_name[20], train_ID[20]; //用户名，车次
-    int num, price, order_ID; //订单编号
-    TimeType date;
-    Ticket ticket;
-    Status status; //订单当前状态
-}
-
-class Waiting_order{ //候补的订单
-    
-}
-
-class OrderManagement{
-private:    
-    queue<Order> waiting_queue; //候补队列
 }
 ```
 
