@@ -1,0 +1,537 @@
+In file included from /Users/celve/Repositories/Me/TicketSystem/main.cpp:14:
+/Users/celve/Repositories/Me/TicketSystem/src/include/thread/thread_pool.h:48:49: warning: 'result_of<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:39:18) ()>' is deprecated [-Wdeprecated-declarations]
+auto ThreadPool::Join(F &&f, Args &&...args) -> THREAD_RETURN_TYPE {
+                                                ^
+/Users/celve/Repositories/Me/TicketSystem/src/include/thread/thread_pool.h:19:54: note: expanded from macro 'THREAD_RETURN_TYPE'
+#define THREAD_RETURN_TYPE std::future<typename std::result_of<F(Args...)>::type>
+                                                     ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/type_traits:4009:34: note: 'result_of<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:39:18) ()>' has been explicitly marked deprecated here
+template <class _Callable> class _LIBCPP_DEPRECATED_IN_CXX17 result_of;
+                                 ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/__config:1066:39: note: expanded from macro '_LIBCPP_DEPRECATED_IN_CXX17'
+#  define _LIBCPP_DEPRECATED_IN_CXX17 _LIBCPP_DEPRECATED
+                                      ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/__config:1043:48: note: expanded from macro '_LIBCPP_DEPRECATED'
+#    define _LIBCPP_DEPRECATED __attribute__ ((deprecated))
+                                               ^
+In file included from /Users/celve/Repositories/Me/TicketSystem/main.cpp:14:
+/Users/celve/Repositories/Me/TicketSystem/src/include/thread/thread_pool.h:48:49: warning: 'result_of<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:54:37) ()>' is deprecated [-Wdeprecated-declarations]
+auto ThreadPool::Join(F &&f, Args &&...args) -> THREAD_RETURN_TYPE {
+                                                ^
+/Users/celve/Repositories/Me/TicketSystem/src/include/thread/thread_pool.h:19:54: note: expanded from macro 'THREAD_RETURN_TYPE'
+#define THREAD_RETURN_TYPE std::future<typename std::result_of<F(Args...)>::type>
+                                                     ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/type_traits:4009:34: note: 'result_of<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:54:37) ()>' has been explicitly marked deprecated here
+template <class _Callable> class _LIBCPP_DEPRECATED_IN_CXX17 result_of;
+                                 ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/__config:1066:39: note: expanded from macro '_LIBCPP_DEPRECATED_IN_CXX17'
+#  define _LIBCPP_DEPRECATED_IN_CXX17 _LIBCPP_DEPRECATED
+                                      ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/__config:1043:48: note: expanded from macro '_LIBCPP_DEPRECATED'
+#    define _LIBCPP_DEPRECATED __attribute__ ((deprecated))
+                                               ^
+In file included from /Users/celve/Repositories/Me/TicketSystem/main.cpp:14:
+/Users/celve/Repositories/Me/TicketSystem/src/include/thread/thread_pool.h:48:49: warning: 'result_of<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:80:16) ()>' is deprecated [-Wdeprecated-declarations]
+auto ThreadPool::Join(F &&f, Args &&...args) -> THREAD_RETURN_TYPE {
+                                                ^
+/Users/celve/Repositories/Me/TicketSystem/src/include/thread/thread_pool.h:19:54: note: expanded from macro 'THREAD_RETURN_TYPE'
+#define THREAD_RETURN_TYPE std::future<typename std::result_of<F(Args...)>::type>
+                                                     ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/type_traits:4009:34: note: 'result_of<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:80:16) ()>' has been explicitly marked deprecated here
+template <class _Callable> class _LIBCPP_DEPRECATED_IN_CXX17 result_of;
+                                 ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/__config:1066:39: note: expanded from macro '_LIBCPP_DEPRECATED_IN_CXX17'
+#  define _LIBCPP_DEPRECATED_IN_CXX17 _LIBCPP_DEPRECATED
+                                      ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/__config:1043:48: note: expanded from macro '_LIBCPP_DEPRECATED'
+#    define _LIBCPP_DEPRECATED __attribute__ ((deprecated))
+                                               ^
+In file included from /Users/celve/Repositories/Me/TicketSystem/main.cpp:14:
+/Users/celve/Repositories/Me/TicketSystem/src/include/thread/thread_pool.h:48:49: warning: 'result_of<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:97:18) ()>' is deprecated [-Wdeprecated-declarations]
+auto ThreadPool::Join(F &&f, Args &&...args) -> THREAD_RETURN_TYPE {
+                                                ^
+/Users/celve/Repositories/Me/TicketSystem/src/include/thread/thread_pool.h:19:54: note: expanded from macro 'THREAD_RETURN_TYPE'
+#define THREAD_RETURN_TYPE std::future<typename std::result_of<F(Args...)>::type>
+                                                     ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/type_traits:4009:34: note: 'result_of<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:97:18) ()>' has been explicitly marked deprecated here
+template <class _Callable> class _LIBCPP_DEPRECATED_IN_CXX17 result_of;
+                                 ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/__config:1066:39: note: expanded from macro '_LIBCPP_DEPRECATED_IN_CXX17'
+#  define _LIBCPP_DEPRECATED_IN_CXX17 _LIBCPP_DEPRECATED
+                                      ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/__config:1043:48: note: expanded from macro '_LIBCPP_DEPRECATED'
+#    define _LIBCPP_DEPRECATED __attribute__ ((deprecated))
+                                               ^
+In file included from /Users/celve/Repositories/Me/TicketSystem/main.cpp:14:
+/Users/celve/Repositories/Me/TicketSystem/src/include/thread/thread_pool.h:48:49: warning: 'result_of<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:113:37) ()>' is deprecated [-Wdeprecated-declarations]
+auto ThreadPool::Join(F &&f, Args &&...args) -> THREAD_RETURN_TYPE {
+                                                ^
+/Users/celve/Repositories/Me/TicketSystem/src/include/thread/thread_pool.h:19:54: note: expanded from macro 'THREAD_RETURN_TYPE'
+#define THREAD_RETURN_TYPE std::future<typename std::result_of<F(Args...)>::type>
+                                                     ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/type_traits:4009:34: note: 'result_of<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:113:37) ()>' has been explicitly marked deprecated here
+template <class _Callable> class _LIBCPP_DEPRECATED_IN_CXX17 result_of;
+                                 ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/__config:1066:39: note: expanded from macro '_LIBCPP_DEPRECATED_IN_CXX17'
+#  define _LIBCPP_DEPRECATED_IN_CXX17 _LIBCPP_DEPRECATED
+                                      ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/__config:1043:48: note: expanded from macro '_LIBCPP_DEPRECATED'
+#    define _LIBCPP_DEPRECATED __attribute__ ((deprecated))
+                                               ^
+In file included from /Users/celve/Repositories/Me/TicketSystem/main.cpp:14:
+/Users/celve/Repositories/Me/TicketSystem/src/include/thread/thread_pool.h:48:49: warning: 'result_of<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:131:16) ()>' is deprecated [-Wdeprecated-declarations]
+auto ThreadPool::Join(F &&f, Args &&...args) -> THREAD_RETURN_TYPE {
+                                                ^
+/Users/celve/Repositories/Me/TicketSystem/src/include/thread/thread_pool.h:19:54: note: expanded from macro 'THREAD_RETURN_TYPE'
+#define THREAD_RETURN_TYPE std::future<typename std::result_of<F(Args...)>::type>
+                                                     ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/type_traits:4009:34: note: 'result_of<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:131:16) ()>' has been explicitly marked deprecated here
+template <class _Callable> class _LIBCPP_DEPRECATED_IN_CXX17 result_of;
+                                 ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/__config:1066:39: note: expanded from macro '_LIBCPP_DEPRECATED_IN_CXX17'
+#  define _LIBCPP_DEPRECATED_IN_CXX17 _LIBCPP_DEPRECATED
+                                      ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/__config:1043:48: note: expanded from macro '_LIBCPP_DEPRECATED'
+#    define _LIBCPP_DEPRECATED __attribute__ ((deprecated))
+                                               ^
+In file included from /Users/celve/Repositories/Me/TicketSystem/main.cpp:14:
+/Users/celve/Repositories/Me/TicketSystem/src/include/thread/thread_pool.h:48:49: warning: 'result_of<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:145:37) ()>' is deprecated [-Wdeprecated-declarations]
+auto ThreadPool::Join(F &&f, Args &&...args) -> THREAD_RETURN_TYPE {
+                                                ^
+/Users/celve/Repositories/Me/TicketSystem/src/include/thread/thread_pool.h:19:54: note: expanded from macro 'THREAD_RETURN_TYPE'
+#define THREAD_RETURN_TYPE std::future<typename std::result_of<F(Args...)>::type>
+                                                     ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/type_traits:4009:34: note: 'result_of<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:145:37) ()>' has been explicitly marked deprecated here
+template <class _Callable> class _LIBCPP_DEPRECATED_IN_CXX17 result_of;
+                                 ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/__config:1066:39: note: expanded from macro '_LIBCPP_DEPRECATED_IN_CXX17'
+#  define _LIBCPP_DEPRECATED_IN_CXX17 _LIBCPP_DEPRECATED
+                                      ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/__config:1043:48: note: expanded from macro '_LIBCPP_DEPRECATED'
+#    define _LIBCPP_DEPRECATED __attribute__ ((deprecated))
+                                               ^
+In file included from /Users/celve/Repositories/Me/TicketSystem/main.cpp:14:
+/Users/celve/Repositories/Me/TicketSystem/src/include/thread/thread_pool.h:62:10: error: no viable conversion from returned value of type 'future<return_type>' to function return type 'future<typename std::result_of<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:39:18) ()>::type>'
+  return res;
+         ^~~
+/Users/celve/Repositories/Me/TicketSystem/main.cpp:39:13: note: in instantiation of function template specialization 'thomas::ThreadPool::Join<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:39:18)>' requested here
+      pool->Join([&, i]() {
+            ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1223:5: note: candidate constructor not viable: no known conversion from 'std::future<return_type>' (aka 'future<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:39:18) &&>') to 'std::future<void> &&' for 1st argument
+    future(future&& __rhs) _NOEXCEPT
+    ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1225:5: note: candidate constructor not viable: no known conversion from 'std::future<return_type>' (aka 'future<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:39:18) &&>') to 'const std::future<void> &' for 1st argument
+    future(const future&) = delete;
+    ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1209:14: note: explicit constructor is not a candidate
+    explicit future(__assoc_sub_state* __state);
+             ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1687:12: error: reference to type '(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:39:18)' could not bind to an rvalue of type 'decltype(static_cast<std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:39:18)> &>(__f)())' (aka 'void')
+    return _VSTD::__invoke(__f_.first(), _VSTD::forward<_ArgTypes>(__arg)...);
+           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/__config:858:15: note: expanded from macro '_VSTD'
+#define _VSTD std::_LIBCPP_ABI_NAMESPACE
+              ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1643:14: note: in instantiation of member function 'std::__packaged_task_func<std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:39:18)>, std::allocator<std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:39:18)>>, (lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:39:18) &&()>::operator()' requested here
+    explicit __packaged_task_func(_Fp&& __f) : __f_(_VSTD::move(__f), __default_init_tag()) {}
+             ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1754:32: note: in instantiation of member function 'std::__packaged_task_func<std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:39:18)>, std::allocator<std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:39:18)>>, (lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:39:18) &&()>::__packaged_task_func' requested here
+        ::new ((void*)&__buf_) _FF(_VSTD::forward<_Fp>(__f));
+                               ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1896:45: note: in instantiation of function template specialization 'std::__packaged_task_function<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:39:18) &&()>::__packaged_task_function<std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:39:18)>>' requested here
+        explicit packaged_task(_Fp&& __f) : __f_(_VSTD::forward<_Fp>(__f)) {}
+                                            ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/__memory/shared_ptr.h:298:37: note: in instantiation of function template specialization 'std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:39:18) &&()>::packaged_task<std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:39:18)>, void>' requested here
+        ::new ((void*)__get_elem()) _Tp(_VSTD::forward<_Args>(__args)...);
+                                    ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/__memory/shared_ptr.h:1106:55: note: in instantiation of function template specialization 'std::__shared_ptr_emplace<std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:39:18) &&()>, std::allocator<std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:39:18) &&()>>>::__shared_ptr_emplace<std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:39:18)>>' requested here
+    ::new ((void*)_VSTD::addressof(*__guard.__get())) _ControlBlock(__a, _VSTD::forward<_Args>(__args)...);
+                                                      ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/__memory/shared_ptr.h:1115:19: note: in instantiation of function template specialization 'std::allocate_shared<std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:39:18) &&()>, std::allocator<std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:39:18) &&()>>, std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:39:18)>, void>' requested here
+    return _VSTD::allocate_shared<_Tp>(allocator<_Tp>(), _VSTD::forward<_Args>(__args)...);
+                  ^
+/Users/celve/Repositories/Me/TicketSystem/src/include/thread/thread_pool.h:52:12: note: in instantiation of function template specialization 'std::make_shared<std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:39:18) &&()>, std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:39:18)>, void>' requested here
+      std::make_shared<std::packaged_task<return_type()>>(std::bind(std::forward<F>(f), std::forward<Args>(args)...));
+           ^
+/Users/celve/Repositories/Me/TicketSystem/main.cpp:39:13: note: in instantiation of function template specialization 'thomas::ThreadPool::Join<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:39:18)>' requested here
+      pool->Join([&, i]() {
+            ^
+In file included from /Users/celve/Repositories/Me/TicketSystem/main.cpp:6:
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:645:29: error: 'type name' declared as a pointer to a reference of type '(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:39:18) &&'
+        reinterpret_cast<_Rp*>(&__value_)->~_Rp();
+                            ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1321:20: note: in instantiation of member function 'std::__assoc_state<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:39:18) &&>::__on_zero_shared' requested here
+    : __state_(new __assoc_state<_Rp>)
+                   ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1896:18: note: in instantiation of member function 'std::promise<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:39:18) &&>::promise' requested here
+        explicit packaged_task(_Fp&& __f) : __f_(_VSTD::forward<_Fp>(__f)) {}
+                 ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/__memory/shared_ptr.h:298:37: note: in instantiation of function template specialization 'std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:39:18) &&()>::packaged_task<std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:39:18)>, void>' requested here
+        ::new ((void*)__get_elem()) _Tp(_VSTD::forward<_Args>(__args)...);
+                                    ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/__memory/shared_ptr.h:1106:55: note: in instantiation of function template specialization 'std::__shared_ptr_emplace<std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:39:18) &&()>, std::allocator<std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:39:18) &&()>>>::__shared_ptr_emplace<std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:39:18)>>' requested here
+    ::new ((void*)_VSTD::addressof(*__guard.__get())) _ControlBlock(__a, _VSTD::forward<_Args>(__args)...);
+                                                      ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/__memory/shared_ptr.h:1115:19: note: in instantiation of function template specialization 'std::allocate_shared<std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:39:18) &&()>, std::allocator<std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:39:18) &&()>>, std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:39:18)>, void>' requested here
+    return _VSTD::allocate_shared<_Tp>(allocator<_Tp>(), _VSTD::forward<_Args>(__args)...);
+                  ^
+/Users/celve/Repositories/Me/TicketSystem/src/include/thread/thread_pool.h:52:12: note: in instantiation of function template specialization 'std::make_shared<std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:39:18) &&()>, std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:39:18)>, void>' requested here
+      std::make_shared<std::packaged_task<return_type()>>(std::bind(std::forward<F>(f), std::forward<Args>(args)...));
+           ^
+/Users/celve/Repositories/Me/TicketSystem/main.cpp:39:13: note: in instantiation of function template specialization 'thomas::ThreadPool::Join<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:39:18)>' requested here
+      pool->Join([&, i]() {
+            ^
+In file included from /Users/celve/Repositories/Me/TicketSystem/main.cpp:6:
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:658:30: error: cannot allocate reference type '(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:39:18) &&' with new
+    ::new ((void*)&__value_) _Rp(_VSTD::forward<_Arg>(__arg));
+                             ^~~
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1375:15: note: in instantiation of function template specialization 'std::__assoc_state<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:39:18) &&>::set_value<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:39:18)>' requested here
+    __state_->set_value(_VSTD::move(__r));
+              ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1960:14: note: in instantiation of member function 'std::promise<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:39:18) &&>::set_value' requested here
+        __p_.set_value(__f_(_VSTD::forward<_ArgTypes>(__args)...));
+             ^
+/Users/celve/Repositories/Me/TicketSystem/src/include/thread/thread_pool.h:59:31: note: in instantiation of member function 'std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:39:18) &&()>::operator()' requested here
+    tasks_.emplace([task]() { (*task)(); });
+                              ^
+/Users/celve/Repositories/Me/TicketSystem/main.cpp:39:13: note: in instantiation of function template specialization 'thomas::ThreadPool::Join<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:39:18)>' requested here
+      pool->Join([&, i]() {
+            ^
+In file included from /Users/celve/Repositories/Me/TicketSystem/main.cpp:14:
+/Users/celve/Repositories/Me/TicketSystem/src/include/thread/thread_pool.h:62:10: error: no viable conversion from returned value of type 'future<return_type>' to function return type 'future<typename std::result_of<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:54:37) ()>::type>'
+  return res;
+         ^~~
+/Users/celve/Repositories/Me/TicketSystem/main.cpp:54:32: note: in instantiation of function template specialization 'thomas::ThreadPool::Join<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:54:37)>' requested here
+    results.emplace_back(pool->Join([&]() {
+                               ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1054:5: note: candidate constructor not viable: no known conversion from 'std::future<return_type>' (aka 'future<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:54:37) &&>') to 'std::future<unsigned long> &&' for 1st argument
+    future(future&& __rhs) _NOEXCEPT
+    ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1056:5: note: candidate constructor not viable: no known conversion from 'std::future<return_type>' (aka 'future<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:54:37) &&>') to 'const std::future<unsigned long> &' for 1st argument
+    future(const future&) = delete;
+    ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1040:14: note: explicit constructor is not a candidate
+    explicit future(__assoc_state<_Rp>* __state);
+             ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1687:12: error: reference to type '(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:54:37)' could not bind to an rvalue of type 'decltype(static_cast<std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:54:37)> &>(__f)())' (aka 'unsigned long')
+    return _VSTD::__invoke(__f_.first(), _VSTD::forward<_ArgTypes>(__arg)...);
+           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/__config:858:15: note: expanded from macro '_VSTD'
+#define _VSTD std::_LIBCPP_ABI_NAMESPACE
+              ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1643:14: note: in instantiation of member function 'std::__packaged_task_func<std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:54:37)>, std::allocator<std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:54:37)>>, (lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:54:37) &&()>::operator()' requested here
+    explicit __packaged_task_func(_Fp&& __f) : __f_(_VSTD::move(__f), __default_init_tag()) {}
+             ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1754:32: note: in instantiation of member function 'std::__packaged_task_func<std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:54:37)>, std::allocator<std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:54:37)>>, (lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:54:37) &&()>::__packaged_task_func' requested here
+        ::new ((void*)&__buf_) _FF(_VSTD::forward<_Fp>(__f));
+                               ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1896:45: note: in instantiation of function template specialization 'std::__packaged_task_function<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:54:37) &&()>::__packaged_task_function<std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:54:37)>>' requested here
+        explicit packaged_task(_Fp&& __f) : __f_(_VSTD::forward<_Fp>(__f)) {}
+                                            ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/__memory/shared_ptr.h:298:37: note: in instantiation of function template specialization 'std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:54:37) &&()>::packaged_task<std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:54:37)>, void>' requested here
+        ::new ((void*)__get_elem()) _Tp(_VSTD::forward<_Args>(__args)...);
+                                    ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/__memory/shared_ptr.h:1106:55: note: in instantiation of function template specialization 'std::__shared_ptr_emplace<std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:54:37) &&()>, std::allocator<std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:54:37) &&()>>>::__shared_ptr_emplace<std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:54:37)>>' requested here
+    ::new ((void*)_VSTD::addressof(*__guard.__get())) _ControlBlock(__a, _VSTD::forward<_Args>(__args)...);
+                                                      ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/__memory/shared_ptr.h:1115:19: note: in instantiation of function template specialization 'std::allocate_shared<std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:54:37) &&()>, std::allocator<std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:54:37) &&()>>, std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:54:37)>, void>' requested here
+    return _VSTD::allocate_shared<_Tp>(allocator<_Tp>(), _VSTD::forward<_Args>(__args)...);
+                  ^
+/Users/celve/Repositories/Me/TicketSystem/src/include/thread/thread_pool.h:52:12: note: in instantiation of function template specialization 'std::make_shared<std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:54:37) &&()>, std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:54:37)>, void>' requested here
+      std::make_shared<std::packaged_task<return_type()>>(std::bind(std::forward<F>(f), std::forward<Args>(args)...));
+           ^
+/Users/celve/Repositories/Me/TicketSystem/main.cpp:54:32: note: in instantiation of function template specialization 'thomas::ThreadPool::Join<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:54:37)>' requested here
+    results.emplace_back(pool->Join([&]() {
+                               ^
+In file included from /Users/celve/Repositories/Me/TicketSystem/main.cpp:6:
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:645:29: error: 'type name' declared as a pointer to a reference of type '(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:54:37) &&'
+        reinterpret_cast<_Rp*>(&__value_)->~_Rp();
+                            ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1321:20: note: in instantiation of member function 'std::__assoc_state<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:54:37) &&>::__on_zero_shared' requested here
+    : __state_(new __assoc_state<_Rp>)
+                   ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1896:18: note: in instantiation of member function 'std::promise<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:54:37) &&>::promise' requested here
+        explicit packaged_task(_Fp&& __f) : __f_(_VSTD::forward<_Fp>(__f)) {}
+                 ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/__memory/shared_ptr.h:298:37: note: in instantiation of function template specialization 'std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:54:37) &&()>::packaged_task<std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:54:37)>, void>' requested here
+        ::new ((void*)__get_elem()) _Tp(_VSTD::forward<_Args>(__args)...);
+                                    ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/__memory/shared_ptr.h:1106:55: note: in instantiation of function template specialization 'std::__shared_ptr_emplace<std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:54:37) &&()>, std::allocator<std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:54:37) &&()>>>::__shared_ptr_emplace<std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:54:37)>>' requested here
+    ::new ((void*)_VSTD::addressof(*__guard.__get())) _ControlBlock(__a, _VSTD::forward<_Args>(__args)...);
+                                                      ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/__memory/shared_ptr.h:1115:19: note: in instantiation of function template specialization 'std::allocate_shared<std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:54:37) &&()>, std::allocator<std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:54:37) &&()>>, std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:54:37)>, void>' requested here
+    return _VSTD::allocate_shared<_Tp>(allocator<_Tp>(), _VSTD::forward<_Args>(__args)...);
+                  ^
+/Users/celve/Repositories/Me/TicketSystem/src/include/thread/thread_pool.h:52:12: note: in instantiation of function template specialization 'std::make_shared<std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:54:37) &&()>, std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:54:37)>, void>' requested here
+      std::make_shared<std::packaged_task<return_type()>>(std::bind(std::forward<F>(f), std::forward<Args>(args)...));
+           ^
+/Users/celve/Repositories/Me/TicketSystem/main.cpp:54:32: note: in instantiation of function template specialization 'thomas::ThreadPool::Join<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:54:37)>' requested here
+    results.emplace_back(pool->Join([&]() {
+                               ^
+In file included from /Users/celve/Repositories/Me/TicketSystem/main.cpp:6:
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:658:30: error: cannot allocate reference type '(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:54:37) &&' with new
+    ::new ((void*)&__value_) _Rp(_VSTD::forward<_Arg>(__arg));
+                             ^~~
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1375:15: note: in instantiation of function template specialization 'std::__assoc_state<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:54:37) &&>::set_value<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:54:37)>' requested here
+    __state_->set_value(_VSTD::move(__r));
+              ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1960:14: note: in instantiation of member function 'std::promise<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:54:37) &&>::set_value' requested here
+        __p_.set_value(__f_(_VSTD::forward<_ArgTypes>(__args)...));
+             ^
+/Users/celve/Repositories/Me/TicketSystem/src/include/thread/thread_pool.h:59:31: note: in instantiation of member function 'std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:54:37) &&()>::operator()' requested here
+    tasks_.emplace([task]() { (*task)(); });
+                              ^
+/Users/celve/Repositories/Me/TicketSystem/main.cpp:54:32: note: in instantiation of function template specialization 'thomas::ThreadPool::Join<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:54:37)>' requested here
+    results.emplace_back(pool->Join([&]() {
+                               ^
+In file included from /Users/celve/Repositories/Me/TicketSystem/main.cpp:14:
+/Users/celve/Repositories/Me/TicketSystem/src/include/thread/thread_pool.h:62:10: error: no viable conversion from returned value of type 'future<return_type>' to function return type 'future<typename std::result_of<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:80:16) ()>::type>'
+  return res;
+         ^~~
+/Users/celve/Repositories/Me/TicketSystem/main.cpp:80:11: note: in instantiation of function template specialization 'thomas::ThreadPool::Join<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:80:16)>' requested here
+    pool->Join([&]() {
+          ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1223:5: note: candidate constructor not viable: no known conversion from 'std::future<return_type>' (aka 'future<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:80:16) &&>') to 'std::future<void> &&' for 1st argument
+    future(future&& __rhs) _NOEXCEPT
+    ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1225:5: note: candidate constructor not viable: no known conversion from 'std::future<return_type>' (aka 'future<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:80:16) &&>') to 'const std::future<void> &' for 1st argument
+    future(const future&) = delete;
+    ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1209:14: note: explicit constructor is not a candidate
+    explicit future(__assoc_sub_state* __state);
+             ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1687:12: error: reference to type '(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:80:16)' could not bind to an rvalue of type 'decltype(static_cast<std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:80:16)> &>(__f)())' (aka 'void')
+    return _VSTD::__invoke(__f_.first(), _VSTD::forward<_ArgTypes>(__arg)...);
+           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/__config:858:15: note: expanded from macro '_VSTD'
+#define _VSTD std::_LIBCPP_ABI_NAMESPACE
+              ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1643:14: note: in instantiation of member function 'std::__packaged_task_func<std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:80:16)>, std::allocator<std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:80:16)>>, (lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:80:16) &&()>::operator()' requested here
+    explicit __packaged_task_func(_Fp&& __f) : __f_(_VSTD::move(__f), __default_init_tag()) {}
+             ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1754:32: note: in instantiation of member function 'std::__packaged_task_func<std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:80:16)>, std::allocator<std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:80:16)>>, (lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:80:16) &&()>::__packaged_task_func' requested here
+        ::new ((void*)&__buf_) _FF(_VSTD::forward<_Fp>(__f));
+                               ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1896:45: note: in instantiation of function template specialization 'std::__packaged_task_function<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:80:16) &&()>::__packaged_task_function<std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:80:16)>>' requested here
+        explicit packaged_task(_Fp&& __f) : __f_(_VSTD::forward<_Fp>(__f)) {}
+                                            ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/__memory/shared_ptr.h:298:37: note: in instantiation of function template specialization 'std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:80:16) &&()>::packaged_task<std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:80:16)>, void>' requested here
+        ::new ((void*)__get_elem()) _Tp(_VSTD::forward<_Args>(__args)...);
+                                    ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/__memory/shared_ptr.h:1106:55: note: in instantiation of function template specialization 'std::__shared_ptr_emplace<std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:80:16) &&()>, std::allocator<std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:80:16) &&()>>>::__shared_ptr_emplace<std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:80:16)>>' requested here
+    ::new ((void*)_VSTD::addressof(*__guard.__get())) _ControlBlock(__a, _VSTD::forward<_Args>(__args)...);
+                                                      ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/__memory/shared_ptr.h:1115:19: note: in instantiation of function template specialization 'std::allocate_shared<std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:80:16) &&()>, std::allocator<std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:80:16) &&()>>, std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:80:16)>, void>' requested here
+    return _VSTD::allocate_shared<_Tp>(allocator<_Tp>(), _VSTD::forward<_Args>(__args)...);
+                  ^
+/Users/celve/Repositories/Me/TicketSystem/src/include/thread/thread_pool.h:52:12: note: in instantiation of function template specialization 'std::make_shared<std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:80:16) &&()>, std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:80:16)>, void>' requested here
+      std::make_shared<std::packaged_task<return_type()>>(std::bind(std::forward<F>(f), std::forward<Args>(args)...));
+           ^
+/Users/celve/Repositories/Me/TicketSystem/main.cpp:80:11: note: in instantiation of function template specialization 'thomas::ThreadPool::Join<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:80:16)>' requested here
+    pool->Join([&]() {
+          ^
+In file included from /Users/celve/Repositories/Me/TicketSystem/main.cpp:6:
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:645:29: error: 'type name' declared as a pointer to a reference of type '(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:80:16) &&'
+        reinterpret_cast<_Rp*>(&__value_)->~_Rp();
+                            ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1321:20: note: in instantiation of member function 'std::__assoc_state<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:80:16) &&>::__on_zero_shared' requested here
+    : __state_(new __assoc_state<_Rp>)
+                   ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1896:18: note: in instantiation of member function 'std::promise<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:80:16) &&>::promise' requested here
+        explicit packaged_task(_Fp&& __f) : __f_(_VSTD::forward<_Fp>(__f)) {}
+                 ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/__memory/shared_ptr.h:298:37: note: in instantiation of function template specialization 'std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:80:16) &&()>::packaged_task<std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:80:16)>, void>' requested here
+        ::new ((void*)__get_elem()) _Tp(_VSTD::forward<_Args>(__args)...);
+                                    ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/__memory/shared_ptr.h:1106:55: note: in instantiation of function template specialization 'std::__shared_ptr_emplace<std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:80:16) &&()>, std::allocator<std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:80:16) &&()>>>::__shared_ptr_emplace<std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:80:16)>>' requested here
+    ::new ((void*)_VSTD::addressof(*__guard.__get())) _ControlBlock(__a, _VSTD::forward<_Args>(__args)...);
+                                                      ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/__memory/shared_ptr.h:1115:19: note: in instantiation of function template specialization 'std::allocate_shared<std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:80:16) &&()>, std::allocator<std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:80:16) &&()>>, std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:80:16)>, void>' requested here
+    return _VSTD::allocate_shared<_Tp>(allocator<_Tp>(), _VSTD::forward<_Args>(__args)...);
+                  ^
+/Users/celve/Repositories/Me/TicketSystem/src/include/thread/thread_pool.h:52:12: note: in instantiation of function template specialization 'std::make_shared<std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:80:16) &&()>, std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:80:16)>, void>' requested here
+      std::make_shared<std::packaged_task<return_type()>>(std::bind(std::forward<F>(f), std::forward<Args>(args)...));
+           ^
+/Users/celve/Repositories/Me/TicketSystem/main.cpp:80:11: note: in instantiation of function template specialization 'thomas::ThreadPool::Join<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:80:16)>' requested here
+    pool->Join([&]() {
+          ^
+In file included from /Users/celve/Repositories/Me/TicketSystem/main.cpp:6:
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:658:30: error: cannot allocate reference type '(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:80:16) &&' with new
+    ::new ((void*)&__value_) _Rp(_VSTD::forward<_Arg>(__arg));
+                             ^~~
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1375:15: note: in instantiation of function template specialization 'std::__assoc_state<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:80:16) &&>::set_value<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:80:16)>' requested here
+    __state_->set_value(_VSTD::move(__r));
+              ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1960:14: note: in instantiation of member function 'std::promise<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:80:16) &&>::set_value' requested here
+        __p_.set_value(__f_(_VSTD::forward<_ArgTypes>(__args)...));
+             ^
+/Users/celve/Repositories/Me/TicketSystem/src/include/thread/thread_pool.h:59:31: note: in instantiation of member function 'std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:80:16) &&()>::operator()' requested here
+    tasks_.emplace([task]() { (*task)(); });
+                              ^
+/Users/celve/Repositories/Me/TicketSystem/main.cpp:80:11: note: in instantiation of function template specialization 'thomas::ThreadPool::Join<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:80:16)>' requested here
+    pool->Join([&]() {
+          ^
+In file included from /Users/celve/Repositories/Me/TicketSystem/main.cpp:14:
+/Users/celve/Repositories/Me/TicketSystem/src/include/thread/thread_pool.h:62:10: error: no viable conversion from returned value of type 'future<return_type>' to function return type 'future<typename std::result_of<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:97:18) ()>::type>'
+  return res;
+         ^~~
+/Users/celve/Repositories/Me/TicketSystem/main.cpp:97:13: note: in instantiation of function template specialization 'thomas::ThreadPool::Join<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:97:18)>' requested here
+      pool->Join([&, i]() {
+            ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1223:5: note: candidate constructor not viable: no known conversion from 'std::future<return_type>' (aka 'future<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:97:18) &&>') to 'std::future<void> &&' for 1st argument
+    future(future&& __rhs) _NOEXCEPT
+    ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1225:5: note: candidate constructor not viable: no known conversion from 'std::future<return_type>' (aka 'future<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:97:18) &&>') to 'const std::future<void> &' for 1st argument
+    future(const future&) = delete;
+    ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1209:14: note: explicit constructor is not a candidate
+    explicit future(__assoc_sub_state* __state);
+             ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1687:12: error: reference to type '(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:97:18)' could not bind to an rvalue of type 'decltype(static_cast<std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:97:18)> &>(__f)())' (aka 'void')
+    return _VSTD::__invoke(__f_.first(), _VSTD::forward<_ArgTypes>(__arg)...);
+           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/__config:858:15: note: expanded from macro '_VSTD'
+#define _VSTD std::_LIBCPP_ABI_NAMESPACE
+              ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1643:14: note: in instantiation of member function 'std::__packaged_task_func<std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:97:18)>, std::allocator<std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:97:18)>>, (lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:97:18) &&()>::operator()' requested here
+    explicit __packaged_task_func(_Fp&& __f) : __f_(_VSTD::move(__f), __default_init_tag()) {}
+             ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1754:32: note: in instantiation of member function 'std::__packaged_task_func<std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:97:18)>, std::allocator<std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:97:18)>>, (lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:97:18) &&()>::__packaged_task_func' requested here
+        ::new ((void*)&__buf_) _FF(_VSTD::forward<_Fp>(__f));
+                               ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1896:45: note: in instantiation of function template specialization 'std::__packaged_task_function<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:97:18) &&()>::__packaged_task_function<std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:97:18)>>' requested here
+        explicit packaged_task(_Fp&& __f) : __f_(_VSTD::forward<_Fp>(__f)) {}
+                                            ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/__memory/shared_ptr.h:298:37: note: in instantiation of function template specialization 'std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:97:18) &&()>::packaged_task<std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:97:18)>, void>' requested here
+        ::new ((void*)__get_elem()) _Tp(_VSTD::forward<_Args>(__args)...);
+                                    ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/__memory/shared_ptr.h:1106:55: note: in instantiation of function template specialization 'std::__shared_ptr_emplace<std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:97:18) &&()>, std::allocator<std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:97:18) &&()>>>::__shared_ptr_emplace<std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:97:18)>>' requested here
+    ::new ((void*)_VSTD::addressof(*__guard.__get())) _ControlBlock(__a, _VSTD::forward<_Args>(__args)...);
+                                                      ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/__memory/shared_ptr.h:1115:19: note: in instantiation of function template specialization 'std::allocate_shared<std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:97:18) &&()>, std::allocator<std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:97:18) &&()>>, std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:97:18)>, void>' requested here
+    return _VSTD::allocate_shared<_Tp>(allocator<_Tp>(), _VSTD::forward<_Args>(__args)...);
+                  ^
+/Users/celve/Repositories/Me/TicketSystem/src/include/thread/thread_pool.h:52:12: note: in instantiation of function template specialization 'std::make_shared<std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:97:18) &&()>, std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:97:18)>, void>' requested here
+      std::make_shared<std::packaged_task<return_type()>>(std::bind(std::forward<F>(f), std::forward<Args>(args)...));
+           ^
+/Users/celve/Repositories/Me/TicketSystem/main.cpp:97:13: note: in instantiation of function template specialization 'thomas::ThreadPool::Join<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:97:18)>' requested here
+      pool->Join([&, i]() {
+            ^
+In file included from /Users/celve/Repositories/Me/TicketSystem/main.cpp:6:
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:645:29: error: 'type name' declared as a pointer to a reference of type '(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:97:18) &&'
+        reinterpret_cast<_Rp*>(&__value_)->~_Rp();
+                            ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1321:20: note: in instantiation of member function 'std::__assoc_state<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:97:18) &&>::__on_zero_shared' requested here
+    : __state_(new __assoc_state<_Rp>)
+                   ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1896:18: note: in instantiation of member function 'std::promise<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:97:18) &&>::promise' requested here
+        explicit packaged_task(_Fp&& __f) : __f_(_VSTD::forward<_Fp>(__f)) {}
+                 ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/__memory/shared_ptr.h:298:37: note: in instantiation of function template specialization 'std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:97:18) &&()>::packaged_task<std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:97:18)>, void>' requested here
+        ::new ((void*)__get_elem()) _Tp(_VSTD::forward<_Args>(__args)...);
+                                    ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/__memory/shared_ptr.h:1106:55: note: in instantiation of function template specialization 'std::__shared_ptr_emplace<std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:97:18) &&()>, std::allocator<std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:97:18) &&()>>>::__shared_ptr_emplace<std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:97:18)>>' requested here
+    ::new ((void*)_VSTD::addressof(*__guard.__get())) _ControlBlock(__a, _VSTD::forward<_Args>(__args)...);
+                                                      ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/__memory/shared_ptr.h:1115:19: note: in instantiation of function template specialization 'std::allocate_shared<std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:97:18) &&()>, std::allocator<std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:97:18) &&()>>, std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:97:18)>, void>' requested here
+    return _VSTD::allocate_shared<_Tp>(allocator<_Tp>(), _VSTD::forward<_Args>(__args)...);
+                  ^
+/Users/celve/Repositories/Me/TicketSystem/src/include/thread/thread_pool.h:52:12: note: in instantiation of function template specialization 'std::make_shared<std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:97:18) &&()>, std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:97:18)>, void>' requested here
+      std::make_shared<std::packaged_task<return_type()>>(std::bind(std::forward<F>(f), std::forward<Args>(args)...));
+           ^
+/Users/celve/Repositories/Me/TicketSystem/main.cpp:97:13: note: in instantiation of function template specialization 'thomas::ThreadPool::Join<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:97:18)>' requested here
+      pool->Join([&, i]() {
+            ^
+In file included from /Users/celve/Repositories/Me/TicketSystem/main.cpp:6:
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:658:30: error: cannot allocate reference type '(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:97:18) &&' with new
+    ::new ((void*)&__value_) _Rp(_VSTD::forward<_Arg>(__arg));
+                             ^~~
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1375:15: note: in instantiation of function template specialization 'std::__assoc_state<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:97:18) &&>::set_value<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:97:18)>' requested here
+    __state_->set_value(_VSTD::move(__r));
+              ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1960:14: note: in instantiation of member function 'std::promise<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:97:18) &&>::set_value' requested here
+        __p_.set_value(__f_(_VSTD::forward<_ArgTypes>(__args)...));
+             ^
+/Users/celve/Repositories/Me/TicketSystem/src/include/thread/thread_pool.h:59:31: note: in instantiation of member function 'std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:97:18) &&()>::operator()' requested here
+    tasks_.emplace([task]() { (*task)(); });
+                              ^
+/Users/celve/Repositories/Me/TicketSystem/main.cpp:97:13: note: in instantiation of function template specialization 'thomas::ThreadPool::Join<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:97:18)>' requested here
+      pool->Join([&, i]() {
+            ^
+In file included from /Users/celve/Repositories/Me/TicketSystem/main.cpp:14:
+/Users/celve/Repositories/Me/TicketSystem/src/include/thread/thread_pool.h:62:10: error: no viable conversion from returned value of type 'future<return_type>' to function return type 'future<typename std::result_of<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:113:37) ()>::type>'
+  return res;
+         ^~~
+/Users/celve/Repositories/Me/TicketSystem/main.cpp:113:32: note: in instantiation of function template specialization 'thomas::ThreadPool::Join<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:113:37)>' requested here
+    results.emplace_back(pool->Join([&]() {
+                               ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1054:5: note: candidate constructor not viable: no known conversion from 'std::future<return_type>' (aka 'future<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:113:37) &&>') to 'std::future<unsigned long> &&' for 1st argument
+    future(future&& __rhs) _NOEXCEPT
+    ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1056:5: note: candidate constructor not viable: no known conversion from 'std::future<return_type>' (aka 'future<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:113:37) &&>') to 'const std::future<unsigned long> &' for 1st argument
+    future(const future&) = delete;
+    ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1040:14: note: explicit constructor is not a candidate
+    explicit future(__assoc_state<_Rp>* __state);
+             ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1687:12: error: reference to type '(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:113:37)' could not bind to an rvalue of type 'decltype(static_cast<std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:113:37)> &>(__f)())' (aka 'unsigned long')
+    return _VSTD::__invoke(__f_.first(), _VSTD::forward<_ArgTypes>(__arg)...);
+           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/__config:858:15: note: expanded from macro '_VSTD'
+#define _VSTD std::_LIBCPP_ABI_NAMESPACE
+              ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1643:14: note: in instantiation of member function 'std::__packaged_task_func<std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:113:37)>, std::allocator<std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:113:37)>>, (lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:113:37) &&()>::operator()' requested here
+    explicit __packaged_task_func(_Fp&& __f) : __f_(_VSTD::move(__f), __default_init_tag()) {}
+             ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1754:32: note: in instantiation of member function 'std::__packaged_task_func<std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:113:37)>, std::allocator<std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:113:37)>>, (lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:113:37) &&()>::__packaged_task_func' requested here
+        ::new ((void*)&__buf_) _FF(_VSTD::forward<_Fp>(__f));
+                               ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1896:45: note: in instantiation of function template specialization 'std::__packaged_task_function<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:113:37) &&()>::__packaged_task_function<std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:113:37)>>' requested here
+        explicit packaged_task(_Fp&& __f) : __f_(_VSTD::forward<_Fp>(__f)) {}
+                                            ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/__memory/shared_ptr.h:298:37: note: in instantiation of function template specialization 'std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:113:37) &&()>::packaged_task<std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:113:37)>, void>' requested here
+        ::new ((void*)__get_elem()) _Tp(_VSTD::forward<_Args>(__args)...);
+                                    ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/__memory/shared_ptr.h:1106:55: note: in instantiation of function template specialization 'std::__shared_ptr_emplace<std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:113:37) &&()>, std::allocator<std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:113:37) &&()>>>::__shared_ptr_emplace<std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:113:37)>>' requested here
+    ::new ((void*)_VSTD::addressof(*__guard.__get())) _ControlBlock(__a, _VSTD::forward<_Args>(__args)...);
+                                                      ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/__memory/shared_ptr.h:1115:19: note: in instantiation of function template specialization 'std::allocate_shared<std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:113:37) &&()>, std::allocator<std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:113:37) &&()>>, std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:113:37)>, void>' requested here
+    return _VSTD::allocate_shared<_Tp>(allocator<_Tp>(), _VSTD::forward<_Args>(__args)...);
+                  ^
+/Users/celve/Repositories/Me/TicketSystem/src/include/thread/thread_pool.h:52:12: note: in instantiation of function template specialization 'std::make_shared<std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:113:37) &&()>, std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:113:37)>, void>' requested here
+      std::make_shared<std::packaged_task<return_type()>>(std::bind(std::forward<F>(f), std::forward<Args>(args)...));
+           ^
+/Users/celve/Repositories/Me/TicketSystem/main.cpp:113:32: note: in instantiation of function template specialization 'thomas::ThreadPool::Join<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:113:37)>' requested here
+    results.emplace_back(pool->Join([&]() {
+                               ^
+In file included from /Users/celve/Repositories/Me/TicketSystem/main.cpp:6:
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:645:29: error: 'type name' declared as a pointer to a reference of type '(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:113:37) &&'
+        reinterpret_cast<_Rp*>(&__value_)->~_Rp();
+                            ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1321:20: note: in instantiation of member function 'std::__assoc_state<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:113:37) &&>::__on_zero_shared' requested here
+    : __state_(new __assoc_state<_Rp>)
+                   ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/future:1896:18: note: in instantiation of member function 'std::promise<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:113:37) &&>::promise' requested here
+        explicit packaged_task(_Fp&& __f) : __f_(_VSTD::forward<_Fp>(__f)) {}
+                 ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/__memory/shared_ptr.h:298:37: note: in instantiation of function template specialization 'std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:113:37) &&()>::packaged_task<std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:113:37)>, void>' requested here
+        ::new ((void*)__get_elem()) _Tp(_VSTD::forward<_Args>(__args)...);
+                                    ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/__memory/shared_ptr.h:1106:55: note: in instantiation of function template specialization 'std::__shared_ptr_emplace<std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:113:37) &&()>, std::allocator<std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:113:37) &&()>>>::__shared_ptr_emplace<std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:113:37)>>' requested here
+    ::new ((void*)_VSTD::addressof(*__guard.__get())) _ControlBlock(__a, _VSTD::forward<_Args>(__args)...);
+                                                      ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/__memory/shared_ptr.h:1115:19: note: in instantiation of function template specialization 'std::allocate_shared<std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:113:37) &&()>, std::allocator<std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:113:37) &&()>>, std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:113:37)>, void>' requested here
+    return _VSTD::allocate_shared<_Tp>(allocator<_Tp>(), _VSTD::forward<_Args>(__args)...);
+                  ^
+/Users/celve/Repositories/Me/TicketSystem/src/include/thread/thread_pool.h:52:12: note: in instantiation of function template specialization 'std::make_shared<std::packaged_task<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:113:37) &&()>, std::__bind<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:113:37)>, void>' requested here
+      std::make_shared<std::packaged_task<return_type()>>(std::bind(std::forward<F>(f), std::forward<Args>(args)...));
+           ^
+/Users/celve/Repositories/Me/TicketSystem/main.cpp:113:32: note: in instantiation of function template specialization 'thomas::ThreadPool::Join<(lambda at /Users/celve/Repositories/Me/TicketSystem/main.cpp:113:37)>' requested here
+    results.emplace_back(pool->Join([&]() {
+                               ^
+fatal error: too many errors emitted, stopping now [-ferror-limit=]
+7 warnings and 20 errors generated.
+make[3]: *** [CMakeFiles/code.dir/main.cpp.o] Error 1
+make[2]: *** [CMakeFiles/code.dir/all] Error 2
+make[1]: *** [all] Error 2
+make: *** [target] Error 2

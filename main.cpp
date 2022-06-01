@@ -1,24 +1,27 @@
 #include <algorithm>
 #include <cstdio>
-#include <random>
 #include <ctime>
+#include <random>
 
 #include "storage/index/b_plus_tree_index.h"
 
 using namespace thomas;
 
 int main() {
-  BPlusTreeIndex<MixedStringInt<68>, int, MixedStringIntComparator<68>> *index_tree;
+  BPlusTreeIndex<MixedStringInt<68>, int, MixedStringIntComparator<68>>
+      *index_tree;
   MixedStringIntComparator<68> comparator(1);
   MixedStringIntComparator<68> standby_comparator(2);
-  index_tree = new BPlusTreeIndex<MixedStringInt<68>, int, MixedStringIntComparator<68>>("index", comparator);
+  index_tree =
+      new BPlusTreeIndex<MixedStringInt<68>, int, MixedStringIntComparator<68>>(
+          "index", comparator);
   int n;
   char opt[16];
   char index[68];
   int value;
   MixedStringInt<68> key;
   scanf("%d", &n);
-  while(n--) {
+  while (n--) {
     scanf("%s", opt);
     if (!strcmp(opt, "insert")) {
       scanf("%s %d", index, &value);

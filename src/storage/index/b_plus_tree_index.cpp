@@ -1,14 +1,17 @@
 #include "storage/index/b_plus_tree_index.h"
 
-#include <cstring>
 #include <cassert>
+#include <cstring>
 
 namespace thomas {
 
 #define BPLUSTREEINDEX_TYPE BPlusTreeIndex<KeyType, ValueType, KeyComparator>
 
 INDEX_TEMPLATE_ARGUMENTS
-BPLUSTREEINDEX_TYPE::BPlusTreeIndex(const std::string &index_name, const KeyComparator &key_comparator, int buffer_pool_size) : key_comparator_(key_comparator) {
+BPLUSTREEINDEX_TYPE::BPlusTreeIndex(const std::string &index_name,
+                                    const KeyComparator &key_comparator,
+                                    int buffer_pool_size)
+    : key_comparator_(key_comparator) {
   assert(index_name.size() < 32);
   strcpy(index_name_, index_name.c_str());
   disk_manager_ = new DiskManager(index_name + ".db");
@@ -32,7 +35,7 @@ BPLUSTREEINDEX_TYPE::BPlusTreeIndex(const std::string &index_name, const KeyComp
     header_page_->InsertRecord("index", -1);
     header_page_->InsertRecord("page_amount", 1);
   }
-  tree_ = new BPLUSTREE_TYPE("index", bpm_, key_comparator_);
+  tree_ = new BPLUSTREE_TYPE("index", bpm_, key_comparator_, 4, 5);
 }
 
 INDEX_TEMPLATE_ARGUMENTS
@@ -46,7 +49,8 @@ BPLUSTREEINDEX_TYPE::~BPlusTreeIndex() {
 }
 
 INDEX_TEMPLATE_ARGUMENTS
-void BPLUSTREEINDEX_TYPE::InsertEntry(const KeyType &key, const ValueType &value) {
+void BPLUSTREEINDEX_TYPE::InsertEntry(const KeyType &key,
+                                      const ValueType &value) {
   tree_->Insert(key, value);
 }
 
@@ -56,16 +60,17 @@ void BPLUSTREEINDEX_TYPE::DeleteEntry(const KeyType &key) {
 }
 
 INDEX_TEMPLATE_ARGUMENTS
-void BPLUSTREEINDEX_TYPE::ScanKey(const KeyType &key, vector<ValueType> *result, const KeyComparator &standby_comparator) {
+void BPLUSTREEINDEX_TYPE::ScanKey(const KeyType &key, vector<ValueType> *result,
+                                  const KeyComparator &standby_comparator) {
   tree_->GetValue(key, result, standby_comparator);
 }
 
 INDEX_TEMPLATE_ARGUMENTS
-void BPLUSTREEINDEX_TYPE::Debug() {
-  tree_->Print(bpm_);
-}
+void BPLUSTREEINDEX_TYPE::Debug() { tree_->Print(bpm_); }
 
-template class BPlusTreeIndex<FixedString<48>, size_t, FixedStringComparator<48>>;
-template class BPlusTreeIndex<MixedStringInt<68>, int, MixedStringIntComparator<68>>;
+template class BPlusTreeIndex<FixedString<48>, size_t,
+                              FixedStringComparator<48>>;
+template class BPlusTreeIndex<MixedStringInt<68>, int,
+                              MixedStringIntComparator<68>>;
 
-}
+} // namespace thomas
