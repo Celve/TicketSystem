@@ -35,7 +35,7 @@ BPLUSTREEINDEX_TYPE::BPlusTreeIndex(const std::string &index_name,
     header_page_->InsertRecord("index", -1);
     header_page_->InsertRecord("page_amount", 1);
   }
-  tree_ = new BPLUSTREE_TYPE("index", bpm_, key_comparator_, 4, 5);
+  tree_ = new BPLUSTREE_TYPE("index", bpm_, key_comparator_, 8, 8);
 }
 
 INDEX_TEMPLATE_ARGUMENTS
