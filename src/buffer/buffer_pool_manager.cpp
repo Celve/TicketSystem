@@ -4,6 +4,9 @@
 #include <mutex>
 #include <unordered_map>
 
+#include "buffer/innodb_replacer.h"
+#include "buffer/lru_replacer.h"
+
 namespace thomas {
 
 BufferPoolManager::BufferPoolManager(size_t pool_size, DiskManager *disk_manager, THREAD_SAFE_TYPE ts_type)

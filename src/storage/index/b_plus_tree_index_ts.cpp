@@ -8,6 +8,7 @@
 
 #include "common/config.h"
 #include "concurrency/transaction.h"
+#include "thread/thread_pool.h"
 
 namespace thomas {
 
@@ -46,6 +47,11 @@ BPLUSTREEINDEXTS_TYPE::BPlusTreeIndexTS(const std::string &index_name, const Key
 INDEX_TEMPLATE_ARGUMENTS
 BPLUSTREEINDEXTS_TYPE::~BPlusTreeIndexTS() {
   header_page_->UpdateRecord("page_amount", disk_manager_->GetNextPageId());
+  page_id_t root_page_id;
+  header_page_->SearchRecord("index", &root_page_id);
+  if (root_page_id != -1) {
+    bpm_->UnpinPage(root_page_id, false);
+  }
   bpm_->UnpinPage(HEADER_PAGE_ID, true);
   bpm_->FlushAllPages();
   disk_manager_->ShutDown();
@@ -85,6 +91,9 @@ void BPLUSTREEINDEXTS_TYPE::SearchKey(const KeyType &key, vector<ValueType> *res
   tree_->GetValue(key, result, transaction);
   delete transaction;
 }
+
+INDEX_TEMPLATE_ARGUMENTS
+void BPLUSTREEINDEXTS_TYPE::ResetPool(ThreadPool *pool) { pool_ = pool; }
 
 template class BPlusTreeIndexTS<FixedString<48>, size_t, FixedStringComparator<48>>;
 template class BPlusTreeIndexTS<MixedStringInt<68>, int, MixedStringIntComparator<68>>;

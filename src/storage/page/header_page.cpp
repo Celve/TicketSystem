@@ -1,7 +1,7 @@
+#include "storage/page/header_page.h"
+
 #include <cassert>
 #include <iostream>
-
-#include "storage/page/header_page.h"
 
 namespace thomas {
 
@@ -27,9 +27,9 @@ bool HeaderPage::InsertRecord(const std::string &name, const page_id_t root_id) 
 }
 
 /**
- * @brief 
+ * @brief
  * Delete a particular record
- * @param name 
+ * @param name
  * @return true record is found and deleted
  * @return false record is not found
  */
@@ -50,11 +50,11 @@ bool HeaderPage::DeleteRecord(const std::string &name) {
 }
 
 /**
- * @brief 
+ * @brief
  * Search the record and return as a metadata
  * The record is stored in the root_id
- * @param name 
- * @param root_id 
+ * @param name
+ * @param root_id
  * @return true record is found.
  * @return false record is not found.
  */

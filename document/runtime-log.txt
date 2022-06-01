@@ -1,0 +1,216 @@
+3000000 4096 120000 8
+insert cost: sec_cost: 18.9868
+find cost: sec_cost: 36.7178
+delete cost: sec_cost: 57.1828
+insert cost: sec_cost: 83.6502
+find cost: sec_cost: 109.816
+delete random cost: sec_cost: 137.692
+find cost: sec_cost: 164.05
+
+3000000 4096 120000 1
+insert cost: sec_cost: 19.766
+find cost: sec_cost: 35.8981
+delete cost: sec_cost: 53.6394
+insert cost: sec_cost: 79.1754
+find cost: sec_cost: 112.711
+delete random cost: sec_cost: 136.787
+find cost: sec_cost: 170.288
+
+2000000 4096 120000 1
+insert cost: sec_cost: 12.8976
+find cost: sec_cost: 23.5121
+delete cost: sec_cost: 35.2334
+insert cost: sec_cost: 51.7287
+find cost: sec_cost: 70.6107
+delete random cost: sec_cost: 83.5635
+find cost: sec_cost: 103.265
+
+2000000 4096 120000 8
+insert cost: sec_cost: 12.1385
+find cost: sec_cost: 23.4271
+delete cost: sec_cost: 36.5626
+insert cost: sec_cost: 53.3579
+find cost: sec_cost: 67.0583
+delete random cost: sec_cost: 81.0927
+find cost: sec_cost: 95.5084
+
+200000 4096 120000 8
+insert cost: sec_cost: 12.1265
+find cost: sec_cost: 23.4376
+delete cost: sec_cost: 36.5725
+insert cost: sec_cost: 53.1118
+find cost: sec_cost: 66.8741
+delete random cost: sec_cost: 80.896
+find cost: sec_cost: 95.8654
+
+3000000 4096 130000 1
+insert cost: sec_cost: 19.8578
+find cost: sec_cost: 36.1052
+delete cost: sec_cost: 53.8813
+insert cost: sec_cost: 79.2685
+find cost: sec_cost: 108.447
+delete random cost: sec_cost: 128.75
+find cost: sec_cost: 159.108
+
+3000000 4096 130000 8
+insert cost: sec_cost: 19.4653
+find cost: sec_cost: 37.1412
+delete cost: sec_cost: 57.687
+insert cost: sec_cost: 84.1257
+find cost: sec_cost: 105.522
+delete random cost: sec_cost: 127.998
+find cost: sec_cost: 150.543
+
+3000000 4096 140000 8
+insert cost: sec_cost: 19.5573
+find cost: sec_cost: 37.3395
+delete cost: sec_cost: 57.9028
+insert cost: sec_cost: 84.4171
+find cost: sec_cost: 105.649
+delete random cost: sec_cost: 127.886
+find cost: sec_cost: 150.383
+
+1000000 8192 130000 8
+insert cost: sec_cost: 4.08859
+find cost: sec_cost: 7.77429
+delete cost: sec_cost: 12.0058
+insert cost: sec_cost: 17.7579
+find cost: sec_cost: 23.6907
+delete random cost: sec_cost: 28.9723
+find cost: sec_cost: 35.0852
+
+1000000 4096 130000 8
+insert cost: sec_cost: 5.43376
+find cost: sec_cost: 10.7465
+delete cost: sec_cost: 16.5989
+insert cost: sec_cost: 24.0001
+find cost: sec_cost: 30.5012
+delete random cost: sec_cost: 36.9191
+find cost: sec_cost: 43.7061
+
+1000000 8192 80000 8
+insert cost: sec_cost: 4.21255
+find cost: sec_cost: 8.01168
+delete cost: sec_cost: 12.377
+insert cost: sec_cost: 18.112
+find cost: sec_cost: 24.0018
+delete random cost: sec_cost: 29.3571
+find cost: sec_cost: 35.4694
+
+1000000 8192 80000 1
+insert cost: sec_cost: 5.60917
+find cost: sec_cost: 9.91209
+delete cost: sec_cost: 14.6973
+insert cost: sec_cost: 21.9252
+find cost: sec_cost: 30.6296
+delete random cost: sec_cost: 36.3884
+find cost: sec_cost: 45.4948
+
+2000000 8192 120000 1 wrong in find
+final cost:11.9897
+
+2000000 8192 120000 8 wrong in find
+final cost:9.47559
+
+1000000 16384 80000 8
+insert cost: sec_cost: 3.98918
+find cost: sec_cost: 7.56653
+delete cost: sec_cost: 11.3631
+insert cost: sec_cost: 16.2754
+find cost: sec_cost: 22.1557
+delete random cost: sec_cost: 26.3782
+find cost: sec_cost: 32.282
+
+2000000 16384 80000 8
+insert cost: sec_cost: 8.55773
+find cost: sec_cost: 16.3769
+delete cost: sec_cost: 24.8324
+insert cost: sec_cost: 35.612
+find cost: sec_cost: 47.5599
+delete random cost: sec_cost: 56.7899
+find cost: sec_cost: 68.6331
+
+3000000 16384 120000 1
+insert cost: sec_cost: 20.0264
+find cost: sec_cost: 33.6498
+delete cost: sec_cost: 48.8559
+insert cost: sec_cost: 73.5016
+find cost: sec_cost: 99.341
+delete random cost: sec_cost: 116.409
+find cost: sec_cost: 142.745
+
+3000000 16384 120000 8
+insert cost: sec_cost: 13.4962
+find cost: sec_cost: 25.7752
+delete cost: sec_cost: 38.9373
+insert cost: sec_cost: 56.6399
+find cost: sec_cost: 73.9753
+delete random cost: sec_cost: 88.4265
+find cost: sec_cost: 106.45
+
+2000000 4096 120000 1
+insert cost: sec_cost: 12.1363
+find cost: sec_cost: 22.582
+delete cost: sec_cost: 33.8934
+insert cost: sec_cost: 49.6371
+find cost: sec_cost: 68.4374
+delete random cost: sec_cost: 81.0245
+find cost: sec_cost: 100.622
+
+6000000 16384 120000 1 all insert
+final cost:42.0641
+
+6000000 4096 120000 8 all insert
+final cost:42.6952
+
+6000000 16384 120000 8 all insert
+final cost:29.2632
+
+6000000 16384 120000 8 insert : find : delete = 8 : 4 : 2 wrong in find
+final cost:27.5118
+
+6000000 16384 120000 1 insert : find : delete = 8 : 4 : 2 wrong in find
+final cost:36.2623
+
+10000000 16384 120000 1 insert : find : delete = 8 : 4 : 2 wrong in find
+final cost:36.2623
+final cost:62.4527
+
+10000000 16384 120000 8 insert : find : delete = 8 : 4 : 2 wrong in find
+final cost:48.9237
+
+5000000 16384 120000 8 pre insert the same number, insert : find : delete = 4 : 8 : 4, only count the last
+final cost:26.196
+
+5000000 16384 120000 1 pre insert the same number, insert : find : delete = 4 : 8 : 4, only count the last
+final cost:30.3211
+
+10000000 16384 120000 1 pre insert the same number, insert : find : delete = 4 : 8 : 4, only count the last
+final cost:64.2558
+
+10000000 16384 120000 8 pre insert the same number, insert : find : delete = 4 : 8 : 4, only count the last
+final cost:57.583
+
+10000000 16384 150000 8 pre insert the same number, insert : find : delete = 4 : 8 : 4, only count the last
+half cost:57.6449
+final cost:109.518
+
+10000000 16384 150000 1 pre insert the same number, insert : find : delete = 4 : 8 : 4, only count the last
+half cost:65.4346
+final cost:139.385
+
+1000000 16384 150000 8  pre insert the same number, insert : find : delete = 4 : 8 : 4, only count the last
+half cost:4.22781
+final cost:8.25608
+
+1000000 16384 150000 1  pre insert the same number, insert : find : delete = 4 : 8 : 4, only count the last
+half cost:5.65579
+final cost:12.0133
+
+1000000 16384 150000 1  pre insert the same number, insert : find : delete = 4 : 8 : 0, only count the last
+half cost:5.55173
+final cost:11.6948
+
+1000000 16384 150000 8 pre insert the same number, insert : find : delete = 4 : 8 : 0, only count the last
+half cost:4.35122
+final cost:8.43587
