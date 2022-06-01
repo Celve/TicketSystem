@@ -1,5 +1,3 @@
-#include <bits/types/clock_t.h>
-
 #include <algorithm>
 #include <cassert>
 #include <chrono>
@@ -44,7 +42,6 @@ void Test4() {  // NOLINT
     if (remap.count(key_string) == 0) {
       pool->Join([&, key, i]() {
         index_tree->InsertEntry(*key, i);
-        std::cout << "b";
         delete key;
       });
       remap[key_string] = i;
@@ -56,6 +53,7 @@ void Test4() {  // NOLINT
   std::cout << "all cost: sec_cost: " << 1.0 * (half_time - start_time).count() / 1e9  // NOLINT
             << std::endl;
   pool = new ThreadPool(THREAD_NUMBER);
+  index_tree->ResetPool(pool);
   // std::cout << "result of try lock: " << pool->latch_.try_lock() << std::endl;
   // pool->latch_.unlock();
 
@@ -70,7 +68,6 @@ void Test4() {  // NOLINT
       index_tree->SearchKey(*key, &res);
       size_t temp = res.empty() ? -1 : res[0];
       delete key;
-      std::cout << "c";
       return temp;
     }));
   }

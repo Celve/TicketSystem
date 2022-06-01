@@ -30,6 +30,8 @@ class BPlusTreeIndexTS {
 
   void Debug();
 
+  void ResetPool(ThreadPool *pool);
+
  private:
   char index_name_[32];
   DiskManager *disk_manager_;
