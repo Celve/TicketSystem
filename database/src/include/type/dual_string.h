@@ -37,13 +37,9 @@ class DualString {
     second_str_.SetValue(str2);
   }
 
-  int CompareFirstWith(const DualString &rhs) const {
-    return first_str_.CompareWith(rhs.first_str_);
-  }
+  int CompareFirstWith(const DualString &rhs) const { return first_str_.CompareWith(rhs.first_str_); }
 
-  int CompareSecondWith(const DualString &rhs) const {
-    return second_str_.CompareWith(rhs.second_str_);
-  }
+  int CompareSecondWith(const DualString &rhs) const { return second_str_.CompareWith(rhs.second_str_); }
 
   friend std::ostream &operator<<(std::ostream &os, const DualString &src) {
     size_t size = strlen(src.data_str_);
@@ -67,18 +63,17 @@ class DualString {
  * @tparam SecondStringSize the size of the string used as the second key
  */
 template <size_t FirstStringSize, size_t SecondStringSize>
-class StringIntComparator {
+class DualStringComparator {
  public:
   /**
    * @brief Construct a new String Int Comparator object
    * @param type 1 for the comparator used to compare both; 2 for the comparator
    * used to compare the first key; other values are invalid
    */
-  explicit StringIntComparator(int type = 0) : type_(type) {}
+  explicit DualStringComparator(int type = 0) : type_(type) {}
 
-  int operator()(
-      const DualString<FirstStringSize, SecondStringSize> &lhs,
-      const DualString<FirstStringSize, SecondStringSize> &rhs) const {
+  int operator()(const DualString<FirstStringSize, SecondStringSize> &lhs,
+                 const DualString<FirstStringSize, SecondStringSize> &rhs) const {
     auto first_result = lhs.CompareFirstWith(rhs);
     switch (type_) {
       case 1:

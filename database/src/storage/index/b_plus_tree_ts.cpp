@@ -2,6 +2,7 @@
 
 #include <string>
 
+#include "common/macros.h"
 #include "storage/index/b_plus_tree_nts.h"
 #include "storage/page/b_plus_tree_page.h"
 #include "storage/page/header_page.h"
@@ -79,7 +80,7 @@ bool BPLUSTREETS_TYPE::GetValue(const KeyType &key, vector<ValueType> *result, c
 
   int index = leaf_node->KeyIndex(key, comparator_);
 
-  auto ClearUp = [&]() {
+  auto clear_up = [&]() {
     UnlatchPage(leaf_page, TransactionType::MULTIFIND);
     buffer_pool_manager_->UnpinPage(leaf_node->GetPageId(), false);
   };
@@ -87,7 +88,7 @@ bool BPLUSTREETS_TYPE::GetValue(const KeyType &key, vector<ValueType> *result, c
   while (true) {
     if (index != -1) {
       if (new_comparator(key, leaf_node->KeyAt(index))) {
-        ClearUp();
+        clear_up();
         transaction->Unlock();
         return true;
       }
@@ -99,7 +100,7 @@ bool BPLUSTREETS_TYPE::GetValue(const KeyType &key, vector<ValueType> *result, c
       page_id_t next_page_id = leaf_node->GetNextPageId();
 
       /* unlatch and unpin */
-      ClearUp();
+      clear_up();
 
       if (next_page_id == INVALID_PAGE_ID) {
         break;
@@ -493,10 +494,10 @@ bool BPLUSTREETS_TYPE::Coalesce(N **neighbor_node, N **node,
                                 BPlusTreeInternalPage<KeyType, page_id_t, KeyComparator> **parent, int index,
                                 Transaction *transaction) {
   /* Guarantee that *neighbor_node, *node, and *parent are all pinned in the beginning. */
-  bool isSwap = false;
+  bool is_swap = false;
   if (!index) {
     /* make sure that neighbor_node is the predescssor of the node */
-    isSwap = true;
+    is_swap = true;
     std::swap(node, neighbor_node);
     index = 1;
   }
@@ -517,7 +518,7 @@ bool BPLUSTREETS_TYPE::Coalesce(N **neighbor_node, N **node,
   (*parent)->Remove(index);
 
   /* unlatch and unpin and delete */
-  UnlatchNode<N>(isSwap ? *node : *neighbor_node, TransactionType::DELETE);
+  UnlatchNode<N>(is_swap ? *node : *neighbor_node, TransactionType::DELETE);
   buffer_pool_manager_->UnpinPage((*neighbor_node)->GetPageId(), true);  // neighbor_node is unpinned
   buffer_pool_manager_->UnpinPage((*node)->GetPageId(), true);           // node is unpinned
   transaction->AddIntoDeletedPageSet((*node)->GetPageId());
@@ -1028,7 +1029,6 @@ void BPLUSTREETS_TYPE::ToString(BPlusTreePage *page, BufferPoolManager *bpm) con
   bpm->UnpinPage(page->GetPageId(), false);
 }
 
-template class BPlusTreeTS<FixedString<48>, size_t, FixedStringComparator<48>>;
-template class BPlusTreeTS<MixedStringInt<68>, int, MixedStringIntComparator<68>>;
+DECLARE(BPlusTreeTS);
 
 }  // namespace thomas

@@ -7,6 +7,7 @@
 #include <stdexcept>
 
 #include "common/config.h"
+#include "common/macros.h"
 #include "concurrency/transaction.h"
 #include "thread/thread_pool.h"
 
@@ -95,7 +96,6 @@ void BPLUSTREEINDEXTS_TYPE::SearchKey(const KeyType &key, vector<ValueType> *res
 INDEX_TEMPLATE_ARGUMENTS
 void BPLUSTREEINDEXTS_TYPE::ResetPool(ThreadPool *pool) { pool_ = pool; }
 
-template class BPlusTreeIndexTS<FixedString<48>, size_t, FixedStringComparator<48>>;
-template class BPlusTreeIndexTS<MixedStringInt<68>, int, MixedStringIntComparator<68>>;
+DECLARE(BPlusTreeIndexTS)
 
 }  // namespace thomas

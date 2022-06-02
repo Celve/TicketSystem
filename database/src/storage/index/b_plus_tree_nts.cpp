@@ -2,6 +2,7 @@
 
 #include <string>
 
+#include "common/macros.h"
 #include "storage/page/header_page.h"
 
 namespace thomas {
@@ -70,12 +71,12 @@ bool BPLUSTREENTS_TYPE::GetValue(const KeyType &key, vector<ValueType> *result, 
 
   int index = leaf_node->KeyIndex(key, comparator_);
 
-  auto ClearUp = [&]() { buffer_pool_manager_->UnpinPage(leaf_node->GetPageId(), false); };
+  auto clear_up = [&]() { buffer_pool_manager_->UnpinPage(leaf_node->GetPageId(), false); };
 
   while (true) {
     if (index != -1) {
       if (new_comparator(key, leaf_node->KeyAt(index))) {
-        ClearUp();
+        clear_up();
         return true;
       }
       result->push_back(leaf_node->GetItem(index++).second);
@@ -86,7 +87,7 @@ bool BPLUSTREENTS_TYPE::GetValue(const KeyType &key, vector<ValueType> *result, 
       page_id_t next_page_id = leaf_node->GetNextPageId();
 
       /* unlatch and unpin */
-      ClearUp();
+      clear_up();
 
       if (next_page_id == INVALID_PAGE_ID) {
         break;
@@ -764,7 +765,6 @@ void BPLUSTREENTS_TYPE::ToString(BPlusTreePage *page, BufferPoolManager *bpm) co
   bpm->UnpinPage(page->GetPageId(), false);
 }
 
-template class BPlusTreeNTS<FixedString<48>, size_t, FixedStringComparator<48>>;
-template class BPlusTreeNTS<MixedStringInt<68>, int, MixedStringIntComparator<68>>;
+DECLARE(BPlusTreeNTS)
 
 }  // namespace thomas

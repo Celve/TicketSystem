@@ -7,6 +7,7 @@
 #include <stdexcept>
 
 #include "common/config.h"
+#include "common/macros.h"
 #include "concurrency/transaction.h"
 
 namespace thomas {
@@ -76,7 +77,6 @@ void BPLUSTREEINDEXNTS_TYPE::SearchKey(const KeyType &key, vector<ValueType> *re
   tree_->GetValue(key, result);
 }
 
-template class BPlusTreeIndexNTS<FixedString<48>, size_t, FixedStringComparator<48>>;
-template class BPlusTreeIndexNTS<MixedStringInt<68>, int, MixedStringIntComparator<68>>;
+DECLARE(BPlusTreeIndexNTS)
 
 }  // namespace thomas

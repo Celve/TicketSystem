@@ -1,7 +1,9 @@
+#include "storage/page/b_plus_tree_internal_page.h"
+
 #include <iostream>
 #include <sstream>
 
-#include "storage/page/b_plus_tree_internal_page.h"
+#include "common/macros.h"
 
 namespace thomas {
 /*****************************************************************************
@@ -295,7 +297,6 @@ void B_PLUS_TREE_INTERNAL_PAGE_TYPE::CopyFirstFrom(const MappingType &pair, Buff
   buffer_pool_manager->UnpinPage(ValueAt(0), true);
 }
 
-template class BPlusTreeInternalPage<FixedString<48>, page_id_t, FixedStringComparator<48>>;
-template class BPlusTreeInternalPage<MixedStringInt<68>, int, MixedStringIntComparator<68>>;
+DECLARE_BPLUSTREE_INTERNALPAGE(BPlusTreeInternalPage)
 
 }  // namespace thomas
