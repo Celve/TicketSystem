@@ -157,7 +157,7 @@ bool BPLUSTREETS_TYPE::OptimisticInsert(const KeyType &key, const ValueType &val
 
 /**
  * @brief
- * An optimistic try to insert.
+ * An optimistic try to insert, which means it only use read latch along the way.
  * @param key
  * @param value
  * @param transaction
@@ -187,7 +187,7 @@ void BPLUSTREETS_TYPE::TentativeInsert(const KeyType &key, const ValueType &valu
 
 /**
  * @brief
- * create a new leaf page
+ * create a new page, which might be different types
  * @param parent_id
  * @return INDEX_TEMPLATE_ARGUMENTS*
  */
@@ -245,6 +245,7 @@ bool BPLUSTREETS_TYPE::InsertIntoLeaf(const KeyType &key, const ValueType &value
   Page *leaf_page = CrabToLeaf(key, TransactionType::INSERT, false, true, false, transaction);
   LeafPage *leaf_node = reinterpret_cast<LeafPage *>(leaf_page->GetData());
 
+  /* the key is duplicate, which is not allowed */
   if (leaf_node->Insert(key, value, comparator_) == -1) {
     /* unlatch and unpin */
     ReleasePages(TransactionType::INSERT, transaction);
@@ -254,6 +255,7 @@ bool BPLUSTREETS_TYPE::InsertIntoLeaf(const KeyType &key, const ValueType &value
     return false;
   }
 
+  /* whether to split or not, according to the size */
   if (leaf_node->GetSize() < leaf_node->GetMaxSize()) {
     /* unlatch and unpin */
     UnlatchPage(leaf_page, TransactionType::INSERT);
@@ -616,6 +618,8 @@ bool BPLUSTREETS_TYPE::AdjustRoot(BPlusTreePage *old_root_node, Transaction *tra
     UpdateRootPageId(0);
 
     /* unlatch the root_page_id */
+    /* IMPORTANT NOTE: I think the root latch should not be unlocked here, because it would be released in the
+     * releasepage function */
     root_latch_.WUnlock();
 
     return true;
@@ -629,6 +633,8 @@ bool BPLUSTREETS_TYPE::AdjustRoot(BPlusTreePage *old_root_node, Transaction *tra
 
     root_page_id_ = INVALID_PAGE_ID;
     UpdateRootPageId(0);
+    /* IMPORTANT NOTE: I think the root latch should not be unlocked here, because it would be released in the
+     * releasepage function */
     root_latch_.WUnlock();
 
     return true;
@@ -858,7 +864,7 @@ void BPLUSTREETS_TYPE::UpdateRootPageId(int insert_record) {
     // create a new record<index_name + root_page_id> in header_page
     header_page->InsertRecord(index_name_, root_page_id_);
   } else {
-    // update root_page_id in header_page
+    // update root_page_id in header_page and make sure that the root is always pinned
     page_id_t last_root_page_id;
     header_page->SearchRecord(index_name_, &last_root_page_id);
     if (last_root_page_id != -1) {
