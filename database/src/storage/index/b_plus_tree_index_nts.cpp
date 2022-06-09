@@ -14,6 +14,14 @@ namespace thomas {
 
 #define BPLUSTREEINDEXNTS_TYPE BPlusTreeIndexNTS<KeyType, ValueType, KeyComparator>
 
+/**
+ * @brief
+ * a non-thread-safe b+ tree constructor
+ * @param index_name the name of b+ tree
+ * @param key_comparator the comparator used to compare keys
+ * @param buffer_pool_size the size of the buffer pool
+ * @return INDEX_TEMPLATE_ARGUMENTS
+ */
 INDEX_TEMPLATE_ARGUMENTS
 BPLUSTREEINDEXNTS_TYPE::BPlusTreeIndexNTS(const std::string &index_name, const KeyComparator &key_comparator,
                                           int buffer_pool_size)
@@ -58,12 +66,35 @@ BPLUSTREEINDEXNTS_TYPE::~BPlusTreeIndexNTS() {
 INDEX_TEMPLATE_ARGUMENTS
 void BPLUSTREEINDEXNTS_TYPE::Debug() { tree_->Print(bpm_); }
 
+/**
+ * @brief
+ * insert a key value pair into the b+ tree, and the duplicate key is not allowed, repeated key is not allowed, too
+ * @param key the key to be inserted
+ * @param value the value to be inserted
+ * @return INDEX_TEMPLATE_ARGUMENTS
+ */
 INDEX_TEMPLATE_ARGUMENTS
 void BPLUSTREEINDEXNTS_TYPE::InsertEntry(const KeyType &key, const ValueType &value) { tree_->Insert(key, value); }
 
+/**
+ * @brief
+ * delete a key value pair into the b+ tree, nothing happens if no such entry
+ * @param key
+ * @return INDEX_TEMPLATE_ARGUMENTS
+ */
 INDEX_TEMPLATE_ARGUMENTS
 void BPLUSTREEINDEXNTS_TYPE::DeleteEntry(const KeyType &key) { tree_->Remove(key); }
 
+/**
+ * @brief
+ * scan to find out all values with the same key
+ * due to the property of b+ tree, duplicate key is not allowed
+ * so a new comparator
+ * @param key
+ * @param result
+ * @param standby_comparator
+ * @return INDEX_TEMPLATE_ARGUMENTS
+ */
 INDEX_TEMPLATE_ARGUMENTS
 void BPLUSTREEINDEXNTS_TYPE::ScanKey(const KeyType &key, vector<ValueType> *result,
                                      const KeyComparator &standby_comparator) {
