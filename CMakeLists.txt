@@ -6,19 +6,20 @@ set(CMAKE_CXX_STANDARD 17)
 
 add_subdirectory(database)
 
-add_executable(code main.cpp   
+add_executable(code main.cpp
         back_end/src/Command.cpp
         back_end/src/Account.cpp
         back_end/src/TrainSystem.cpp
+        back_end/src/Management.cpp
 
-        back_end/database/FileStorage.h
-        back_end/database/map.hpp
-        back_end/database/vector.hpp
-        back_end/database/Library.h
-        back_end/database/Library.cpp
-        back_end/database/ull.h
+        back_end/libs/FileStorage.h
+        back_end/libs/map.hpp
+        back_end/libs/vector.hpp
+        back_end/libs/Library.h
+        back_end/libs/Library.cpp
+        back_end/libs/ull.h
         )
 
 target_link_libraries(code database)
 
-include_directories(back_end/src back_end/database)
+include_directories(back_end/src back_end/libs)

@@ -6,6 +6,7 @@
 #include "Account.h"
 #include "TrainSystem.h"
 #include "Command.h"
+#include "Management.h"
 
 using namespace std;
 
@@ -49,8 +50,6 @@ int main() {
         else if (s == "clean") cout << trains.clean(accounts) << endl;
         else if (s == "exit") trains.exit(accounts);
     }
-
-    fclose(stdin), fclose(stdout);
 
     return 0;
 }

@@ -70,8 +70,8 @@ private:
 public:
     Ticket() = default;
     Ticket(const Station &x, const Station &y); //起点为x,终点为y
-    inline int time() const; //查询总时间
-    inline int cost() const; //查询总价格
+    int time() const; //查询总时间
+    int cost() const; //查询总价格
     friend bool time_cmp(const Ticket &a, const Ticket &b);
     friend bool cost_cmp(const Ticket &a, const Ticket &b);
 };
@@ -136,46 +136,5 @@ public:
 
 //------------------------------------------总接口----------------------------------------
 
-class TrainManagement{
-private:
-    MemoryRiver<Train> train_data; //车次数据
-    MemoryRiver<DayTrain> day_train_data; //每日座位数据
-    MemoryRiver<Station> station_data; //车站数据
-//    MemoryRiver<Ticket> ticket_data; //购票数据
-    MemoryRiver<Order> order_data; //订单数据
-    MemoryRiver<PendingOrder> pending_order_data;
-
-    Ull train_id_to_pos, daytrain_id_to_pos, station_id_to_pos; //索引
-    Ull order_id_to_pos, pending_order_id_to_pos;
-
-//    Ull time_to_pos, cost_to_pos; //按照不同关键字排序
-
-    Ticket tickets[maxn]; //临时存储 query_ticket 的结果
-    Order orders[maxn]; //临时存储 query_order 结果
-    PendingOrder pending_orders[maxn];
-    pair<string, int> starts[maxn], ends[maxn]; //临时存储 query_transfer 2趟车次的 所有车站
-    int order_num; //临时存储 order 总数
-
-public:
-    friend void OUTPUT(TrainManagement &all, const string &train_ID);
-
-    TrainManagement();
-//    TrainManagement(const string &file_name);
-
-    //返回值设计为string，可以传递报错信息
-    string add_train(Command &line); //增加列车
-    string release_train(Command &line); //发布列车，可售票
-    string query_train(Command &line); //查询车次
-    string delete_train(Command &line); //删除列车
-    string query_ticket(Command &line); //查询车票
-    string query_transfer(Command &line); //查询换乘
-    string buy_ticket(Command &line, AccountManagement &accounts);
-    string query_order(Command &line, AccountManagement &accounts);
-    string refund_ticket(Command &line, AccountManagement &accounts);
-
-    string rollback(Command &line, AccountManagement &accounts);
-    string clean(AccountManagement &accounts);
-    string exit(AccountManagement &accounts); //退出系统，所有用户下线
-};
 
 #endif //TicketYSTEM_TRAINSYSTEM_H
