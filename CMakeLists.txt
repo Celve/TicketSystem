@@ -2,11 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 project(TicketSystem)
 
 set(CMAKE_CXX_STANDARD 17)
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=leak -fsanitize=address -ftrapv")
-# 删除编译选项
-
-#MATH(EXPR stack_size "512*1024*1024")
-#set(CMAKE_EXE_LINKER_FLAGS "-Wl,-stack,${stack_size}")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=leak -fsanitize=address -ftrapv -Ofast")
 
 add_subdirectory(database)
 

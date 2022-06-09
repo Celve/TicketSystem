@@ -47,7 +47,7 @@ private:
 
 
     thomas::StringComparator<25> cmp1;
-
+    thomas::StringTypeComparator<>
 
     Ticket tickets[maxn]; //临时存储 query_ticket 的结果
     Order orders[maxn]; //临时存储 query_order 结果
