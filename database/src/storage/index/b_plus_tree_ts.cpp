@@ -618,7 +618,7 @@ bool BPLUSTREETS_TYPE::AdjustRoot(BPlusTreePage *old_root_node, Transaction *tra
     UpdateRootPageId(0);
 
     /* unlatch the root_page_id */
-    /* IMPORTANT NOTE: I think the root latch should not be unlocked here, because it would be released in the
+    /* TODO: I think the root latch should not be unlocked here, because it would be released in the
      * releasepage function */
     root_latch_.WUnlock();
 
@@ -633,7 +633,7 @@ bool BPLUSTREETS_TYPE::AdjustRoot(BPlusTreePage *old_root_node, Transaction *tra
 
     root_page_id_ = INVALID_PAGE_ID;
     UpdateRootPageId(0);
-    /* IMPORTANT NOTE: I think the root latch should not be unlocked here, because it would be released in the
+    /* TODO: I think the root latch should not be unlocked here, because it would be released in the
      * releasepage function */
     root_latch_.WUnlock();
 

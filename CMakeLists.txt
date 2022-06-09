@@ -10,8 +10,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 add_subdirectory(database)
 
-add_executable(code     # 生成的可执行文件名称
-        back_end/main.cpp
+add_executable(code main.cpp   
         back_end/src/Command.cpp
         back_end/src/Account.cpp
         back_end/src/TrainSystem.cpp

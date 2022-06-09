@@ -30,6 +30,6 @@ set(SOURCE_CPPS
     src/thread/thread_pool.cpp
 )
 
-add_library(database main.cpp ${SOURCE_CPPS})
+add_library(database STATIC ${SOURCE_CPPS})
 
 target_include_directories(database PUBLIC src/include)

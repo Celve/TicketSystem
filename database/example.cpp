@@ -14,7 +14,7 @@
 #include "container/vector.hpp"
 #include "storage/index/b_plus_tree_index_ts.h"
 #include "thread/thread_pool.h"
-#include "type/fixed_string.h"
+#include "type/string.h"
 
 #define THREAD_NUMBER 1
 #define BUFFER_POOL_SIZE 10000
@@ -25,12 +25,10 @@ using namespace thomas;  // NOLINT
 void Test4() {  // NOLINT
   srand(time(nullptr));
   ThreadPool *pool = new ThreadPool(THREAD_NUMBER);
-  BPlusTreeIndexTS<FixedString<48>, size_t, FixedStringComparator<48>>
-      *index_tree;
-  FixedStringComparator<48> comparator;
+  BPlusTreeIndexTS<String<48>, size_t, StringComparator<48>> *index_tree;
+  StringComparator<48> comparator;
   index_tree =
-      new BPlusTreeIndexTS<FixedString<48>, size_t, FixedStringComparator<48>>(
-          "index", comparator, pool, BUFFER_POOL_SIZE);
+      new BPlusTreeIndexTS<String<48>, size_t, StringComparator<48>>("index", comparator, pool, BUFFER_POOL_SIZE);
   std::vector<std::future<size_t>> results;
 
   auto one = std::chrono::system_clock::now();
@@ -40,7 +38,7 @@ void Test4() {  // NOLINT
     for (int i = 0; i < 15; ++i) {
       key_string += static_cast<char>(rand() % 26 + 'a');
     }
-    FixedString<48> *key = new FixedString<48>;
+    String<48> *key = new String<48>;
     key->SetValue(key_string);
     pool->Join([&, key, i]() {
       index_tree->InsertEntry(*key, i);
@@ -61,7 +59,7 @@ void Test4() {  // NOLINT
     for (int i = 0; i < 15; ++i) {
       key_string += static_cast<char>(rand() % 26 + 'a');
     }
-    FixedString<48> *key = new FixedString<48>;
+    String<48> *key = new String<48>;
     key->SetValue(key_string);
     results.emplace_back(pool->Join([&, key]() {
       vector<size_t> res;
@@ -84,7 +82,7 @@ void Test4() {  // NOLINT
     for (int i = 0; i < 15; ++i) {
       key_string += static_cast<char>(rand() % 26 + 'a');
     }
-    FixedString<48> *key = new FixedString<48>;
+    String<48> *key = new String<48>;
     key->SetValue(key_string);
     pool->Join([&, key]() {
       index_tree->DeleteEntry(*key);
@@ -103,7 +101,7 @@ void Test4() {  // NOLINT
     for (int i = 0; i < 15; ++i) {
       key_string += static_cast<char>(rand() % 26 + 'a');
     }
-    FixedString<48> *key = new FixedString<48>;
+    String<48> *key = new String<48>;
     key->SetValue(key_string);
     pool->Join([&, i, key]() {
       index_tree->InsertEntry(*key, i);
@@ -124,7 +122,7 @@ void Test4() {  // NOLINT
     for (int i = 0; i < 15; ++i) {
       key_string += static_cast<char>(rand() % 26 + 'a');
     }
-    FixedString<48> *key = new FixedString<48>;
+    String<48> *key = new String<48>;
     key->SetValue(key_string);
     results.emplace_back(pool->Join([&, key]() {
       vector<size_t> res;
@@ -146,7 +144,7 @@ void Test4() {  // NOLINT
     for (int i = 0; i < 15; ++i) {
       key_string += char(rand() % 26 + 'a');
     }
-    FixedString<48> *key = new FixedString<48>;
+    String<48> *key = new String<48>;
     key->SetValue(key_string);
     pool->Join([&, key]() {
       index_tree->DeleteEntry(*key);
@@ -167,7 +165,7 @@ void Test4() {  // NOLINT
     for (int i = 0; i < 15; ++i) {
       key_string += char(rand() % 26 + 'a');
     }
-    FixedString<48> *key = new FixedString<48>;
+    String<48> *key = new String<48>;
     key->SetValue(key_string);
     results.emplace_back(pool->Join([&, key]() {
       vector<size_t> res;
@@ -182,51 +180,41 @@ void Test4() {  // NOLINT
   delete pool;
   delete index_tree;
   auto eight = std::chrono::system_clock::now();
-  std::cout << NUMBER << " " << PAGE_SIZE << " " << BUFFER_POOL_SIZE << " "
-            << THREAD_NUMBER << std::endl;
-  std::cout << "insert cost: sec_cost: "
-            << 1.0 * (two - one).count() / 1e9  // NOLINT
+  std::cout << NUMBER << " " << PAGE_SIZE << " " << BUFFER_POOL_SIZE << " " << THREAD_NUMBER << std::endl;
+  std::cout << "insert cost: sec_cost: " << 1.0 * (two - one).count() / 1e9  // NOLINT
             << std::endl;
-  std::cout << "find cost: sec_cost: "
-            << 1.0 * (three - one).count() / 1e9  // NOLINT
+  std::cout << "find cost: sec_cost: " << 1.0 * (three - one).count() / 1e9  // NOLINT
             << std::endl;
-  std::cout << "delete cost: sec_cost: "
-            << 1.0 * (four - one).count() / 1e9  // NOLINT
+  std::cout << "delete cost: sec_cost: " << 1.0 * (four - one).count() / 1e9  // NOLINT
             << std::endl;
-  std::cout << "insert cost: sec_cost: "
-            << 1.0 * (five - one).count() / 1e9  // NOLINT
+  std::cout << "insert cost: sec_cost: " << 1.0 * (five - one).count() / 1e9  // NOLINT
             << std::endl;
-  std::cout << "find cost: sec_cost: "
-            << 1.0 * (six - one).count() / 1e9  // NOLINT
+  std::cout << "find cost: sec_cost: " << 1.0 * (six - one).count() / 1e9  // NOLINT
             << std::endl;
-  std::cout << "delete random cost: sec_cost: "
-            << 1.0 * (seven - one).count() / 1e9  // NOLINT
+  std::cout << "delete random cost: sec_cost: " << 1.0 * (seven - one).count() / 1e9  // NOLINT
             << std::endl;
-  std::cout << "find cost: sec_cost: "
-            << 1.0 * (eight - one).count() / 1e9  // NOLINT
+  std::cout << "find cost: sec_cost: " << 1.0 * (eight - one).count() / 1e9  // NOLINT
             << std::endl;
 }
 
 void Test5() {
   // srand(time(nullptr));
   ThreadPool *pool = new ThreadPool(THREAD_NUMBER);
-  BPlusTreeIndexTS<FixedString<48>, size_t, FixedStringComparator<48>>
-      *index_tree;
-  FixedStringComparator<48> comparator;
+  BPlusTreeIndexTS<String<48>, size_t, StringComparator<48>> *index_tree;
+  StringComparator<48> comparator;
   index_tree =
-      new BPlusTreeIndexTS<FixedString<48>, size_t, FixedStringComparator<48>>(
-          "index", comparator, pool, BUFFER_POOL_SIZE);
+      new BPlusTreeIndexTS<String<48>, size_t, StringComparator<48>>("index", comparator, pool, BUFFER_POOL_SIZE);
   std::vector<std::future<size_t>> results;
   auto begin = std::chrono::system_clock::now();
   for (int i = 0; i < NUMBER; ++i) {
     int type = rand() % 14;
     std::string key_string;
-    FixedString<48> *key;
+    String<48> *key;
     if (type <= 7) {
       for (int j = 0; j < 20; ++j) {
         key_string += static_cast<char>(rand() % 26 + 'a');
       }
-      key = new FixedString<48>;
+      key = new String<48>;
       key->SetValue(key_string);
       pool->Join([&, key, i]() {
         index_tree->InsertEntry(*key, i);
@@ -236,7 +224,7 @@ void Test5() {
       for (int j = 0; j < 15; ++j) {
         key_string += static_cast<char>(rand() % 26 + 'a');
       }
-      key = new FixedString<48>;
+      key = new String<48>;
       key->SetValue(key_string);
       results.emplace_back(pool->Join([&, key]() {
         vector<size_t> res;
@@ -249,7 +237,7 @@ void Test5() {
       for (int j = 0; j < 15; ++j) {
         key_string += static_cast<char>(rand() % 26 + 'a');
       }
-      key = new FixedString<48>;
+      key = new String<48>;
       key->SetValue(key_string);
       pool->Join([&, key]() {
         index_tree->DeleteEntry(*key);
@@ -260,8 +248,7 @@ void Test5() {
   delete pool;
   delete index_tree;
   auto end = std::chrono::system_clock::now();
-  std::cout << NUMBER << " " << PAGE_SIZE << " " << BUFFER_POOL_SIZE << " "
-            << THREAD_NUMBER << std::endl;
+  std::cout << NUMBER << " " << PAGE_SIZE << " " << BUFFER_POOL_SIZE << " " << THREAD_NUMBER << std::endl;
   std::cout << "final cost:" << 1.0 * (end - begin).count() / 1e9  // NOLINT
             << std::endl;
 }
@@ -269,12 +256,10 @@ void Test5() {
 void Test6() {
   srand(time(nullptr));
   ThreadPool *pool = new ThreadPool(THREAD_NUMBER);
-  BPlusTreeIndexTS<FixedString<48>, size_t, FixedStringComparator<48>>
-      *index_tree;
-  FixedStringComparator<48> comparator;
+  BPlusTreeIndexTS<String<48>, size_t, StringComparator<48>> *index_tree;
+  StringComparator<48> comparator;
   index_tree =
-      new BPlusTreeIndexTS<FixedString<48>, size_t, FixedStringComparator<48>>(
-          "index", comparator, pool, BUFFER_POOL_SIZE);
+      new BPlusTreeIndexTS<String<48>, size_t, StringComparator<48>>("index", comparator, pool, BUFFER_POOL_SIZE);
   std::vector<std::future<size_t>> results;
   auto begin = std::chrono::system_clock::now();
   for (int i = 0; i < NUMBER; ++i) {
@@ -282,7 +267,7 @@ void Test6() {
     for (int j = 0; j < 15; ++j) {
       key_string += static_cast<char>(rand() % 26 + 'a');
     }
-    FixedString<48> *key = new FixedString<48>;
+    String<48> *key = new String<48>;
     key->SetValue(key_string);
     pool->Join([&, key, i]() {
       index_tree->InsertEntry(*key, i);
@@ -300,9 +285,9 @@ void Test6() {
     for (int j = 0; j < 15; ++j) {
       key_string += static_cast<char>(rand() % 26 + 'a');
     }
-    FixedString<48> *key;
+    String<48> *key;
     // if (type <= -1) {
-    // key = new FixedString<48>;
+    // key = new String<48>;
     // key->SetValue(key_string);
     // pool->Join([&, key, i]() {
     // index_tree->InsertEntry(*key, i);
@@ -312,7 +297,7 @@ void Test6() {
     // for (int j = 0; j < 15; ++j) {
     // key_string += static_cast<char>(rand() % 26 + 'a');
     // }
-    key = new FixedString<48>;
+    key = new String<48>;
     key->SetValue(key_string);
     pool->Join([&, key]() {
       vector<size_t> res;
@@ -325,7 +310,7 @@ void Test6() {
     // for (int j = 0; j < 15; ++j) {
     // key_string += static_cast<char>(rand() % 26 + 'a');
     // }
-    // key = new FixedString<48>;
+    // key = new String<48>;
     // key->SetValue(key_string);
     // pool->Join([&, key]() {
     // index_tree->DeleteEntry(*key);
@@ -336,8 +321,7 @@ void Test6() {
   delete pool;
   delete index_tree;
   auto end = std::chrono::system_clock::now();
-  std::cout << NUMBER << " " << PAGE_SIZE << " " << BUFFER_POOL_SIZE << " "
-            << THREAD_NUMBER << std::endl;
+  std::cout << NUMBER << " " << PAGE_SIZE << " " << BUFFER_POOL_SIZE << " " << THREAD_NUMBER << std::endl;
   std::cout << "first cost:" << 1.0 * (middle - begin).count() / 1e9  // NOLINT
             << std::endl;
   std::cout << "second cost:" << 1.0 * (end - middle).count() / 1e9  // NOLINT
