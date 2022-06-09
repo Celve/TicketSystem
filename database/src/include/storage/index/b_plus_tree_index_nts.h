@@ -18,14 +18,13 @@ class BPlusTreeIndexNTS {
                              int buffer_pool_size = 1000);
   ~BPlusTreeIndexNTS();
 
-  void InsertEntry(const KeyType &key, const ValueType &value, std::mutex *mutex);
+  void InsertEntry(const KeyType &key, const ValueType &value);
 
-  void DeleteEntry(const KeyType &key, std::mutex *mutex);
+  void DeleteEntry(const KeyType &key);
 
-  void ScanKey(const KeyType &key, vector<ValueType> *result, const KeyComparator &standby_comparator,
-               std::mutex *mutex);
+  void ScanKey(const KeyType &key, vector<ValueType> *result, const KeyComparator &standby_comparator);
 
-  void SearchKey(const KeyType &key, vector<ValueType> *result, std::mutex *mutex);
+  void SearchKey(const KeyType &key, vector<ValueType> *result);
 
   void Debug();
 

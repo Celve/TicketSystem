@@ -59,23 +59,19 @@ INDEX_TEMPLATE_ARGUMENTS
 void BPLUSTREEINDEXNTS_TYPE::Debug() { tree_->Print(bpm_); }
 
 INDEX_TEMPLATE_ARGUMENTS
-void BPLUSTREEINDEXNTS_TYPE::InsertEntry(const KeyType &key, const ValueType &value, std::mutex *mutex) {
-  tree_->Insert(key, value);
-}
+void BPLUSTREEINDEXNTS_TYPE::InsertEntry(const KeyType &key, const ValueType &value) { tree_->Insert(key, value); }
 
 INDEX_TEMPLATE_ARGUMENTS
-void BPLUSTREEINDEXNTS_TYPE::DeleteEntry(const KeyType &key, std::mutex *mutex) { tree_->Remove(key); }
+void BPLUSTREEINDEXNTS_TYPE::DeleteEntry(const KeyType &key) { tree_->Remove(key); }
 
 INDEX_TEMPLATE_ARGUMENTS
 void BPLUSTREEINDEXNTS_TYPE::ScanKey(const KeyType &key, vector<ValueType> *result,
-                                     const KeyComparator &standby_comparator, std::mutex *mutex) {
+                                     const KeyComparator &standby_comparator) {
   tree_->GetValue(key, result, standby_comparator);
 }
 
 INDEX_TEMPLATE_ARGUMENTS
-void BPLUSTREEINDEXNTS_TYPE::SearchKey(const KeyType &key, vector<ValueType> *result, std::mutex *mutex) {
-  tree_->GetValue(key, result);
-}
+void BPLUSTREEINDEXNTS_TYPE::SearchKey(const KeyType &key, vector<ValueType> *result) { tree_->GetValue(key, result); }
 
 DECLARE(BPlusTreeIndexNTS)
 
