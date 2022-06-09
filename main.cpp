@@ -3,14 +3,10 @@
 #include <cstring>
 #include <cmath>
 
-#include "back_end/src/Account.h"
-#include "back_end/src/TrainSystem.h"
-#include "back_end/src/Command.h"
-
-#include "storage/index/b_plus_tree_index_ts.h"
-#include "thread/thread_pool.h"
-#include "type/fixed_string.h"
-#include "type/mixed_string_int.h"
+#include "Account.h"
+#include "TrainSystem.h"
+#include "Command.h"
+#include "Management.h"
 
 using namespace std;
 
@@ -54,8 +50,6 @@ int main() {
         else if (s == "clean") cout << trains.clean(accounts) << endl;
         else if (s == "exit") trains.exit(accounts);
     }
-
-//    fclose(stdin), fclose(stdout);
 
     return 0;
 }

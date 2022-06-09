@@ -8,8 +8,8 @@
 #include "storage/index/index_iterator.h"
 #include "storage/page/b_plus_tree_internal_page.h"
 #include "storage/page/b_plus_tree_leaf_page.h"
-#include "type/fixed_string.h"
-#include "type/mixed_string_int.h"
+#include "type/string.h"
+#include "type/string_int.h"
 
 namespace thomas {
 

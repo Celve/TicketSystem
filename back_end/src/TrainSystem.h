@@ -70,8 +70,8 @@ private:
 public:
     Ticket() = default;
     Ticket(const Station &x, const Station &y); //起点为x,终点为y
-    inline int time() const; //查询总时间
-    inline int cost() const; //查询总价格
+    int time() const; //查询总时间
+    int cost() const; //查询总价格
     friend bool time_cmp(const Ticket &a, const Ticket &b);
     friend bool cost_cmp(const Ticket &a, const Ticket &b);
 };

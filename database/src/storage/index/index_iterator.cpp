@@ -1,9 +1,11 @@
 /**
  * index_iterator.cpp
  */
+#include "storage/index/index_iterator.h"
+
 #include <cassert>
 
-#include "storage/index/index_iterator.h"
+#include "common/macros.h"
 
 namespace thomas {
 
@@ -54,7 +56,6 @@ INDEXITERATOR_TYPE &INDEXITERATOR_TYPE::operator++() {
   return *this;
 }
 
-template class IndexIterator<FixedString<48>, size_t, FixedStringComparator<48>>;
-template class IndexIterator<MixedStringInt<68>, int, MixedStringIntComparator<68>>;
+DECLARE(IndexIterator)
 
 }  // namespace thomas

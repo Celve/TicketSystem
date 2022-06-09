@@ -2,6 +2,7 @@
 
 #include <string>
 
+#include "common/macros.h"
 #include "storage/index/b_plus_tree_nts.h"
 #include "storage/page/b_plus_tree_page.h"
 #include "storage/page/header_page.h"
@@ -79,7 +80,7 @@ bool BPLUSTREETS_TYPE::GetValue(const KeyType &key, vector<ValueType> *result, c
 
   int index = leaf_node->KeyIndex(key, comparator_);
 
-  auto ClearUp = [&]() {
+  auto clear_up = [&]() {
     UnlatchPage(leaf_page, TransactionType::MULTIFIND);
     buffer_pool_manager_->UnpinPage(leaf_node->GetPageId(), false);
   };
@@ -87,7 +88,7 @@ bool BPLUSTREETS_TYPE::GetValue(const KeyType &key, vector<ValueType> *result, c
   while (true) {
     if (index != -1) {
       if (new_comparator(key, leaf_node->KeyAt(index))) {
-        ClearUp();
+        clear_up();
         transaction->Unlock();
         return true;
       }
@@ -99,7 +100,7 @@ bool BPLUSTREETS_TYPE::GetValue(const KeyType &key, vector<ValueType> *result, c
       page_id_t next_page_id = leaf_node->GetNextPageId();
 
       /* unlatch and unpin */
-      ClearUp();
+      clear_up();
 
       if (next_page_id == INVALID_PAGE_ID) {
         break;
@@ -156,7 +157,7 @@ bool BPLUSTREETS_TYPE::OptimisticInsert(const KeyType &key, const ValueType &val
 
 /**
  * @brief
- * An optimistic try to insert.
+ * An optimistic try to insert, which means it only use read latch along the way.
  * @param key
  * @param value
  * @param transaction
@@ -186,7 +187,7 @@ void BPLUSTREETS_TYPE::TentativeInsert(const KeyType &key, const ValueType &valu
 
 /**
  * @brief
- * create a new leaf page
+ * create a new page, which might be different types
  * @param parent_id
  * @return INDEX_TEMPLATE_ARGUMENTS*
  */
@@ -244,6 +245,7 @@ bool BPLUSTREETS_TYPE::InsertIntoLeaf(const KeyType &key, const ValueType &value
   Page *leaf_page = CrabToLeaf(key, TransactionType::INSERT, false, true, false, transaction);
   LeafPage *leaf_node = reinterpret_cast<LeafPage *>(leaf_page->GetData());
 
+  /* the key is duplicate, which is not allowed */
   if (leaf_node->Insert(key, value, comparator_) == -1) {
     /* unlatch and unpin */
     ReleasePages(TransactionType::INSERT, transaction);
@@ -253,6 +255,7 @@ bool BPLUSTREETS_TYPE::InsertIntoLeaf(const KeyType &key, const ValueType &value
     return false;
   }
 
+  /* whether to split or not, according to the size */
   if (leaf_node->GetSize() < leaf_node->GetMaxSize()) {
     /* unlatch and unpin */
     UnlatchPage(leaf_page, TransactionType::INSERT);
@@ -493,10 +496,10 @@ bool BPLUSTREETS_TYPE::Coalesce(N **neighbor_node, N **node,
                                 BPlusTreeInternalPage<KeyType, page_id_t, KeyComparator> **parent, int index,
                                 Transaction *transaction) {
   /* Guarantee that *neighbor_node, *node, and *parent are all pinned in the beginning. */
-  bool isSwap = false;
+  bool is_swap = false;
   if (!index) {
     /* make sure that neighbor_node is the predescssor of the node */
-    isSwap = true;
+    is_swap = true;
     std::swap(node, neighbor_node);
     index = 1;
   }
@@ -517,7 +520,7 @@ bool BPLUSTREETS_TYPE::Coalesce(N **neighbor_node, N **node,
   (*parent)->Remove(index);
 
   /* unlatch and unpin and delete */
-  UnlatchNode<N>(isSwap ? *node : *neighbor_node, TransactionType::DELETE);
+  UnlatchNode<N>(is_swap ? *node : *neighbor_node, TransactionType::DELETE);
   buffer_pool_manager_->UnpinPage((*neighbor_node)->GetPageId(), true);  // neighbor_node is unpinned
   buffer_pool_manager_->UnpinPage((*node)->GetPageId(), true);           // node is unpinned
   transaction->AddIntoDeletedPageSet((*node)->GetPageId());
@@ -615,6 +618,8 @@ bool BPLUSTREETS_TYPE::AdjustRoot(BPlusTreePage *old_root_node, Transaction *tra
     UpdateRootPageId(0);
 
     /* unlatch the root_page_id */
+    /* TODO: I think the root latch should not be unlocked here, because it would be released in the
+     * releasepage function */
     root_latch_.WUnlock();
 
     return true;
@@ -628,6 +633,8 @@ bool BPLUSTREETS_TYPE::AdjustRoot(BPlusTreePage *old_root_node, Transaction *tra
 
     root_page_id_ = INVALID_PAGE_ID;
     UpdateRootPageId(0);
+    /* TODO: I think the root latch should not be unlocked here, because it would be released in the
+     * releasepage function */
     root_latch_.WUnlock();
 
     return true;
@@ -857,7 +864,7 @@ void BPLUSTREETS_TYPE::UpdateRootPageId(int insert_record) {
     // create a new record<index_name + root_page_id> in header_page
     header_page->InsertRecord(index_name_, root_page_id_);
   } else {
-    // update root_page_id in header_page
+    // update root_page_id in header_page and make sure that the root is always pinned
     page_id_t last_root_page_id;
     header_page->SearchRecord(index_name_, &last_root_page_id);
     if (last_root_page_id != -1) {
@@ -1028,7 +1035,6 @@ void BPLUSTREETS_TYPE::ToString(BPlusTreePage *page, BufferPoolManager *bpm) con
   bpm->UnpinPage(page->GetPageId(), false);
 }
 
-template class BPlusTreeTS<FixedString<48>, size_t, FixedStringComparator<48>>;
-template class BPlusTreeTS<MixedStringInt<68>, int, MixedStringIntComparator<68>>;
+DECLARE(BPlusTreeTS);
 
 }  // namespace thomas

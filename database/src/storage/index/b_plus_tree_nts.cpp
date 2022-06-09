@@ -2,6 +2,7 @@
 
 #include <string>
 
+#include "common/macros.h"
 #include "storage/page/header_page.h"
 
 namespace thomas {
@@ -70,23 +71,23 @@ bool BPLUSTREENTS_TYPE::GetValue(const KeyType &key, vector<ValueType> *result, 
 
   int index = leaf_node->KeyIndex(key, comparator_);
 
-  auto ClearUp = [&]() { buffer_pool_manager_->UnpinPage(leaf_node->GetPageId(), false); };
+  auto clear_up = [&]() { buffer_pool_manager_->UnpinPage(leaf_node->GetPageId(), false); };
 
+  /* iterate through it to find out the value with same first key */
   while (true) {
     if (index != -1) {
       if (new_comparator(key, leaf_node->KeyAt(index))) {
-        ClearUp();
+        clear_up();
         return true;
       }
       result->push_back(leaf_node->GetItem(index++).second);
     }
     if (index == -1 || index == leaf_node->GetSize()) {
       index = 0;
-      /* get next page id */
       page_id_t next_page_id = leaf_node->GetNextPageId();
 
       /* unlatch and unpin */
-      ClearUp();
+      clear_up();
 
       if (next_page_id == INVALID_PAGE_ID) {
         break;
@@ -130,7 +131,7 @@ N *BPLUSTREENTS_TYPE::NewNode(page_id_t parent_id, IndexPageType page_type) {
   page_id_t page_id;
   Page *page = buffer_pool_manager_->NewPage(&page_id);
 
-  /* all frames in buffer pool are pinned */
+  /* all frames in buffer pool are pinned, however, this is impossible to happen */
   if (page == nullptr) {
     throw std::runtime_error("Cannot fetch a new page.");
   }
@@ -318,10 +319,7 @@ bool BPLUSTREENTS_TYPE::CoalesceOrRedistribute(N *node, Transaction *transaction
     return true;
   }
 
-  // puts("Try to balance.");
-
   if (node->IsRootPage()) {
-    // puts("Adjust root happens. ");
     return AdjustRoot(node);
   }
 
@@ -764,7 +762,6 @@ void BPLUSTREENTS_TYPE::ToString(BPlusTreePage *page, BufferPoolManager *bpm) co
   bpm->UnpinPage(page->GetPageId(), false);
 }
 
-template class BPlusTreeNTS<FixedString<48>, size_t, FixedStringComparator<48>>;
-template class BPlusTreeNTS<MixedStringInt<68>, int, MixedStringIntComparator<68>>;
+DECLARE(BPlusTreeNTS)
 
 }  // namespace thomas

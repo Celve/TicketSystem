@@ -6,7 +6,6 @@
 #include "concurrency/transaction.h"
 #include "container/vector.hpp"
 #include "storage/disk/disk_manager.h"
-#include "storage/index/b_plus_tree_nts.h"
 #include "storage/index/b_plus_tree_ts.h"
 #include "storage/page/header_page.h"
 #include "thread/thread_pool.h"
