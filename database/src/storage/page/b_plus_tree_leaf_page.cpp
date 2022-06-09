@@ -3,6 +3,7 @@
 #include <sstream>
 
 #include "common/macros.h"
+#include "storage/page/b_plus_tree_page.h"
 
 namespace thomas {
 
@@ -89,11 +90,10 @@ int B_PLUS_TREE_LEAF_PAGE_TYPE::Insert(const KeyType &key, const ValueType &valu
     return GetSize();
   }
 
-  /* duplicate key */
+  /* duplicate key, but I just want to modify it */
   if (!comparator(key, KeyAt(index))) {
-    // std::cout << key << " " << KeyAt(index) << std::endl;
-    // puts("he he duplicate key");
-    return -1;
+    array[index] = MappingType{key, value};
+    return GetSize();
   }
 
   /* shift */
