@@ -9,6 +9,10 @@ namespace thomas {
 template <size_t StringSize>
 class String {
  public:
+  String(const std::string &str) {
+      SetValue(str);
+  }
+
   void SetValue(const std::string &str) {
     memset(data_, 0, sizeof(data_));
     memcpy(data_, str.c_str(), str.size());
