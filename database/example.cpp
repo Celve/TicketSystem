@@ -28,7 +28,7 @@ int main() {
   BPlusTreeIndexNTS<StringType<int, 68>, int, StringTypeComparator<int, 68>> *index_tree;
   StringTypeComparator<int, 68> comparator(1);
   StringTypeComparator<int, 68> standby_comparator(2);
-  index_tree = new BPlusTreeIndexNTS<StringType<68>, int, StringTypeComparator<68>>("index", comparator);
+  index_tree = new BPlusTreeIndexNTS<StringType<int, 68>, int, StringTypeComparator<int, 68>>("index", comparator);
   int n;
   char opt[16];
   char index[68];
