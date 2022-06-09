@@ -9,6 +9,8 @@ namespace thomas {
 template <size_t StringSize>
 class String {
  public:
+  explicit String(const std::string &str) { SetValue(str); }
+
   void SetValue(const std::string &str) {
     memset(data_, 0, sizeof(data_));
     memcpy(data_, str.c_str(), str.size());
@@ -23,9 +25,7 @@ class String {
 
   int CompareWith(const String &rhs) const { return strcmp(data_, rhs.data_); }
 
-  inline int64_t ToString() const {
-    return *reinterpret_cast<int64_t *>(const_cast<char *>(data_));
-  }
+  inline int64_t ToString() const { return *reinterpret_cast<int64_t *>(const_cast<char *>(data_)); }
 
   friend std::ostream &operator<<(std::ostream &os, const String &src) {
     size_t size = strlen(src.data_);
@@ -42,10 +42,7 @@ class String {
 template <size_t StringSize>
 class StringComparator {
  public:
-  int operator()(const String<StringSize> &lhs,
-                 const String<StringSize> &rhs) const {
-    return lhs.CompareWith(rhs);
-  }
+  int operator()(const String<StringSize> &lhs, const String<StringSize> &rhs) const { return lhs.CompareWith(rhs); }
 };
 
 }  // namespace thomas
