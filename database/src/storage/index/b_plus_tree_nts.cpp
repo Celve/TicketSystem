@@ -300,6 +300,7 @@ bool BPLUSTREENTS_TYPE::Remove(const KeyType &key, Transaction *transaction) {
   LeafPage *leaf_node = reinterpret_cast<LeafPage *>(leaf_page->GetData());
   if (leaf_node->RemoveAndDeleteRecord(key, comparator_) == -1) {
     buffer_pool_manager_->UnpinPage(leaf_page->GetPageId(), false);
+    return false;
     //    throw std::runtime_error("Entry is not found. ");
   }
   CoalesceOrRedistribute(leaf_node, transaction);
