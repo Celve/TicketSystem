@@ -61,6 +61,7 @@ BPLUSTREEINDEXNTS_TYPE::BPlusTreeIndexNTS(const std::string &index_name, const K
 INDEX_TEMPLATE_ARGUMENTS
 BPLUSTREEINDEXNTS_TYPE::~BPlusTreeIndexNTS() {
   header_page_->UpdateRecord("page_amount", disk_manager_->GetNextPageId());
+  header_page_->UpdateRecord("size", size_);
   bpm_->UnpinPage(HEADER_PAGE_ID, true);
   bpm_->FlushAllPages();
   disk_manager_->ShutDown();
