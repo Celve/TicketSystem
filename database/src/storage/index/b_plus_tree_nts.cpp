@@ -48,7 +48,7 @@ bool BPLUSTREENTS_TYPE::GetValue(const KeyType &key, vector<ValueType> *result, 
     result->push_back(value);
     flag = true;
   }
-  buffer_pool_manager_->UnpinPage(leaf_node->GetPageId(), 0);
+  buffer_pool_manager_->UnpinPage(leaf_node->GetPageId(), false);
   return flag;
 }
 
