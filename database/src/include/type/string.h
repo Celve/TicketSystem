@@ -9,6 +9,7 @@ namespace thomas {
 template <size_t StringSize>
 class String {
  public:
+
   explicit String(const std::string &str) { SetValue(str); }
 
   void SetValue(const std::string &str) {

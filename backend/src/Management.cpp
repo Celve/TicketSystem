@@ -12,7 +12,7 @@ void Sort(T *a, int l, int r, bool cmp(const T &u, const T &v)) {
     while (pl <= pr) {
         while (cmp(a[pl], mid_val)) ++pl;
         while (cmp(mid_val, a[pr])) --pr;
-        if (pl <= pr) swap(a[pl], a[pr]), ++pl, --pr;
+        if (pl <= pr) std::swap(a[pl], a[pr]), ++pl, --pr;
     }
     if (l < pr) Sort(a, l, pr, cmp);
     if (pl < r) Sort(a, pl, r, cmp);
@@ -48,13 +48,15 @@ bool pending_order_cmp(const PendingOrder &a, const PendingOrder &b) { //按ID�
     return a.order_ID < b.order_ID; //越早买的越早补票
 }
 
-bool station_cmp(const pair<string, int> &a, const pair<string, int> &b) { //按名字排序
+bool station_cmp(const std::pair<string, int> &a, const std::pair<string, int> &b) { //按名字排序
     return a.first < b.first;
 }
 
 void OUTPUT(TrainManagement &all, const string &train_ID) {//用来调试
+    using namespace std;
+
     Train a;
-    vector<int> tmp1;
+    thomas::vector<int> tmp1;
     all.train_id_to_pos.find_node(train_ID, tmp1);
     all.train_data.read(a, tmp1[0]);
 
@@ -87,13 +89,15 @@ void OUTPUT(TrainManagement &all, const string &train_ID) {//用来调试
 //----------------------------------------------class AccountManagement
 
 AccountManagement::AccountManagement() {
-    user_data.initialise("user_data");
-    username_to_pos.init("username_to_pos");
+//    user_data.initialise("user_data");
+//    username_to_pos.init("username_to_pos");
+    user_database = new thomas::BPlusTreeIndexNTS<thomas::String<32>, User, thomas::StringComparator<32> >
+                        ("user_database", cmp1);
 }
 
 AccountManagement::AccountManagement(const string &file_name) {
-    user_data.initialise("user_data");
-    username_to_pos.init(file_name);
+    user_database = new thomas::BPlusTreeIndexNTS<thomas::String<32>, User, thomas::StringComparator<32> >
+            (file_name, cmp1);
 }
 
 string AccountManagement::add_user(Command &line) {
@@ -111,23 +115,20 @@ string AccountManagement::add_user(Command &line) {
         opt = line.next_token();
     }
 
-    user_data.get_info(num, 1);
-    vector<int> ans;
-    username_to_pos.find_node(username, ans);
+    thomas::vector<User> *ans;
+    user_database->SearchKey(thomas::String<32>(username), ans);
 
     if (!num) { //首次添加用户
         User u(username, name, mail, password, 10);
-        int pos = user_data.write(u);
-        username_to_pos.add_node(UllNode(username, pos));
+        user_database->InsertEntry(thomas::String<32>(username), u);
         return "0";
     } else {
         //操作失败：未登录/权限不足/用户名已存在
-        if (!login_pool.count(cur) || login_pool.at(cur) <= privilege || !ans.empty()) {
+        if (!login_pool.count(cur) || login_pool.at(cur) <= privilege || !ans->empty()) {
             return "-1";
         } else {
             User u(username, name, mail, password, privilege);
-            int pos = user_data.write(u);
-            username_to_pos.add_node(UllNode(username, pos));
+            user_database->InsertEntry(thomas::String<32>(username), u);
             return "0";
         }
     }
@@ -142,16 +143,14 @@ string AccountManagement::login(Command &line) {
         opt = line.next_token();
     }
 
-    vector<int> ans;
-    username_to_pos.find_node(username, ans);
+    thomas::vector<User> *ans;
+    user_database->SearchKey(thomas::String<32>(username), ans);
     //用户不存在/用户已登录
-    if (ans.empty() || login_pool.count(username)) return "-1";
+    if (ans->empty() || login_pool.count(username)) return "-1";
 
-    User u;
-    user_data.read(u, ans[0]);
-    if (strcmp(u.password, password.c_str())) return "-1"; //密码错误
+    if (strcmp( (*ans)[0].password, password.c_str())) return "-1"; //密码错误
 
-    login_pool.insert(sjtu::pair<string, int>(username, u.privilege));
+    login_pool.insert(sjtu::pair<string, int>(username, (*ans)[0].privilege));
     return "0";
 }
 
@@ -179,24 +178,25 @@ string AccountManagement::modify_profile(Command &line) {
         opt = line.next_token();
     }
 
-    vector<int> ans;
-    username_to_pos.find_node(username, ans);
-    if (ans.empty()) return "-1";                   //u不存在
-    User u;
-    user_data.read(u, ans[0]);
+    thomas::vector<User> *ans;
+    user_database->SearchKey(thomas::String<32>(username), ans);
+    if (ans->empty()) return "-1";                   //user不存在
 
+    User u = (*ans)[0];
     //cur未登录/cur权限<=u的权限 且 cur != u
     if (!login_pool.count(cur) || (login_pool.at(cur) <= u.privilege) && (cur != username)
         || privilege >= login_pool.at(cur) )
         return "-1";
-
 
     if (!password.empty()) strcpy(u.password, password.c_str());
     if (!name.empty()) strcpy(u.name, name.c_str());
     if (!mail.empty()) strcpy(u.mail_addr, mail.c_str());
     if (privilege) u.privilege = privilege;
 
-    user_data.update(u, ans[0]);
+//    user_data.update(u, ans[0]);
+    user_database->InsertEntry(thomas::String<32>(username), u);
+    // todo: need to be updated.
+
     return (string)u.user_name + " " + (string)u.name + " " + (string)u.mail_addr + " " + to_string(u.privilege);
 }
 
@@ -210,11 +210,10 @@ string AccountManagement::query_profile(Command &line) {
         opt = line.next_token();
     }
 
-    User u;
-    vector<int> ans;
-    username_to_pos.find_node(username, ans);
-    if (ans.empty()) return "-1";                   //u不存在
-    user_data.read(u, ans[0]);
+    thomas::vector<User> *ans;
+    user_database->SearchKey(thomas::String<32>(username), ans);
+    if (ans->empty()) return "-1";                   //u不存在
+    User u = (*ans)[0];
 
     //cur未登录/cur权限<=u的权限 且 cur != u
     if (!login_pool.count(cur) || (login_pool.at(cur) <= u.privilege) && (cur != username) )
@@ -222,9 +221,6 @@ string AccountManagement::query_profile(Command &line) {
 
     return (string)u.user_name + " " + (string)u.name + " " + (string)u.mail_addr + " " + to_string(u.privilege);
 }
-
-//---------------------------
-
 
 //-------------------------------------------------class TrainManagement
 
@@ -264,7 +260,7 @@ string TrainManagement::add_train(Command &line) {
         opt = line.next_token();
     }
 
-    vector<int> ans;
+    thomas::vector<User> *ans;
     train_id_to_pos.find_node(train_id, ans);
     if (!ans.empty()) return "-1"; //train_ID 已存在，添加失败
 

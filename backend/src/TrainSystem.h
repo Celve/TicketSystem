@@ -2,6 +2,8 @@
 #define TicketYSTEM_TRAINSYSTEM_H
 
 #include "Account.h"
+#include "FileStorage.h"
+
 //#include "Library.h"
 
 //extern bool time_cmp();

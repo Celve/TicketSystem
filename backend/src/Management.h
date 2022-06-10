@@ -7,7 +7,7 @@
 
 #include "Account.h"
 #include "TrainSystem.h"
-
+#include "storage/index/b_plus_tree_index_nts.h"
 
 class AccountManagement{
     friend class TrainManagement;
@@ -15,9 +15,13 @@ private:
     sjtu::map<string, int> login_pool;//登录池,username -> privilege
     //可以用二叉查找树实现(红黑树)，以加快查询速度
     //更新：不能保证实时修改，所以login_pool里面的权限没有用...
-    MemoryRiver<User> user_data;//保存数据
-    Ull username_to_pos; //索引，暂时用 Ull 完成，最后要改为 BpTree
 
+//    MemoryRiver<User> user_data;//保存数据
+//    Ull username_to_pos; //索引，暂时用 Ull 完成，最后要改为 BpTree
+
+    //Memory_river与 ull 的复合
+    thomas::BPlusTreeIndexNTS<thomas::String<32>, User, thomas::StringComparator<32> > *user_database;
+    thomas::StringComparator<32> cmp1;
 
 public:
     AccountManagement();
@@ -35,19 +39,19 @@ private:
     MemoryRiver<Train> train_data; //车次数据
     MemoryRiver<DayTrain> day_train_data; //每日座位数据
     MemoryRiver<Station> station_data; //车站数据
-//    MemoryRiver<Ticket> ticket_data; //购票数据
     MemoryRiver<Order> order_data; //订单数据
     MemoryRiver<PendingOrder> pending_order_data;
 
     Ull train_id_to_pos, daytrain_id_to_pos, station_id_to_pos; //索引
     Ull order_id_to_pos, pending_order_id_to_pos;
 
-//    Ull time_to_pos, cost_to_pos; //按照不同关键字排序
+    thomas::StringComparator<25> cmp1;
+    thomas::StringTypeComparator<int, 64> cmp2;
 
     Ticket tickets[maxn]; //临时存储 query_ticket 的结果
     Order orders[maxn]; //临时存储 query_order 结果
     PendingOrder pending_orders[maxn];
-    pair<string, int> starts[maxn], ends[maxn]; //临时存储 query_transfer 2趟车次的 所有车站
+    std::pair<string, int> starts[maxn], ends[maxn]; //临时存储 query_transfer 2趟车次的 所有车站
     int order_num; //临时存储 order 总数
 
 public:

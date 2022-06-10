@@ -14,7 +14,7 @@ add_executable(code main.cpp
 
         back_end/libs/FileStorage.h
         back_end/libs/map.hpp
-        back_end/libs/vector.hpp
+#        back_end/libs/vector.hpp
         back_end/libs/Library.h
         back_end/libs/Library.cpp
         back_end/libs/ull.h
