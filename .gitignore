@@ -13,3 +13,5 @@ Debug_record.md
 Cmake
 data
 output.txt
+build.log
+*.db

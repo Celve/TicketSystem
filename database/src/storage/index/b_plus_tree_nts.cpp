@@ -38,6 +38,9 @@ bool BPLUSTREENTS_TYPE::IsEmpty() const { return root_page_id_ == INVALID_PAGE_I
 INDEX_TEMPLATE_ARGUMENTS
 bool BPLUSTREENTS_TYPE::GetValue(const KeyType &key, vector<ValueType> *result, Transaction *transaction) {
   Page *leaf_page = FindLeafPage(key, false);
+  if (leaf_page == nullptr) {
+    return false;
+  }
   LeafPage *leaf_node = reinterpret_cast<LeafPage *>(leaf_page);
   ValueType value;
   bool flag = false;
