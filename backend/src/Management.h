@@ -23,13 +23,13 @@ namespace thomas {
 //    Ull username_to_pos; //索引，暂时用 Ull 完成，最后要改为 BpTree
 
         //Memory_river与 ull 的复合
-        thomas::BPlusTreeIndexNTS<thomas::String<32>, User, thomas::StringComparator<32> > *user_database;
-        thomas::StringComparator<32> cmp1;
+        BPlusTreeIndexNTS<String<32>, User, StringComparator<32> > *user_database;
+        StringComparator<32> cmp1;
 
     public:
         AccountManagement();
-
         AccountManagement(const string &file_name);
+        ~AccountManagement();
 
         string add_user(Command &line); //增加用户
         string login(Command &line); //登录
@@ -40,25 +40,27 @@ namespace thomas {
 
     class TrainManagement {
     private:
-        MemoryRiver<Train> train_data; //车次数据
-        MemoryRiver<DayTrain> day_train_data; //每日座位数据
-        MemoryRiver<Station> station_data; //车站数据
-        MemoryRiver<Order> order_data; //订单数据
-        MemoryRiver<PendingOrder> pending_order_data;
-
+//        MemoryRiver<Train> train_data; //车次数据
+//        MemoryRiver<DayTrain> day_train_data; //每日座位数据
+//        MemoryRiver<Station> station_data; //车站数据
+//        MemoryRiver<Order> order_data; //订单数据
+//        MemoryRiver<PendingOrder> pending_order_data;
 //    Ull train_id_to_pos, daytrain_id_to_pos, station_id_to_pos; //索引
 //    Ull order_id_to_pos, pending_order_id_to_pos;
 
         StringComparator<32> cmp1;
-        StringAnyComparator<int, 32> cmp2;
+        DualStringComparator<32, 32> cmp2;
+        StringAnyComparator<TimeType, 32> cmp3;
+        StringAnyComparator<int, 32> cmp4;
+        StringAnyComparator<sjtu::pair<int, int>, 32> cmp5;
 
         BPlusTreeIndexNTS<String<32>, Train, StringComparator<32> > *train_database;
         BPlusTreeIndexNTS<DualString<32, 32>, Station, DualStringComparator<32, 32> > *station_database;
-//        BPlusTreeIndexNTS<>
+        BPlusTreeIndexNTS<StringAny<TimeType, 32>, DayTrain, StringAnyComparator<TimeType, 32> > *daytrain_database;
+        BPlusTreeIndexNTS<StringAny<int, 32>, Order, StringAnyComparator<int, 32> > *order_database;
+        BPlusTreeIndexNTS<StringAny<sjtu::pair<int, int>, 32>, PendingOrder, StringAnyComparator<sjtu::pair<int, int>, 32> > *pending_order_database;
 
-
-                Ticket
-        tickets[maxn]; //临时存储 query_ticket 的结果
+        Ticket tickets[maxn]; //临时存储 query_ticket 的结果
         Order orders[maxn]; //临时存储 query_order 结果
         PendingOrder pending_orders[maxn];
         std::pair<string, int> starts[maxn], ends[maxn]; //临时存储 query_transfer 2趟车次的 所有车站
@@ -69,6 +71,7 @@ namespace thomas {
 
         TrainManagement();
 //    TrainManagement(const string &file_name);
+        ~TrainManagement();
 
         //返回值设计为string，可以传递报错信息
         string add_train(Command &line); //增加列车
@@ -78,17 +81,13 @@ namespace thomas {
         string query_ticket(Command &line); //查询车票
         string query_transfer(Command &line); //查询换乘
         string buy_ticket(Command &line, AccountManagement &accounts);
-
         string query_order(Command &line, AccountManagement &accounts);
-
         string refund_ticket(Command &line, AccountManagement &accounts);
-
         string rollback(Command &line, AccountManagement &accounts);
-
         string clean(AccountManagement &accounts);
-
         string exit(AccountManagement &accounts); //退出系统，所有用户下线
     };
+
 }
 
 

@@ -117,6 +117,10 @@ public:
     TimeType get_time() const{//返回当前时间 xx:xx
         return TimeType(minute % 1440);
     }
+
+    int get_value() const{
+        return minute;
+    }
 };
 
 #endif //TICKETSYSTEM_LIBRARY_H

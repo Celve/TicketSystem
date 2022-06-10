@@ -13,7 +13,6 @@ namespace thomas {
 
     class Command {
         friend class AccountManagement;
-
         friend class TrainManagement;
 
     private:
@@ -47,5 +46,8 @@ namespace thomas {
         void set_delimiter(char new_delimiter); //修改分隔符
     };
 
+    //因为用 namespace，所以友元函数要在类外面声明一次
+//    istream &operator>>(istream &input, Command &obj);
+//    ostream &operator<<(ostream &os, const Command &command);
 }
 #endif //TICKETSYSTEM_COMMAND_H

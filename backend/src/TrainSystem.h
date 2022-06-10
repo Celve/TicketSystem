@@ -62,7 +62,7 @@ namespace thomas {
         TimeType start_sale_time, end_sale_time, arriving_time, leaving_time; //该车次中，到站与出站时间
         int price_sum, index; //继承自Train，index表示是该车次的第几站
         char id[64]; //这里只起到额外存储和提示作用
-        //todo : 同理直接把 train_id 和 station_name 拼接起来
+        //todo : 同理把 train_id 和 station_name 复合起来, station_name是第一关键字
 
     public:
         Station() = default;
@@ -153,6 +153,7 @@ namespace thomas {
         int num, from, to, order_ID;
         char id[64];
         //todo: 关键字是 train_ID + start_sale_date + order_ID
+        // 把 start_sale_date 和 order_ID 合成为一个 pair,然后与 train_ID 复合
         int pos; // refund_ticket 时临时用来存储位置
 
     public:
