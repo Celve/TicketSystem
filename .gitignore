@@ -16,3 +16,5 @@ output.txt
 build.log
 *.db
 testdata
+diff.log
+judge.py
