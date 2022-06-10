@@ -15,7 +15,7 @@
 
 #include "storage/index/b_plus_tree_index_nts.h"
 #include "type/string.h"
-#include "type/string_type.h"
+#include "type/string_any.h"
 
 using namespace thomas;  // NOLINT
 
@@ -25,15 +25,15 @@ int main() {
    * both thread-safe version and non-thread-safe version is provided
    * Here use the non-thread-safe version
    */
-  BPlusTreeIndexNTS<StringType<int, 68>, int, StringTypeComparator<int, 68>> *index_tree;
-  StringTypeComparator<int, 68> comparator(1);
-  StringTypeComparator<int, 68> standby_comparator(2);
-  index_tree = new BPlusTreeIndexNTS<StringType<int, 68>, int, StringTypeComparator<int, 68>>("index", comparator);
+  BPlusTreeIndexNTS<StringAny<int, 68>, int, StringAnyComparator<int, 68>> *index_tree;
+  StringAnyComparator<int, 68> comparator(1);
+  StringAnyComparator<int, 68> standby_comparator(2);
+  index_tree = new BPlusTreeIndexNTS<StringAny<int, 68>, int, StringAnyComparator<int, 68>>("index", comparator);
   int n;
   char opt[16];
   char index[68];
   int value;
-  StringType<int, 68> key;
+  StringAny<int, 68> key;
   scanf("%d", &n);
   while ((n--) != 0) {
     scanf("%s", opt);
