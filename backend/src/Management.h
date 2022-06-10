@@ -9,6 +9,7 @@
 #include "TrainSystem.h"
 #include "storage/index/b_plus_tree_index_nts.h"
 #include "type/string_any.h"
+#include "type/string_int_int.h"
 
 namespace thomas {
     class AccountManagement {
@@ -54,13 +55,13 @@ namespace thomas {
         DualStringComparator<32, 32> cmp2;
         StringAnyComparator<32, TimeType> cmp3;
         StringAnyComparator<32, int> cmp4;
-        StringAnyComparator<32, std::pair<int, int> > cmp5; //要把order_ID放在最前面
+        StringIntIntComparator<32> cmp5; //
 
         BPlusTreeIndexNTS<String<32>, Train, StringComparator<32> > *train_database;
         BPlusTreeIndexNTS<DualString<32, 32>, Station, DualStringComparator<32, 32> > *station_database;
         BPlusTreeIndexNTS<StringAny<32, TimeType>, DayTrain, StringAnyComparator<32, TimeType> > *daytrain_database;
         BPlusTreeIndexNTS<StringAny<32, int>, Order, StringAnyComparator<32, int> > *order_database;
-        BPlusTreeIndexNTS<StringAny<32, std::pair<int, int> >, PendingOrder, StringAnyComparator<32, std::pair<int, int> > > *pending_order_database;
+        BPlusTreeIndexNTS<StringIntInt<32>, PendingOrder, StringIntIntComparator<32> > *pending_order_database;
 
         Ticket tickets[maxn]; //临时存储 query_ticket 的结果
         Order orders[maxn]; //临时存储 query_order 结果

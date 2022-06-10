@@ -228,7 +228,7 @@ namespace thomas {
 
 //-------------------------------------------------class TrainManagement
 
-    TrainManagement::TrainManagement() : cmp2(2), cmp3(3), cmp4(3), cmp5(3){
+    TrainManagement::TrainManagement() : cmp2(2), cmp3(3), cmp4(3), cmp5(2){
         //先指定 cmp 的类型
 
         train_database = new BPlusTreeIndexNTS<String<32>, Train, StringComparator<32> >
@@ -239,7 +239,7 @@ namespace thomas {
                 ("daytrain_database", cmp3);
         order_database = new BPlusTreeIndexNTS<StringAny<32, int>, Order, StringAnyComparator<32, int> >
                 ("order_database", cmp4);
-        pending_order_database = new BPlusTreeIndexNTS<StringAny<32, std::pair<int, int>>, PendingOrder, StringAnyComparator<32, std::pair<int, int> > >
+        pending_order_database = new BPlusTreeIndexNTS<StringIntInt<32>, PendingOrder, StringIntIntComparator<32> >
                 ("pending_order_database", cmp5);
 
         order_num = order_database->Size();
@@ -667,8 +667,8 @@ namespace thomas {
 
             order_database->InsertEntry(StringAny<32, int>(user_name, order_ID), new_order);
             pending_order_database->InsertEntry(
-                    StringAny<32, std::pair<int, int> >(train_ID, std::make_pair(order_ID, start_day.get_value()) ),
-                    pending_order );
+                    StringIntInt<32>(train_ID, start_day.get_value(), order_ID),
+                    pending_order);
 
 //        cout << "queue" << endl;
 //        OUTPUT(*this, target_train.train_ID);
@@ -751,9 +751,9 @@ namespace thomas {
         if (refund_order.status == pending) { //候补的票要修改 pending_database
             string key = string(refund_order.train_ID) + refund_order.start_day.transfer()
                          + to_string(refund_order.order_ID);
-            pending_order_database->DeleteEntry(StringAny<32, std::pair<int, int> >(
+            pending_order_database->DeleteEntry(StringIntInt<32>(
                     refund_order.train_ID,
-                    std::make_pair(refund_order.order_ID, refund_order.start_day.get_value()))
+                    refund_order.start_day.get_value(), refund_order.order_ID)
                     );
 
 //        cout << "0" << endl;
@@ -773,16 +773,10 @@ namespace thomas {
         int CNT = 0;
         //todo: 同样是区间查找
         vector<PendingOrder> *ans2;
-        StringAnyComparator<32, std::pair<int, int> > tp_cmp2(1);
-        pending_order_database->ScanKey(StringAny<32, std::pair<int, int> >(), ans2, );
-        pending_order_id_to_pos.find_all(all);
-        for (int i = 0; i < all.size(); ++i) {
-            PendingOrder tp;
-            pending_order_data.read(tp, all[i]);
-            if (tp.start_day == refund_order.start_day && !strcmp(tp.train_ID, refund_order.train_ID)) {
-                pending_orders[++CNT] = tp;
-                pending_orders[CNT].pos = all[i];
-            }
+        StringIntIntComparator<32> tp_cmp2(1);
+        pending_order_database->ScanKey(StringIntInt<32>(), ans2, tp_cmp2);
+        for (int i = 0; i < ans2->size(); ++i) {
+            pending_orders[++CNT] = (*ans2)[i];
         }
 
         //todo: 同理的排序修改，但是是从小到大，因为早买票就早补票
@@ -795,8 +789,8 @@ namespace thomas {
                 //座位足够，而且只能全买
                 tp_daytrain.modify_seat(pending_orders[i].from, pending_orders[i].to - 1, -pending_orders[i].num);
                 //相应地删除pending_database
-                pending_order_id_to_pos.delete_node(UllNode(pending_orders[i].id, pending_orders[i].pos));
-                pending_order_data.Delete(pending_orders[i].pos);
+                pending_order_database->DeleteEntry(StringIntInt<32>(
+                        pending_orders[i].train_ID, pending_orders[i].start_day.get_value(), pending_orders[i].order_ID));
 
                 //修改 order 中的状态
                 Order success_order;
