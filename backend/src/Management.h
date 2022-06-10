@@ -53,13 +53,13 @@ namespace thomas {
         //Bpt中元素的排序规则
         StringComparator<32> cmp1;
         DualStringComparator<32, 32> cmp2;
-        StringAnyComparator<32, TimeType> cmp3;
+        StringAnyComparator<32, int> cmp3;
         StringAnyComparator<32, int> cmp4;
         StringIntIntComparator<32> cmp5; //
 
         BPlusTreeIndexNTS<String<32>, Train, StringComparator<32> > *train_database;
         BPlusTreeIndexNTS<DualString<32, 32>, Station, DualStringComparator<32, 32> > *station_database;
-        BPlusTreeIndexNTS<StringAny<32, TimeType>, DayTrain, StringAnyComparator<32, TimeType> > *daytrain_database;
+        BPlusTreeIndexNTS<StringAny<32, int>, DayTrain, StringAnyComparator<32, int> > *daytrain_database;
         BPlusTreeIndexNTS<StringAny<32, int>, Order, StringAnyComparator<32, int> > *order_database;
         BPlusTreeIndexNTS<StringIntInt<32>, PendingOrder, StringIntIntComparator<32> > *pending_order_database;
 

@@ -1,12 +1,12 @@
-#include <iostream>
+#include <cmath>
 #include <cstdio>
 #include <cstring>
-#include <cmath>
+#include <iostream>
 
 #include "Account.h"
-#include "TrainSystem.h"
 #include "Command.h"
 #include "Management.h"
+#include "TrainSystem.h"
 
 using namespace std;
 using namespace thomas;
@@ -16,11 +16,10 @@ AccountManagement accounts; //声明在外部，防止数组太大，爆栈空�
 TrainManagement trains;
 
 int main() {
-
     string input;
 
-//    freopen("1.in", "r", stdin);
-//    freopen("output.txt", "w", stdout);
+    freopen("1.in", "r", stdin);
+    freopen("output.txt", "w", stdout);
 
     while (getline(cin, input)) {
         Command cmd(input);

@@ -32,21 +32,20 @@ class StringIntInt {
     second_int_ = second_int;
   }
 
-  int CompareStrWith(const StringIntInt &rhs) { return strcmp(str_, rhs.str_); }
+  int CompareStringWith(const StringIntInt &rhs) const { return str_.CompareWith(rhs.str_); }
 
-  int CompareFirstIntWith(const StringIntInt &rhs) {
+  int CompareFirstIntWith(const StringIntInt &rhs) const {
     return first_int_ < rhs.first_int_ ? -1 : (first_int_ == rhs.first_int_ ? 0 : 1);
   }
 
-  int CompareSecondIntWith(const StringIntInt &rhs) {
+  int CompareSecondIntWith(const StringIntInt &rhs) const {
     return second_int_ < rhs.second_int_ ? -1 : (second_int_ == rhs.second_int_ ? 0 : 1);
   }
 
   inline int64_t ToString() const { return *reinterpret_cast<int64_t *>(const_cast<char *>(str_)); }
 
   friend std::ostream &operator<<(std::ostream &os, const StringIntInt &src) {
-    size_t size = strlen(src.data_str_);
-    os << "(" << src.str_ << "," << src.first_int_ << "," << src.second_int_ << ", " << src.data_t_ << ")";
+    os << "(" << src.str_ << "," << src.first_int_ << "," << src.second_int_ << ")";
     return os;
   }
 

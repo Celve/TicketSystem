@@ -235,7 +235,7 @@ namespace thomas {
                 ("train_database", cmp1);
         station_database = new BPlusTreeIndexNTS<DualString<32, 32>, Station, DualStringComparator<32, 32> >
                 ("station_database", cmp2);
-        daytrain_database = new BPlusTreeIndexNTS<StringAny<32, TimeType>, DayTrain, StringAnyComparator<32, TimeType> >
+        daytrain_database = new BPlusTreeIndexNTS<StringAny<32, int>, DayTrain, StringAnyComparator<32, int> >
                 ("daytrain_database", cmp3);
         order_database = new BPlusTreeIndexNTS<StringAny<32, int>, Order, StringAnyComparator<32, int> >
                 ("order_database", cmp4);
@@ -301,7 +301,7 @@ namespace thomas {
             for (int j = 1; j <= target_train.station_num; ++j) tp_daytrain.seat_num[j] = target_train.total_seat_num;
 
             //目前直接用 train_id + time 替代
-            daytrain_database->InsertEntry(StringAny<32, TimeType>(t_id, i), tp_daytrain);
+            daytrain_database->InsertEntry(StringAny<32, int>(t_id, i.get_value()), tp_daytrain);
         }
 
         //维护 沿途的每个车站
@@ -336,7 +336,7 @@ namespace thomas {
         if (day < target_train.start_sale_date || day > target_train.end_sale_date) return "-1";
 
         vector<DayTrain> *ans2;
-        daytrain_database->SearchKey(StringAny<32, TimeType>(t_id, day), ans2);
+        daytrain_database->SearchKey(StringAny<32, int>(t_id, day.get_value()), ans2);
         DayTrain current_daytrain = (*ans2)[0];
 
         //第一行
@@ -443,7 +443,7 @@ namespace thomas {
         for (int i = 1; i <= cnt; ++i) {
             TimeType start_day = day - tickets[i].s.leaving_time.get_date();
 
-            daytrain_database->SearchKey(StringAny<32, TimeType>(tickets[i].s.train_ID, start_day), all);
+            daytrain_database->SearchKey(StringAny<32, int>(tickets[i].s.train_ID, start_day.get_value()), all);
             DayTrain tp_daytrain = (*all)[0];
 
             string seat = to_string(tp_daytrain.query_seat(tickets[i].s.index, tickets[i].t.index - 1)); //终点站的座位数不影响
@@ -574,8 +574,8 @@ namespace thomas {
                         if (updated) { //如果更新答案，就保存结果
                             output.clear();
                             vector<DayTrain> *f1, *f2;
-                            daytrain_database->SearchKey(StringAny<32, TimeType>(train1.train_ID, start_day1), f1);
-                            daytrain_database->SearchKey(StringAny<32, TimeType>(train2.train_ID, start_day2), f2);
+                            daytrain_database->SearchKey(StringAny<32, int>(train1.train_ID, start_day1.get_value()), f1);
+                            daytrain_database->SearchKey(StringAny<32, int>(train2.train_ID, start_day2.get_value()), f2);
                             DayTrain S = (*f1)[0], T = (*f2)[0]; //读出当前的座位
 
                             output += string(s1.train_ID) + " " + string(s1.station_name) + " "
@@ -638,7 +638,7 @@ namespace thomas {
         if (start_day < target_train.start_sale_date || start_day > target_train.end_sale_date) return "-1"; //不在售票日期
 
         vector<DayTrain> *ans2;
-        daytrain_database->SearchKey(StringAny<32, TimeType>(train_ID, start_day), ans2);
+        daytrain_database->SearchKey(StringAny<32, int>(train_ID, start_day.get_value()), ans2);
         DayTrain tp = (*ans2)[0];
 
         int remain_seat = tp.query_seat(s, t - 1);
@@ -657,7 +657,7 @@ namespace thomas {
 
         if (remain_seat >= num) { //座位足够
             tp.modify_seat(s, t - 1, -num);
-            daytrain_database->InsertEntry(StringAny<32, TimeType>(train_ID, start_day), tp);
+            daytrain_database->InsertEntry(StringAny<32, int>(train_ID, start_day.get_value()), tp);
             order_database->InsertEntry(StringAny<32, int>(user_name, order_ID), new_order);
             long long total = num * price;
             return to_string(total);
@@ -764,7 +764,7 @@ namespace thomas {
         //如果原来的订单success，要修改座位，增加
         string key = string(refund_order.train_ID) + refund_order.start_day.transfer();
         vector<DayTrain> *ans;
-        daytrain_database->SearchKey(StringAny<32, TimeType>(
+        daytrain_database->SearchKey(StringAny<32, int>(
                 refund_order.train_ID, refund_order.start_day.get_value()), ans);
         DayTrain tp_daytrain = (*ans)[0];
         tp_daytrain.modify_seat(refund_order.from, refund_order.to - 1, refund_order.num);
@@ -805,7 +805,7 @@ namespace thomas {
             }
         }
         //把新补票后减少的座位，写入文件中
-        daytrain_database->InsertEntry(StringAny<32, TimeType>(
+        daytrain_database->InsertEntry(StringAny<32, int>(
                 refund_order.train_ID, refund_order.start_day.get_value()), tp_daytrain);
 
 //    cout << "0" << endl;
