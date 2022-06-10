@@ -18,7 +18,7 @@ TrainManagement trains;
 int main() {
     string input;
 
-    freopen("test_data/normal/basic_3/1.in", "r", stdin);
+    freopen("test_data/normal/basic_3/2.in", "r", stdin);
     freopen("output.txt", "w", stdout);
 
 
