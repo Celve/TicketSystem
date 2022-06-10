@@ -3,14 +3,12 @@
 namespace thomas {
 
 class Integer {
-public: 
-  void SetValue(int value) {
-    value_ = value;
-  }
+ public:
+  explicit Integer(int value) : value_(value) {}
 
-  int GetValue() {
-    return value_;
-  }
+  void SetValue(int value) { value_ = value; }
+
+  int GetValue() { return value_; }
 
   int CompareWith(const Integer &rhs) const {
     if (value_ < rhs.value_) {
@@ -22,15 +20,13 @@ public:
     return 0;
   }
 
-private: 
-  int value_;   
+ private:
+  int value_;
 };
 
 class IntegerComparator {
-public:
-  int operator()(const Integer &lhs, const Integer &rhs) {
-    return lhs.CompareWith(rhs);
-  }
+ public:
+  int operator()(const Integer &lhs, const Integer &rhs) { return lhs.CompareWith(rhs); }
 };
 
-};
+};  // namespace thomas

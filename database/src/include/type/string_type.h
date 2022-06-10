@@ -15,6 +15,8 @@ namespace thomas {
 template <class T, size_t StringSize>
 class StringType {
  public:
+  explicit StringType(const std::string &str, const T &value) { SetValue(str, value); }
+
   void SetValue(const std::string &str, const T &value) {
     memset(data_str_, 0, sizeof(data_str_));
     memcpy(data_str_, str.c_str(), str.size());
