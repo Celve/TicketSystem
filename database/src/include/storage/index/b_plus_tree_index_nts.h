@@ -3,6 +3,7 @@
 #include <mutex>
 
 #include "buffer/buffer_pool_manager.h"
+#include "common/config.h"
 #include "concurrency/transaction.h"
 #include "container/vector.hpp"
 #include "storage/disk/disk_manager.h"
@@ -15,7 +16,7 @@ INDEX_TEMPLATE_ARGUMENTS
 class BPlusTreeIndexNTS {
  public:
   explicit BPlusTreeIndexNTS(const std::string &index_name, const KeyComparator &key_comparator,
-                             int buffer_pool_size = 1000);
+                             int buffer_pool_size = BUFFER_POOL_SIZE);
   ~BPlusTreeIndexNTS();
 
   bool IsEmpty();
