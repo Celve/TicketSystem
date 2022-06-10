@@ -19,7 +19,7 @@ private:
     int minute; //表示当前的时间距离 起始时间2021-6-1 00:00 有多少 分钟
 
 public:
-    TimeType() = default;
+    TimeType() : minute(0) {};
 
     TimeType(const int &x) : minute(x) {}
 

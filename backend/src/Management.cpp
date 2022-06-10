@@ -361,7 +361,6 @@ string TrainManagement::release_train(Command &line) {
       tp_daytrain.seat_num[j] = target_train.total_seat_num;
 
     //目前直接用 train_id + time 替代
-
     daytrain_database->InsertEntry(StringAny<32, int>(t_id, i.get_value()),
                                    tp_daytrain);
   }
@@ -407,7 +406,6 @@ string TrainManagement::query_train(Command &line) {
   vector<DayTrain> ans2;
   daytrain_database->SearchKey(StringAny<32, int>(t_id, day.get_value()),
                                &ans2);
-  DayTrain current_daytrain = ans2[0];
 
   //第一行
   output = t_id + " " + target_train.type + "\n";
@@ -432,6 +430,7 @@ string TrainManagement::query_train(Command &line) {
               to_string(target_train.price_sum[target_train.station_num]) +
               " x";
   } else {
+    DayTrain current_daytrain = ans2[0]; //防止 未release, ans2 为空的特殊情况
     //从 current_daytrain 获取实时的座位数
     output += string(target_train.stations[1]) + " xx-xx xx:xx -> " +
               (day + target_train.start_time).transfer() + " 0 " +
@@ -805,9 +804,6 @@ string TrainManagement::buy_ticket(Command &line, AccountManagement &accounts) {
 
   if (remain_seat >= num) { //座位足够
     tp.modify_seat(s, t - 1, -num);
-    if (train_ID == "IHEARDthatyouask") {
-      system("pause");
-    }
     daytrain_database->InsertEntry(
         StringAny<32, int>(train_ID, start_day.get_value()), tp);
     order_database->InsertEntry(StringAny<32, int>(user_name, order_ID),
