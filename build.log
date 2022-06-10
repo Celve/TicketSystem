@@ -1,0 +1,457 @@
+/Users/celve/Repositories/Me/TicketSystem/database/src/storage/index/b_plus_tree_ts.cpp:90:11: error: no matching function for call to object of type 'const thomas::StringComparator<48>'
+      if (new_comparator(key, leaf_node->KeyAt(index))) {
+          ^~~~~~~~~~~~~~
+/Users/celve/Repositories/Me/TicketSystem/database/src/storage/index/b_plus_tree_ts.cpp:1038:9: note: in instantiation of member function 'thomas::BPlusTreeTS<thomas::String<32>, unsigned long, thomas::StringComparator<48>>::GetValue' requested here
+DECLARE(BPlusTreeTS);
+        ^
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string.h:46:7: note: candidate function not viable: no known conversion from 'const String<32>' to 'const String<48UL aka 48>' for 1st argument
+  int operator()(const String<StringSize> &lhs, const String<StringSize> &rhs) const { return lhs.CompareWith(rhs); }
+      ^
+/Users/celve/Repositories/Me/TicketSystem/database/src/storage/index/b_plus_tree_nts.cpp:79:11: error: no matching function for call to object of type 'const thomas::StringComparator<48>'
+      if (new_comparator(key, leaf_node->KeyAt(index))) {
+          ^~~~~~~~~~~~~~
+/Users/celve/Repositories/Me/TicketSystem/database/src/storage/index/b_plus_tree_nts.cpp:765:9: note: in instantiation of member function 'thomas::BPlusTreeNTS<thomas::String<32>, unsigned long, thomas::StringComparator<48>>::GetValue' requested here
+DECLARE(BPlusTreeNTS)
+        ^
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string.h:46:7: note: candidate function not viable: no known conversion from 'const String<32>' to 'const String<48UL aka 48>' for 1st argument
+  int operator()(const String<StringSize> &lhs, const String<StringSize> &rhs) const { return lhs.CompareWith(rhs); }
+      ^
+/Users/celve/Repositories/Me/TicketSystem/database/src/storage/page/b_plus_tree_leaf_page.cpp:47:9: error: no matching function for call to object of type 'const thomas::StringComparator<48>'
+    if (comparator(KeyAt(mid), key) >= 0) {
+        ^~~~~~~~~~
+/Users/celve/Repositories/Me/TicketSystem/database/src/storage/page/b_plus_tree_leaf_page.cpp:238:9: note: in instantiation of member function 'thomas::BPlusTreeLeafPage<thomas::String<32>, unsigned long, thomas::StringComparator<48>>::KeyIndex' requested here
+DECLARE(BPlusTreeLeafPage)
+        ^
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string.h:46:7: note: candidate function not viable: no known conversion from 'String<32>' to 'const String<48UL aka 48>' for 1st argument
+  int operator()(const String<StringSize> &lhs, const String<StringSize> &rhs) const { return lhs.CompareWith(rhs); }
+      ^
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/storage/page/b_plus_tree_leaf_page.cpp:1:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/storage/page/b_plus_tree_leaf_page.h:6:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/storage/page/b_plus_tree_page.h:7:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/buffer/buffer_pool_manager.h:9:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/storage/page/page.h:8:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/common/rwlatch.h:7:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/common/macros.h:7:
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:78:22: error: no member named 'CompareStringWith' in 'thomas::StringIntInt<32>'
+        result = lhs.CompareStringWith(rhs);
+                 ~~~ ^
+/Users/celve/Repositories/Me/TicketSystem/database/src/storage/page/b_plus_tree_leaf_page.cpp:47:9: note: in instantiation of member function 'thomas::StringIntIntComparator<32>::operator()' requested here
+    if (comparator(KeyAt(mid), key) >= 0) {
+        ^
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/storage/page/b_plus_tree_leaf_page.cpp:1:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/storage/page/b_plus_tree_leaf_page.h:6:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/storage/page/b_plus_tree_page.h:7:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/buffer/buffer_pool_manager.h:9:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/storage/page/page.h:8:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/common/rwlatch.h:7:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/common/macros.h:7:
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:79:30: error: 'this' argument to member function 'CompareFirstIntWith' has type 'const StringIntInt<32UL>', but function is not marked const
+        return result == 0 ? lhs.CompareFirstIntWith(rhs) : result;
+                             ^~~
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:37:7: note: 'CompareFirstIntWith' declared here
+  int CompareFirstIntWith(const StringIntInt &rhs) {
+      ^
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:81:22: error: no member named 'CompareStringWith' in 'thomas::StringIntInt<32>'
+        result = lhs.CompareStringWith(rhs);
+                 ~~~ ^
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:83:20: error: 'this' argument to member function 'CompareFirstIntWith' has type 'const StringIntInt<32UL>', but function is not marked const
+          result = lhs.CompareFirstIntWith(rhs);
+                   ^~~
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:37:7: note: 'CompareFirstIntWith' declared here
+  int CompareFirstIntWith(const StringIntInt &rhs) {
+      ^
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:86:20: error: 'this' argument to member function 'CompareSecondIntWith' has type 'const StringIntInt<32UL>', but function is not marked const
+          result = lhs.CompareSecondIntWith(rhs);
+                   ^~~
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:41:7: note: 'CompareSecondIntWith' declared here
+  int CompareSecondIntWith(const StringIntInt &rhs) {
+      ^
+6 errors generated.
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/storage/page/b_plus_tree_internal_page.cpp:1:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/storage/page/b_plus_tree_internal_page.h:5:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/storage/page/b_plus_tree_page.h:7:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/buffer/buffer_pool_manager.h:9:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/storage/page/page.h:8:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/common/rwlatch.h:7:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/common/macros.h:7:
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:78:22: error: no member named 'CompareStringWith' in 'thomas::StringIntInt<32>'
+        result = lhs.CompareStringWith(rhs);
+                 ~~~ ^
+/Users/celve/Repositories/Me/TicketSystem/database/src/storage/page/b_plus_tree_internal_page.cpp:73:9: note: in instantiation of member function 'thomas::StringIntIntComparator<32>::operator()' requested here
+    if (comparator(key, KeyAt(mid)) < 0) {
+        ^
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/storage/page/b_plus_tree_internal_page.cpp:1:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/storage/page/b_plus_tree_internal_page.h:5:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/storage/page/b_plus_tree_page.h:7:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/buffer/buffer_pool_manager.h:9:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/storage/page/page.h:8:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/common/rwlatch.h:7:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/common/macros.h:7:
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:79:30: error: 'this' argument to member function 'CompareFirstIntWith' has type 'const StringIntInt<32UL>', but function is not marked const
+        return result == 0 ? lhs.CompareFirstIntWith(rhs) : result;
+                             ^~~
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:37:7: note: 'CompareFirstIntWith' declared here
+  int CompareFirstIntWith(const StringIntInt &rhs) {
+      ^
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:81:22: error: no member named 'CompareStringWith' in 'thomas::StringIntInt<32>'
+        result = lhs.CompareStringWith(rhs);
+                 ~~~ ^
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:83:20: error: 'this' argument to member function 'CompareFirstIntWith' has type 'const StringIntInt<32UL>', but function is not marked const
+          result = lhs.CompareFirstIntWith(rhs);
+                   ^~~
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:37:7: note: 'CompareFirstIntWith' declared here
+  int CompareFirstIntWith(const StringIntInt &rhs) {
+      ^
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:86:20: error: 'this' argument to member function 'CompareSecondIntWith' has type 'const StringIntInt<32UL>', but function is not marked const
+          result = lhs.CompareSecondIntWith(rhs);
+                   ^~~
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:41:7: note: 'CompareSecondIntWith' declared here
+  int CompareSecondIntWith(const StringIntInt &rhs) {
+      ^
+5 errors generated.
+make[3]: *** [database/CMakeFiles/database.dir/src/storage/page/b_plus_tree_leaf_page.cpp.o] Error 1
+make[3]: *** Waiting for unfinished jobs....
+make[3]: *** [database/CMakeFiles/database.dir/src/storage/page/b_plus_tree_internal_page.cpp.o] Error 1
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/storage/index/b_plus_tree_nts.cpp:1:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/storage/index/b_plus_tree_nts.h:3:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/concurrency/transaction.h:6:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/storage/page/page.h:8:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/common/rwlatch.h:7:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/common/macros.h:7:
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:78:22: error: no member named 'CompareStringWith' in 'thomas::StringIntInt<32>'
+        result = lhs.CompareStringWith(rhs);
+                 ~~~ ^
+/Users/celve/Repositories/Me/TicketSystem/database/src/storage/index/b_plus_tree_nts.cpp:79:11: note: in instantiation of member function 'thomas::StringIntIntComparator<32>::operator()' requested here
+      if (new_comparator(key, leaf_node->KeyAt(index))) {
+          ^
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/storage/index/b_plus_tree_nts.cpp:1:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/storage/index/b_plus_tree_nts.h:3:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/concurrency/transaction.h:6:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/storage/page/page.h:8:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/common/rwlatch.h:7:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/common/macros.h:7:
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:79:30: error: 'this' argument to member function 'CompareFirstIntWith' has type 'const StringIntInt<32UL>', but function is not marked const
+        return result == 0 ? lhs.CompareFirstIntWith(rhs) : result;
+                             ^~~
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:37:7: note: 'CompareFirstIntWith' declared here
+  int CompareFirstIntWith(const StringIntInt &rhs) {
+      ^
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:81:22: error: no member named 'CompareStringWith' in 'thomas::StringIntInt<32>'
+        result = lhs.CompareStringWith(rhs);
+                 ~~~ ^
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:83:20: error: 'this' argument to member function 'CompareFirstIntWith' has type 'const StringIntInt<32UL>', but function is not marked const
+          result = lhs.CompareFirstIntWith(rhs);
+                   ^~~
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:37:7: note: 'CompareFirstIntWith' declared here
+  int CompareFirstIntWith(const StringIntInt &rhs) {
+      ^
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:86:20: error: 'this' argument to member function 'CompareSecondIntWith' has type 'const StringIntInt<32UL>', but function is not marked const
+          result = lhs.CompareSecondIntWith(rhs);
+                   ^~~
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:41:7: note: 'CompareSecondIntWith' declared here
+  int CompareSecondIntWith(const StringIntInt &rhs) {
+      ^
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:48:30: error: no member named 'data_str_' in 'thomas::StringIntInt<32>'
+    size_t size = strlen(src.data_str_);
+                         ~~~ ^
+/Users/celve/Repositories/Me/TicketSystem/database/src/storage/index/b_plus_tree_nts.cpp:668:21: note: in instantiation of member function 'thomas::operator<<' requested here
+      out << "<TD>" << leaf->KeyAt(i) << "</TD>\n";
+                    ^
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/storage/index/b_plus_tree_nts.cpp:1:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/storage/index/b_plus_tree_nts.h:3:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/concurrency/transaction.h:6:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/storage/page/page.h:8:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/common/rwlatch.h:7:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/common/macros.h:7:
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:49:93: error: no member named 'data_t_' in 'thomas::StringIntInt<32>'
+    os << "(" << src.str_ << "," << src.first_int_ << "," << src.second_int_ << ", " << src.data_t_ << ")";
+                                                                                        ~~~ ^
+8 errors generated.
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/storage/index/b_plus_tree_ts.cpp:1:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/storage/index/b_plus_tree_ts.h:7:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/concurrency/transaction.h:6:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/storage/page/page.h:8:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/common/rwlatch.h:7:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/common/macros.h:7:
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:78:22: error: no member named 'CompareStringWith' in 'thomas::StringIntInt<32>'
+        result = lhs.CompareStringWith(rhs);
+                 ~~~ ^
+/Users/celve/Repositories/Me/TicketSystem/database/src/storage/index/b_plus_tree_ts.cpp:90:11: note: in instantiation of member function 'thomas::StringIntIntComparator<32>::operator()' requested here
+      if (new_comparator(key, leaf_node->KeyAt(index))) {
+          ^
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/storage/index/b_plus_tree_ts.cpp:1:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/storage/index/b_plus_tree_ts.h:7:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/concurrency/transaction.h:6:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/storage/page/page.h:8:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/common/rwlatch.h:7:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/common/macros.h:7:
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:79:30: error: 'this' argument to member function 'CompareFirstIntWith' has type 'const StringIntInt<32UL>', but function is not marked const
+        return result == 0 ? lhs.CompareFirstIntWith(rhs) : result;
+                             ^~~
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:37:7: note: 'CompareFirstIntWith' declared here
+  int CompareFirstIntWith(const StringIntInt &rhs) {
+      ^
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:81:22: error: no member named 'CompareStringWith' in 'thomas::StringIntInt<32>'
+        result = lhs.CompareStringWith(rhs);
+                 ~~~ ^
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:83:20: error: 'this' argument to member function 'CompareFirstIntWith' has type 'const StringIntInt<32UL>', but function is not marked const
+          result = lhs.CompareFirstIntWith(rhs);
+                   ^~~
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:37:7: note: 'CompareFirstIntWith' declared here
+  int CompareFirstIntWith(const StringIntInt &rhs) {
+      ^
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:86:20: error: 'this' argument to member function 'CompareSecondIntWith' has type 'const StringIntInt<32UL>', but function is not marked const
+          result = lhs.CompareSecondIntWith(rhs);
+                   ^~~
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:41:7: note: 'CompareSecondIntWith' declared here
+  int CompareSecondIntWith(const StringIntInt &rhs) {
+      ^
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:48:30: error: no member named 'data_str_' in 'thomas::StringIntInt<32>'
+    size_t size = strlen(src.data_str_);
+                         ~~~ ^
+/Users/celve/Repositories/Me/TicketSystem/database/src/storage/index/b_plus_tree_ts.cpp:941:21: note: in instantiation of member function 'thomas::operator<<' requested here
+      out << "<TD>" << leaf->KeyAt(i) << "</TD>\n";
+                    ^
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/storage/index/b_plus_tree_ts.cpp:1:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/storage/index/b_plus_tree_ts.h:7:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/concurrency/transaction.h:6:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/storage/page/page.h:8:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/common/rwlatch.h:7:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/common/macros.h:7:
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:49:93: error: no member named 'data_t_' in 'thomas::StringIntInt<32>'
+    os << "(" << src.str_ << "," << src.first_int_ << "," << src.second_int_ << ", " << src.data_t_ << ")";
+                                                                                        ~~~ ^
+8 errors generated.
+make[3]: *** [database/CMakeFiles/database.dir/src/storage/index/b_plus_tree_nts.cpp.o] Error 1
+make[3]: *** [database/CMakeFiles/database.dir/src/storage/index/b_plus_tree_ts.cpp.o] Error 1
+make[2]: *** [database/CMakeFiles/database.dir/all] Error 2
+make[2]: *** Waiting for unfinished jobs....
+/Users/celve/Repositories/Me/TicketSystem/database/src/storage/page/b_plus_tree_leaf_page.cpp:47:9: error: no matching function for call to object of type 'const thomas::StringComparator<48>'
+    if (comparator(KeyAt(mid), key) >= 0) {
+        ^~~~~~~~~~
+/Users/celve/Repositories/Me/TicketSystem/database/src/storage/page/b_plus_tree_leaf_page.cpp:238:9: note: in instantiation of member function 'thomas::BPlusTreeLeafPage<thomas::String<32>, unsigned long, thomas::StringComparator<48>>::KeyIndex' requested here
+DECLARE(BPlusTreeLeafPage)
+        ^
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string.h:46:7: note: candidate function not viable: no known conversion from 'String<32>' to 'const String<48UL aka 48>' for 1st argument
+  int operator()(const String<StringSize> &lhs, const String<StringSize> &rhs) const { return lhs.CompareWith(rhs); }
+      ^
+/Users/celve/Repositories/Me/TicketSystem/database/src/storage/index/b_plus_tree_ts.cpp:90:11: error: no matching function for call to object of type 'const thomas::StringComparator<48>'
+      if (new_comparator(key, leaf_node->KeyAt(index))) {
+          ^~~~~~~~~~~~~~
+/Users/celve/Repositories/Me/TicketSystem/database/src/storage/index/b_plus_tree_ts.cpp:1038:9: note: in instantiation of member function 'thomas::BPlusTreeTS<thomas::String<32>, unsigned long, thomas::StringComparator<48>>::GetValue' requested here
+DECLARE(BPlusTreeTS);
+        ^
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string.h:46:7: note: candidate function not viable: no known conversion from 'const String<32>' to 'const String<48UL aka 48>' for 1st argument
+  int operator()(const String<StringSize> &lhs, const String<StringSize> &rhs) const { return lhs.CompareWith(rhs); }
+      ^
+/Users/celve/Repositories/Me/TicketSystem/database/src/storage/index/b_plus_tree_nts.cpp:79:11: error: no matching function for call to object of type 'const thomas::StringComparator<48>'
+      if (new_comparator(key, leaf_node->KeyAt(index))) {
+          ^~~~~~~~~~~~~~
+/Users/celve/Repositories/Me/TicketSystem/database/src/storage/index/b_plus_tree_nts.cpp:765:9: note: in instantiation of member function 'thomas::BPlusTreeNTS<thomas::String<32>, unsigned long, thomas::StringComparator<48>>::GetValue' requested here
+DECLARE(BPlusTreeNTS)
+        ^
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string.h:46:7: note: candidate function not viable: no known conversion from 'const String<32>' to 'const String<48UL aka 48>' for 1st argument
+  int operator()(const String<StringSize> &lhs, const String<StringSize> &rhs) const { return lhs.CompareWith(rhs); }
+      ^
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/storage/page/b_plus_tree_internal_page.cpp:1:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/storage/page/b_plus_tree_internal_page.h:5:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/storage/page/b_plus_tree_page.h:7:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/buffer/buffer_pool_manager.h:9:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/storage/page/page.h:8:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/common/rwlatch.h:7:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/common/macros.h:7:
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:78:22: error: no member named 'CompareStringWith' in 'thomas::StringIntInt<32>'
+        result = lhs.CompareStringWith(rhs);
+                 ~~~ ^
+/Users/celve/Repositories/Me/TicketSystem/database/src/storage/page/b_plus_tree_internal_page.cpp:73:9: note: in instantiation of member function 'thomas::StringIntIntComparator<32>::operator()' requested here
+    if (comparator(key, KeyAt(mid)) < 0) {
+        ^
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/storage/page/b_plus_tree_internal_page.cpp:1:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/storage/page/b_plus_tree_internal_page.h:5:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/storage/page/b_plus_tree_page.h:7:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/buffer/buffer_pool_manager.h:9:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/storage/page/page.h:8:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/common/rwlatch.h:7:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/common/macros.h:7:
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:79:30: error: 'this' argument to member function 'CompareFirstIntWith' has type 'const StringIntInt<32UL>', but function is not marked const
+        return result == 0 ? lhs.CompareFirstIntWith(rhs) : result;
+                             ^~~
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:37:7: note: 'CompareFirstIntWith' declared here
+  int CompareFirstIntWith(const StringIntInt &rhs) {
+      ^
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:81:22: error: no member named 'CompareStringWith' in 'thomas::StringIntInt<32>'
+        result = lhs.CompareStringWith(rhs);
+                 ~~~ ^
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:83:20: error: 'this' argument to member function 'CompareFirstIntWith' has type 'const StringIntInt<32UL>', but function is not marked const
+          result = lhs.CompareFirstIntWith(rhs);
+                   ^~~
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:37:7: note: 'CompareFirstIntWith' declared here
+  int CompareFirstIntWith(const StringIntInt &rhs) {
+      ^
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:86:20: error: 'this' argument to member function 'CompareSecondIntWith' has type 'const StringIntInt<32UL>', but function is not marked const
+          result = lhs.CompareSecondIntWith(rhs);
+                   ^~~
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:41:7: note: 'CompareSecondIntWith' declared here
+  int CompareSecondIntWith(const StringIntInt &rhs) {
+      ^
+5 errors generated.
+make[3]: *** [database/CMakeFiles/test.dir/src/storage/page/b_plus_tree_internal_page.cpp.o] Error 1
+make[3]: *** Waiting for unfinished jobs....
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/storage/page/b_plus_tree_leaf_page.cpp:1:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/storage/page/b_plus_tree_leaf_page.h:6:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/storage/page/b_plus_tree_page.h:7:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/buffer/buffer_pool_manager.h:9:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/storage/page/page.h:8:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/common/rwlatch.h:7:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/common/macros.h:7:
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:78:22: error: no member named 'CompareStringWith' in 'thomas::StringIntInt<32>'
+        result = lhs.CompareStringWith(rhs);
+                 ~~~ ^
+/Users/celve/Repositories/Me/TicketSystem/database/src/storage/page/b_plus_tree_leaf_page.cpp:47:9: note: in instantiation of member function 'thomas::StringIntIntComparator<32>::operator()' requested here
+    if (comparator(KeyAt(mid), key) >= 0) {
+        ^
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/storage/page/b_plus_tree_leaf_page.cpp:1:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/storage/page/b_plus_tree_leaf_page.h:6:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/storage/page/b_plus_tree_page.h:7:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/buffer/buffer_pool_manager.h:9:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/storage/page/page.h:8:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/common/rwlatch.h:7:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/common/macros.h:7:
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:79:30: error: 'this' argument to member function 'CompareFirstIntWith' has type 'const StringIntInt<32UL>', but function is not marked const
+        return result == 0 ? lhs.CompareFirstIntWith(rhs) : result;
+                             ^~~
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:37:7: note: 'CompareFirstIntWith' declared here
+  int CompareFirstIntWith(const StringIntInt &rhs) {
+      ^
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:81:22: error: no member named 'CompareStringWith' in 'thomas::StringIntInt<32>'
+        result = lhs.CompareStringWith(rhs);
+                 ~~~ ^
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:83:20: error: 'this' argument to member function 'CompareFirstIntWith' has type 'const StringIntInt<32UL>', but function is not marked const
+          result = lhs.CompareFirstIntWith(rhs);
+                   ^~~
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:37:7: note: 'CompareFirstIntWith' declared here
+  int CompareFirstIntWith(const StringIntInt &rhs) {
+      ^
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:86:20: error: 'this' argument to member function 'CompareSecondIntWith' has type 'const StringIntInt<32UL>', but function is not marked const
+          result = lhs.CompareSecondIntWith(rhs);
+                   ^~~
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:41:7: note: 'CompareSecondIntWith' declared here
+  int CompareSecondIntWith(const StringIntInt &rhs) {
+      ^
+6 errors generated.
+make[3]: *** [database/CMakeFiles/test.dir/src/storage/page/b_plus_tree_leaf_page.cpp.o] Error 1
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/storage/index/b_plus_tree_nts.cpp:1:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/storage/index/b_plus_tree_nts.h:3:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/concurrency/transaction.h:6:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/storage/page/page.h:8:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/common/rwlatch.h:7:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/common/macros.h:7:
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:78:22: error: no member named 'CompareStringWith' in 'thomas::StringIntInt<32>'
+        result = lhs.CompareStringWith(rhs);
+                 ~~~ ^
+/Users/celve/Repositories/Me/TicketSystem/database/src/storage/index/b_plus_tree_nts.cpp:79:11: note: in instantiation of member function 'thomas::StringIntIntComparator<32>::operator()' requested here
+      if (new_comparator(key, leaf_node->KeyAt(index))) {
+          ^
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/storage/index/b_plus_tree_nts.cpp:1:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/storage/index/b_plus_tree_nts.h:3:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/concurrency/transaction.h:6:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/storage/page/page.h:8:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/common/rwlatch.h:7:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/common/macros.h:7:
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:79:30: error: 'this' argument to member function 'CompareFirstIntWith' has type 'const StringIntInt<32UL>', but function is not marked const
+        return result == 0 ? lhs.CompareFirstIntWith(rhs) : result;
+                             ^~~
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:37:7: note: 'CompareFirstIntWith' declared here
+  int CompareFirstIntWith(const StringIntInt &rhs) {
+      ^
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:81:22: error: no member named 'CompareStringWith' in 'thomas::StringIntInt<32>'
+        result = lhs.CompareStringWith(rhs);
+                 ~~~ ^
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:83:20: error: 'this' argument to member function 'CompareFirstIntWith' has type 'const StringIntInt<32UL>', but function is not marked const
+          result = lhs.CompareFirstIntWith(rhs);
+                   ^~~
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:37:7: note: 'CompareFirstIntWith' declared here
+  int CompareFirstIntWith(const StringIntInt &rhs) {
+      ^
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:86:20: error: 'this' argument to member function 'CompareSecondIntWith' has type 'const StringIntInt<32UL>', but function is not marked const
+          result = lhs.CompareSecondIntWith(rhs);
+                   ^~~
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:41:7: note: 'CompareSecondIntWith' declared here
+  int CompareSecondIntWith(const StringIntInt &rhs) {
+      ^
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:48:30: error: no member named 'data_str_' in 'thomas::StringIntInt<32>'
+    size_t size = strlen(src.data_str_);
+                         ~~~ ^
+/Users/celve/Repositories/Me/TicketSystem/database/src/storage/index/b_plus_tree_nts.cpp:668:21: note: in instantiation of member function 'thomas::operator<<' requested here
+      out << "<TD>" << leaf->KeyAt(i) << "</TD>\n";
+                    ^
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/storage/index/b_plus_tree_nts.cpp:1:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/storage/index/b_plus_tree_nts.h:3:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/concurrency/transaction.h:6:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/storage/page/page.h:8:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/common/rwlatch.h:7:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/common/macros.h:7:
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:49:93: error: no member named 'data_t_' in 'thomas::StringIntInt<32>'
+    os << "(" << src.str_ << "," << src.first_int_ << "," << src.second_int_ << ", " << src.data_t_ << ")";
+                                                                                        ~~~ ^
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/storage/index/b_plus_tree_ts.cpp:1:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/storage/index/b_plus_tree_ts.h:7:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/concurrency/transaction.h:6:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/storage/page/page.h:8:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/common/rwlatch.h:7:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/common/macros.h:7:
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:78:22: error: no member named 'CompareStringWith' in 'thomas::StringIntInt<32>'
+        result = lhs.CompareStringWith(rhs);
+                 ~~~ ^
+/Users/celve/Repositories/Me/TicketSystem/database/src/storage/index/b_plus_tree_ts.cpp:90:11: note: in instantiation of member function 'thomas::StringIntIntComparator<32>::operator()' requested here
+      if (new_comparator(key, leaf_node->KeyAt(index))) {
+          ^
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/storage/index/b_plus_tree_ts.cpp:1:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/storage/index/b_plus_tree_ts.h:7:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/concurrency/transaction.h:6:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/storage/page/page.h:8:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/common/rwlatch.h:7:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/common/macros.h:7:
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:79:30: error: 'this' argument to member function 'CompareFirstIntWith' has type 'const StringIntInt<32UL>', but function is not marked const
+        return result == 0 ? lhs.CompareFirstIntWith(rhs) : result;
+                             ^~~
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:37:7: note: 'CompareFirstIntWith' declared here
+  int CompareFirstIntWith(const StringIntInt &rhs) {
+      ^
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:81:22: error: no member named 'CompareStringWith' in 'thomas::StringIntInt<32>'
+        result = lhs.CompareStringWith(rhs);
+                 ~~~ ^
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:83:20: error: 'this' argument to member function 'CompareFirstIntWith' has type 'const StringIntInt<32UL>', but function is not marked const
+          result = lhs.CompareFirstIntWith(rhs);
+                   ^~~
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:37:7: note: 'CompareFirstIntWith' declared here
+  int CompareFirstIntWith(const StringIntInt &rhs) {
+      ^
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:86:20: error: 'this' argument to member function 'CompareSecondIntWith' has type 'const StringIntInt<32UL>', but function is not marked const
+          result = lhs.CompareSecondIntWith(rhs);
+                   ^~~
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:41:7: note: 'CompareSecondIntWith' declared here
+  int CompareSecondIntWith(const StringIntInt &rhs) {
+      ^
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:48:30: error: no member named 'data_str_' in 'thomas::StringIntInt<32>'
+    size_t size = strlen(src.data_str_);
+                         ~~~ ^
+/Users/celve/Repositories/Me/TicketSystem/database/src/storage/index/b_plus_tree_ts.cpp:941:21: note: in instantiation of member function 'thomas::operator<<' requested here
+      out << "<TD>" << leaf->KeyAt(i) << "</TD>\n";
+                    ^
+8 errors generated.
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/storage/index/b_plus_tree_ts.cpp:1:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/storage/index/b_plus_tree_ts.h:7:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/concurrency/transaction.h:6:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/storage/page/page.h:8:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/common/rwlatch.h:7:
+In file included from /Users/celve/Repositories/Me/TicketSystem/database/src/include/common/macros.h:7:
+/Users/celve/Repositories/Me/TicketSystem/database/src/include/type/string_int_int.h:49:93: error: no member named 'data_t_' in 'thomas::StringIntInt<32>'
+    os << "(" << src.str_ << "," << src.first_int_ << "," << src.second_int_ << ", " << src.data_t_ << ")";
+                                                                                        ~~~ ^
+8 errors generated.
+make[3]: *** [database/CMakeFiles/test.dir/src/storage/index/b_plus_tree_nts.cpp.o] Error 1
+make[3]: *** [database/CMakeFiles/test.dir/src/storage/index/b_plus_tree_ts.cpp.o] Error 1
+make[2]: *** [database/CMakeFiles/test.dir/all] Error 2
+make[1]: *** [all] Error 2
+make: *** [target] Error 2

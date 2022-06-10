@@ -21,5 +21,5 @@ add_executable(code main.cpp
   backend/libs/ull.h
 )
 
-target_link_libraries(code database)
+target_link_libraries(code PUBLIC database)
 
