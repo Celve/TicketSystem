@@ -2,6 +2,8 @@
 
 //-------------------------------------------------class User
 
+using namespace thomas;
+
 User::User(const string &_username, const string &_name, const string &_mail,
            const string &_password, const int &_p) : privilege(_p) {
     strcpy(user_name, _username.c_str());

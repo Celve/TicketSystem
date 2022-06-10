@@ -1,7 +1,8 @@
 #include "Command.h"
 
-//class Command
+using namespace thomas;
 
+//class Command
 Command::Command(char _delimiter) {
     delimiter = _delimiter;
 }

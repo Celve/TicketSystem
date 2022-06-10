@@ -4,6 +4,8 @@
 
 #include "Management.h"
 
+using namespace thomas;
+
 template<typename T>
 void Sort(T *a, int l, int r, bool cmp(const T &u, const T &v)) {
     if (l >= r) return;
@@ -91,12 +93,12 @@ void OUTPUT(TrainManagement &all, const string &train_ID) {//用来调试
 AccountManagement::AccountManagement() {
 //    user_data.initialise("user_data");
 //    username_to_pos.init("username_to_pos");
-    user_database = new thomas::BPlusTreeIndexNTS<thomas::String<32>, User, thomas::StringComparator<32> >
+    user_database = new BPlusTreeIndexNTS<String<32>, User, StringComparator<32> >
                         ("user_database", cmp1);
 }
 
 AccountManagement::AccountManagement(const string &file_name) {
-    user_database = new thomas::BPlusTreeIndexNTS<thomas::String<32>, User, thomas::StringComparator<32> >
+    user_database = new BPlusTreeIndexNTS<String<32>, User, StringComparator<32> >
             (file_name, cmp1);
 }
 
@@ -115,12 +117,12 @@ string AccountManagement::add_user(Command &line) {
         opt = line.next_token();
     }
 
-    thomas::vector<User> *ans;
-    user_database->SearchKey(thomas::String<32>(username), ans);
+    vector<User> *ans;
+    user_database->SearchKey(String<32>(username), ans);
 
     if (!num) { //首次添加用户
         User u(username, name, mail, password, 10);
-        user_database->InsertEntry(thomas::String<32>(username), u);
+        user_database->InsertEntry(String<32>(username), u);
         return "0";
     } else {
         //操作失败：未登录/权限不足/用户名已存在
@@ -128,7 +130,7 @@ string AccountManagement::add_user(Command &line) {
             return "-1";
         } else {
             User u(username, name, mail, password, privilege);
-            user_database->InsertEntry(thomas::String<32>(username), u);
+            user_database->InsertEntry(String<32>(username), u);
             return "0";
         }
     }
@@ -143,8 +145,8 @@ string AccountManagement::login(Command &line) {
         opt = line.next_token();
     }
 
-    thomas::vector<User> *ans;
-    user_database->SearchKey(thomas::String<32>(username), ans);
+    vector<User> *ans;
+    user_database->SearchKey(String<32>(username), ans);
     //用户不存在/用户已登录
     if (ans->empty() || login_pool.count(username)) return "-1";
 
@@ -178,8 +180,8 @@ string AccountManagement::modify_profile(Command &line) {
         opt = line.next_token();
     }
 
-    thomas::vector<User> *ans;
-    user_database->SearchKey(thomas::String<32>(username), ans);
+    vector<User> *ans;
+    user_database->SearchKey(String<32>(username), ans);
     if (ans->empty()) return "-1";                   //user不存在
 
     User u = (*ans)[0];
@@ -194,7 +196,7 @@ string AccountManagement::modify_profile(Command &line) {
     if (privilege) u.privilege = privilege;
 
 //    user_data.update(u, ans[0]);
-    user_database->InsertEntry(thomas::String<32>(username), u);
+    user_database->InsertEntry(String<32>(username), u);
     // todo: need to be updated.
 
     return (string)u.user_name + " " + (string)u.name + " " + (string)u.mail_addr + " " + to_string(u.privilege);
@@ -210,7 +212,7 @@ string AccountManagement::query_profile(Command &line) {
         opt = line.next_token();
     }
 
-    thomas::vector<User> *ans;
+    vector<User> *ans;
     user_database->SearchKey(thomas::String<32>(username), ans);
     if (ans->empty()) return "-1";                   //u不存在
     User u = (*ans)[0];

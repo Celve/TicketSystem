@@ -9,40 +9,43 @@ using std::string;
 using std::istream;
 using std::ostream;
 
-class Command {
-    friend class AccountManagement;
+namespace thomas {
 
-    friend class TrainManagement;
+    class Command {
+        friend class AccountManagement;
 
-private:
-    string buffer = "";//存储字符串的缓冲区
-    int cur = 0;//当前指针的位置
-    char delimiter = ' ';//分隔符
+        friend class TrainManagement;
 
-public:
-    int cnt = 0, timestamp = 0;//时间戳
+    private:
+        string buffer = "";//存储字符串的缓冲区
+        int cur = 0;//当前指针的位置
+        char delimiter = ' ';//分隔符
 
-    Command() = default; //构造函数
+    public:
+        int cnt = 0, timestamp = 0;//时间戳
 
-    Command(const Command &rhs);
+        Command() = default; //构造函数
 
-    Command(char _delimiter);
+        Command(const Command &rhs);
 
-    Command(const std::string &in, char _delimiter = ' ');
+        Command(char _delimiter);
 
-    ~Command() = default;
+        Command(const std::string &in, char _delimiter = ' ');
 
-    void count(); //统计参数个数
+        ~Command() = default;
 
-    string next_token();//取出下一个Token,更新cur
+        void count(); //统计参数个数
 
-    void clear();
+        string next_token();//取出下一个Token,更新cur
 
-    friend istream &operator>>(istream &input, Command &obj);
+        void clear();
 
-    friend ostream &operator<<(ostream &os, const Command &command);
+        friend istream &operator>>(istream &input, Command &obj);
 
-    void set_delimiter(char new_delimiter); //修改分隔符
-};
+        friend ostream &operator<<(ostream &os, const Command &command);
 
+        void set_delimiter(char new_delimiter); //修改分隔符
+    };
+
+}
 #endif //TICKETSYSTEM_COMMAND_H

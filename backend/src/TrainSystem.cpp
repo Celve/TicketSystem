@@ -1,5 +1,7 @@
 #include "TrainSystem.h"
 
+using namespace thomas;
+
 //-------------------------------------------------class Train
 
 Train::Train(const string &_train_ID, const int &_station_num, const int &_total_seat_num, const string &_stations,
