@@ -98,6 +98,8 @@ Page *BufferPoolManager::FetchPage(page_id_t page_id) {
   page->page_id_ = page_id;
   page->pin_count_ = 1;
   replacer_->Pin(frame_id);
+
+  /* it would throw here, however, the page is still pinned, which needs further fixings */
   disk_manager_->ReadPage(page_id, page->GetData());
   return page;
 }

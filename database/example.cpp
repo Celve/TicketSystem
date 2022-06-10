@@ -25,9 +25,9 @@ int main() {
    * both thread-safe version and non-thread-safe version is provided
    * Here use the non-thread-safe version
    */
-  BPlusTreeIndexNTS<StringAny<int, 68>, int, StringAnyComparator<int, 68>> *index_tree;
-  StringAnyComparator<int, 68> comparator(1);
-  StringAnyComparator<int, 68> standby_comparator(2);
+  BPlusTreeIndexNTS<StringAny<68, int>, int, StringAnyComparator<68, int>> *index_tree;
+  StringAnyComparator<68, int> comparator(3);
+  StringAnyComparator<68, int> standby_comparator(1);
   index_tree = new BPlusTreeIndexNTS<StringAny<int, 68>, int, StringAnyComparator<int, 68>>("index", comparator);
   int n;
   char opt[16];
@@ -45,7 +45,7 @@ int main() {
       scanf("%s %d", index, &value);
       key.SetValue(index, value);
       index_tree->DeleteEntry(key);
-    } else {
+    } else if (strcmp(opt, "find") == 0) {
       scanf("%s", index);
       key.SetValue(index, -2147483648);
       vector<int> result;
@@ -58,6 +58,8 @@ int main() {
         }
         puts("");
       }
+    } else {
+      index_tree->Clear();
     }
 
     /* a debug function is provided */

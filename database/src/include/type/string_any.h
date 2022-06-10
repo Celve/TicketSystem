@@ -12,7 +12,7 @@ namespace thomas {
  * type can be whatever you want, however, it should provide some basic compare operators
  * @tparam StringSize the size of the string
  */
-template <class T, size_t StringSize>
+template <size_t StringSize, class T>
 class StringAny {
  public:
   StringAny() = default;
@@ -58,7 +58,7 @@ class StringAny {
  * A comparator for string int class
  * @tparam StringSize the size of the string.
  */
-template <class T, size_t StringSize>
+template <size_t StringSize, class T>
 class StringAnyComparator {
  public:
   /**
@@ -68,7 +68,7 @@ class StringAnyComparator {
    */
   explicit StringAnyComparator(int category) : category_(category) {}
 
-  int operator()(const StringAny<T, StringSize> &lhs, const StringAny<T, StringSize> &rhs) const {
+  int operator()(const StringAny<StringSize, T> &lhs, const StringAny<StringSize, T> &rhs) const {
     int temp_result = 0;
     switch (category_) {
       case 1:

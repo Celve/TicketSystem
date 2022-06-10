@@ -2,22 +2,22 @@
 // Created by Celve on 2022/4/10.
 //
 
-#ifndef LINKED_HASHMAP_LINKED_HASHMAP_H
-#define LINKED_HASHMAP_LINKED_HASHMAP_H
+#pragma once
 
 // only for std::equal_to<T> and std::hash<T>
 #include <cstddef>
 #include <functional>
 
 #include "common/exceptions.hpp"
-// #include "container/pair.hpp"
+#include "container/pair.hpp"
 
 namespace thomas {
+
 template <class Key, class Value, class Hash = std::hash<Key>, class Equal = std::equal_to<Key>>
 class linked_hashmap {
  public:
   // using value_type = pair<const Key, Value>;
-  typedef std::pair<const Key, Value> value_type;  // NOLINT
+  typedef pair<const Key, Value> value_type;  // NOLINT
 
  private:
   /* a set of fundamental functions */
@@ -572,7 +572,7 @@ class linked_hashmap {
   /*
    * insert - Insert a value_type, and return a pair(iterator, bool).
    */
-  std::pair<iterator, bool> insert(const value_type &value) {
+  pair<iterator, bool> insert(const value_type &value) {
     Node *curr = Find(value.first);
     bool flag = false;
     if (!curr) {
@@ -581,7 +581,7 @@ class linked_hashmap {
       ++sum;
       Expand();
     }
-    return std::pair<iterator, bool>(iterator(curr, this), flag);
+    return pair<iterator, bool>(iterator(curr, this), flag);
   }
 
   /*
@@ -629,5 +629,3 @@ class linked_hashmap {
   }
 };
 }  // namespace thomas
-
-#endif  // LINKED_HASHMAP_LINKED_HASHMAP_H
