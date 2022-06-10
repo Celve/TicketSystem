@@ -32,6 +32,7 @@ set(SOURCE_CPPS
 
 include_directories(../backend/src ../backend/libs)
 
+add_executable(test example.cpp ${SOURCE_CPPS})
 add_library(database STATIC ${SOURCE_CPPS})
 
 target_include_directories(database PUBLIC src/include)

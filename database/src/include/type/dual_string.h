@@ -72,7 +72,7 @@ class DualStringComparator {
    * @param type 1 for the comparator used to compare both; 2 for the comparator
    * used to compare the first key; other values are invalid
    */
-  explicit DualStringComparator(int type = 0) : type_(type) {}
+  explicit DualStringComparator(int type) : type_(type) {}
 
   int operator()(const DualString<FirstStringSize, SecondStringSize> &lhs,
                  const DualString<FirstStringSize, SecondStringSize> &rhs) const {
