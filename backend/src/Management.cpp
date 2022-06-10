@@ -337,7 +337,6 @@ namespace thomas {
 
         vector<DayTrain> ans2;
         daytrain_database->SearchKey(StringAny<32, int>(t_id, day.get_value()), &ans2);
-        DayTrain current_daytrain = ans2[0];
 
         //第一行
         output = t_id + " " + target_train.type + "\n";
@@ -359,6 +358,7 @@ namespace thomas {
                       (day + target_train.arriving_times[target_train.station_num]).transfer() + " -> xx-xx xx:xx " +
                       to_string(target_train.price_sum[target_train.station_num]) + " x";
         } else {
+            DayTrain current_daytrain = ans2[0]; //防止 未release, ans2 为空的特殊情况
             //从 current_daytrain 获取实时的座位数
             output +=
                     string(target_train.stations[1]) + " xx-xx xx:xx -> " + (day + target_train.start_time).transfer() +
