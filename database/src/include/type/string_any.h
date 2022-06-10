@@ -13,9 +13,9 @@ namespace thomas {
  * @tparam StringSize the size of the string
  */
 template <class T, size_t StringSize>
-class StringType {
+class StringAny {
  public:
-  explicit StringType(const std::string &str, const T &value) { SetValue(str, value); }
+  explicit StringAny(const std::string &str, const T &value) { SetValue(str, value); }
 
   void SetValue(const std::string &str, const T &value) {
     memset(data_str_, 0, sizeof(data_str_));
@@ -29,15 +29,15 @@ class StringType {
     data_t_ = value;
   }
 
-  int CompareTypeWith(const StringType &rhs) const {
+  int CompareTypeWith(const StringAny &rhs) const {
     return data_t_ < rhs.data_t_ ? -1 : (data_t_ == rhs.data_t_ ? 0 : 1);
   }
 
-  int CompareStringWith(const StringType &rhs) const { return strcmp(data_str_, rhs.data_str_); }
+  int CompareStringWith(const StringAny &rhs) const { return strcmp(data_str_, rhs.data_str_); }
 
   inline int64_t ToString() const { return *reinterpret_cast<int64_t *>(const_cast<char *>(data_str_)); }
 
-  friend std::ostream &operator<<(std::ostream &os, const StringType &src) {
+  friend std::ostream &operator<<(std::ostream &os, const StringAny &src) {
     size_t size = strlen(src.data_str_);
     os << "(";
     for (size_t i = 0; i < size; ++i) {
@@ -58,16 +58,16 @@ class StringType {
  * @tparam StringSize the size of the string.
  */
 template <class T, size_t StringSize>
-class StringTypeComparator {
+class StringAnyComparator {
  public:
   /**
    * @brief Construct a new String Int Comparator object
    * @param type 1 only compares string; 2 only compares type; 3 use string as first key; 4 use type as first key
    * comparing only the first key; other values are invalid
    */
-  explicit StringTypeComparator(int category = 0) : category_(category) {}
+  explicit StringAnyComparator(int category = 0) : category_(category) {}
 
-  int operator()(const StringType<T, StringSize> &lhs, const StringType<T, StringSize> &rhs) const {
+  int operator()(const StringAny<T, StringSize> &lhs, const StringAny<T, StringSize> &rhs) const {
     int temp_result = 0;
     switch (category_) {
       case 1:
