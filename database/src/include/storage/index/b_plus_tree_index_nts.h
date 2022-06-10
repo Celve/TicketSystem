@@ -28,6 +28,8 @@ class BPlusTreeIndexNTS {
 
   void SearchKey(const KeyType &key, vector<ValueType> *result);
 
+  size_t Size();
+
   void Clear();
 
   void Debug();
