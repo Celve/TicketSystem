@@ -58,7 +58,7 @@ void DayTrain::modify_seat(int l, int r, int val) {
 
 int DayTrain::query_seat(int l, int r) {
     int ans = MAX_INT;
-    for (int i = l; i <= r; ++i) ans = min(ans, seat_num[i]);
+    for (int i = l; i <= r; ++i) ans = std::min(ans, seat_num[i]);
     return ans;
 }
 

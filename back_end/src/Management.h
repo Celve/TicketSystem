@@ -42,11 +42,15 @@ private:
     MemoryRiver<Order> order_data; //订单数据
     MemoryRiver<PendingOrder> pending_order_data;
 
-    Ull train_id_to_pos, daytrain_id_to_pos, station_id_to_pos; //索引
-    Ull order_id_to_pos, pending_order_id_to_pos;
+//    Ull train_id_to_pos, daytrain_id_to_pos, station_id_to_pos; //索引
+//    Ull order_id_to_pos, pending_order_id_to_pos;
 
     thomas::StringComparator<25> cmp1;
     thomas::StringTypeComparator<int, 64> cmp2;
+
+    thomas::BPlusTreeIndexNTS<thomas::String<25>, Train, thomas::StringComparator<25> > *train_database;
+//    thomas::BPlusTreeIndexNTS<thomas::>
+
 
     Ticket tickets[maxn]; //临时存储 query_ticket 的结果
     Order orders[maxn]; //临时存储 query_order 结果
