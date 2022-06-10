@@ -58,9 +58,9 @@ namespace thomas {
         using namespace std;
 
         Train a;
-        thomas::vector<int> tmp1;
-        all.train_id_to_pos.find_node(train_ID, tmp1);
-        all.train_data.read(a, tmp1[0]);
+//        vector<int> tmp1;
+//        all.train_id_to_pos.find_node(train_ID, tmp1);
+//        all.train_data.read(a, tmp1[0]);
 
         cout << "~~~~ " << a.train_ID << " ~~~~" << endl;
         cout << "stationNum=" << a.station_num << endl;
@@ -72,8 +72,8 @@ namespace thomas {
 
             DayTrain tp;
             vector<int> ans;
-            all.daytrain_id_to_pos.find_node(key, ans);
-            all.day_train_data.read(tp, ans[0]);
+//            all.daytrain_id_to_pos.find_node(key, ans);
+//            all.day_train_data.read(tp, ans[0]);
 
             for (int j = 1; j < a.station_num; ++j) {
                 cout << tp.seat_num[j] << " ";
@@ -242,8 +242,7 @@ namespace thomas {
         pending_order_database = new BPlusTreeIndexNTS<StringAny<32, std::pair<int, int>>, PendingOrder, StringAnyComparator<32, std::pair<int, int> > >
                 ("pending_order_database", cmp5);
 
-        //todo: 用栈的大小代替
-        order_num = order_id_to_pos.size();
+        order_num = order_database->Size();
     }
 
     TrainManagement::~TrainManagement() {
@@ -648,7 +647,6 @@ namespace thomas {
         int price = target_train.price_sum[t] - target_train.price_sum[s]; //刚好不是 s-1
 
 //    order_data.get_info(order_ID, 1); //相当于size操作，求有几个元素
-        //todo: 可能要修改为栈的大小
         order_num++; //不能用 get_info
         int order_ID = order_num;
 
