@@ -750,8 +750,8 @@ namespace thomas {
         order_database->InsertEntry(StringAny<32, int>(user_name, orders[x].order_ID), orders[x]);
 
         if (refund_order.status == pending) { //候补的票要修改 pending_database
-            string key = string(refund_order.train_ID) + refund_order.start_day.transfer()
-                         + to_string(refund_order.order_ID);
+//            string key = string(refund_order.train_ID) + refund_order.start_day.transfer()
+//                         + to_string(refund_order.order_ID);
             pending_order_database->DeleteEntry(StringIntInt<32>(
                     refund_order.train_ID,
                     refund_order.start_day.get_value(), refund_order.order_ID)
@@ -763,7 +763,7 @@ namespace thomas {
         }
 
         //如果原来的订单success，要修改座位，增加
-        string key = string(refund_order.train_ID) + refund_order.start_day.transfer();
+//        string key = string(refund_order.train_ID) + refund_order.start_day.transfer();
         vector<DayTrain> ans;
         daytrain_database->SearchKey(StringAny<32, int>(
                 refund_order.train_ID, refund_order.start_day.get_value()), &ans);
@@ -775,7 +775,9 @@ namespace thomas {
         //todo: 同样是区间查找
         vector<PendingOrder> ans2;
         StringIntIntComparator<32> tp_cmp2(1);
-        pending_order_database->ScanKey(StringIntInt<32>(), &ans2, tp_cmp2);
+        pending_order_database->ScanKey(StringIntInt<32>(
+                     refund_order.train_ID, refund_order.start_day.get_value(), refund_order.order_ID),
+                     &ans2, tp_cmp2);
         for (int i = 0; i < ans2.size(); ++i) {
             pending_orders[++CNT] = ans2[i];
         }
@@ -795,7 +797,7 @@ namespace thomas {
 
                 //修改 order 中的状态
                 Order success_order;
-                key = string(pending_orders[i].user_name) + to_string(pending_orders[i].order_ID);
+//                key = string(pending_orders[i].user_name) + to_string(pending_orders[i].order_ID);
                 all.clear();
                 order_database->SearchKey(StringAny<32, int>(
                         pending_orders[i].user_name, pending_orders[i].order_ID), &all);
