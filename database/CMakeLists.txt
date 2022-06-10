@@ -30,7 +30,7 @@ set(SOURCE_CPPS
     src/thread/thread_pool.cpp
 )
 
-include_directories(../backend/src)
+include_directories(../backend/src ../backend/libs)
 
 add_library(database STATIC ${SOURCE_CPPS})
 

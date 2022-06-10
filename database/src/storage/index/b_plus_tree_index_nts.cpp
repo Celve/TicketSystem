@@ -26,7 +26,7 @@ namespace thomas {
 INDEX_TEMPLATE_ARGUMENTS
 BPLUSTREEINDEXNTS_TYPE::BPlusTreeIndexNTS(const std::string &index_name, const KeyComparator &key_comparator,
                                           int buffer_pool_size)
-    : key_comparator_(key_comparator) {
+    : key_comparator_(key_comparator), buffer_pool_size_(buffer_pool_size) {
   assert(index_name.size() < 32);
   strcpy(index_name_, index_name.c_str());
   disk_manager_ = new DiskManager(index_name + ".db");
@@ -108,6 +108,18 @@ void BPLUSTREEINDEXNTS_TYPE::ScanKey(const KeyType &key, vector<ValueType> *resu
 
 INDEX_TEMPLATE_ARGUMENTS
 void BPLUSTREEINDEXNTS_TYPE::SearchKey(const KeyType &key, vector<ValueType> *result) { tree_->GetValue(key, result); }
+
+INDEX_TEMPLATE_ARGUMENTS
+void BPLUSTREEINDEXNTS_TYPE::Clear() {
+  delete tree_;
+  bpm_->Initialize();
+  disk_manager_->Clear();
+  page_id_t header_page_id;
+  header_page_ = static_cast<HeaderPage *>(bpm_->NewPage(&header_page_id));
+  header_page_->InsertRecord("index", -1);
+  header_page_->InsertRecord("page_amount", 1);
+  tree_ = new BPLUSTREENTS_TYPE("index", bpm_, key_comparator_);
+}
 
 DECLARE(BPlusTreeIndexNTS)
 

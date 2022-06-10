@@ -84,6 +84,12 @@ class BufferPoolManager {
 
   /**
    * @brief
+   * Initialize the buffer pool
+   */
+  void Initialize();
+
+  /**
+   * @brief
    * Whether the algorithm is thread-safe.
    */
   bool IsThreadSafe() { return ts_type_ == THREAD_SAFE_TYPE::THREAD_SAFE; }

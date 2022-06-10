@@ -28,6 +28,12 @@ class DiskManager {
   void ShutDown();
 
   /**
+   * @brief
+   * Clear the file.
+   */
+  void Clear();
+
+  /**
    * Write a page to the database file.
    * @param page_id id of the page
    * @param page_data raw page data
