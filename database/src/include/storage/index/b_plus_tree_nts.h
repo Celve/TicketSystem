@@ -37,7 +37,7 @@ class BPlusTreeNTS {
   bool Insert(const KeyType &key, const ValueType &value, Transaction *transaction = nullptr);
 
   // Remove a key and its value from this B+ tree.
-  void Remove(const KeyType &key, Transaction *transaction = nullptr);
+  bool Remove(const KeyType &key, Transaction *transaction = nullptr);
 
   // return the value associated with a given key
   bool GetValue(const KeyType &key, vector<ValueType> *result, Transaction *transaction = nullptr);

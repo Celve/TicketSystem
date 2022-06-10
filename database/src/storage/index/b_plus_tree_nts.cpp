@@ -182,7 +182,6 @@ bool BPLUSTREENTS_TYPE::InsertIntoLeaf(const KeyType &key, const ValueType &valu
   if (leaf_node->Insert(key, value, comparator_) == -1) {
     /* unpin */
     buffer_pool_manager_->UnpinPage(leaf_node->GetPageId(), false);
-
     return false;
   }
 
@@ -290,10 +289,10 @@ void BPLUSTREENTS_TYPE::InsertIntoParent(BPlusTreePage *old_node, const KeyType 
  * necessary.
  */
 INDEX_TEMPLATE_ARGUMENTS
-void BPLUSTREENTS_TYPE::Remove(const KeyType &key, Transaction *transaction) {
+bool BPLUSTREENTS_TYPE::Remove(const KeyType &key, Transaction *transaction) {
   Page *leaf_page = FindLeafPage(key, false);  // leaf_page is pinned
   if (leaf_page == nullptr) {
-    return;
+    return false;
   }
   LeafPage *leaf_node = reinterpret_cast<LeafPage *>(leaf_page->GetData());
   if (leaf_node->RemoveAndDeleteRecord(key, comparator_) == -1) {
@@ -301,6 +300,7 @@ void BPLUSTREENTS_TYPE::Remove(const KeyType &key, Transaction *transaction) {
     //    throw std::runtime_error("Entry is not found. ");
   }
   CoalesceOrRedistribute(leaf_node, transaction);
+  return true;
 }
 
 /**
