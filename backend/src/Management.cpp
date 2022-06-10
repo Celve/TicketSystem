@@ -439,11 +439,10 @@ namespace thomas {
         if (type == "time") Sort(tickets, 1, cnt, time_cmp);
         else Sort(tickets, 1, cnt, cost_cmp);
 
-        vector<DayTrain> all;
         string output = to_string(cnt);
         for (int i = 1; i <= cnt; ++i) {
             TimeType start_day = day - tickets[i].s.leaving_time.get_date();
-
+            vector<DayTrain> all;
             daytrain_database->SearchKey(StringAny<32, int>(tickets[i].s.train_ID, start_day.get_value()), &all);
             DayTrain tp_daytrain = all[0];
 
