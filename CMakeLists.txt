@@ -6,6 +6,8 @@ set(CMAKE_CXX_STANDARD 17)
 
 add_subdirectory(database)
 
+include_directories(backend/src backend/libs)
+
 add_executable(code main.cpp
   backend/src/Command.cpp
   backend/src/Account.cpp
@@ -21,4 +23,3 @@ add_executable(code main.cpp
 
 target_link_libraries(code database)
 
-include_directories(backend/src backend/libs)

@@ -247,4 +247,15 @@ void BufferPoolManager::FlushAllPages() {
   }
 }
 
+void BufferPoolManager::Initialize() {
+  std::unique_lock<std::mutex> lock =
+      IsThreadSafe() ? std::unique_lock<std::mutex>(latch_) : std::unique_lock<std::mutex>();
+  replacer_->Clear();
+  free_list_.clear();
+
+  for (size_t i = 0; i < pool_size_; ++i) {
+    free_list_.push_back(static_cast<int>(i));
+  }
+}
+
 }  // namespace thomas

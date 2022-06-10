@@ -1,10 +1,11 @@
+#include "storage/disk/disk_manager.h"
+
 #include <cassert>
 #include <cstring>
 #include <iostream>
 #include <string>
 #include <thread>  // NOLINT
 
-#include "storage/disk/disk_manager.h"
 #include "common/exceptions.hpp"
 
 namespace thomas {
@@ -15,8 +16,7 @@ static char *buffer_used;
  * Constructor: open/create a single database file & log file
  * @input db_file: database file name
  */
-DiskManager::DiskManager(const std::string &db_file)
-    : file_name_(db_file), next_page_id_(0) {
+DiskManager::DiskManager(const std::string &db_file) : file_name_(db_file), next_page_id_(0) {
   std::string::size_type n = file_name_.rfind('.');
   if (n == std::string::npos) {
     throw std::runtime_error("wrong file format");
@@ -41,8 +41,18 @@ DiskManager::DiskManager(const std::string &db_file)
 /**
  * Close all file streams
  */
-void DiskManager::ShutDown() {
+void DiskManager::ShutDown() { db_io_.close(); }
+
+/**
+ * @brief
+ * clear the entire file
+ */
+void DiskManager::Clear() {
   db_io_.close();
+  db_io_.open(file_name_, std::ios::binary | std::ios::trunc | std::ios::out);
+  db_io_.close();
+  db_io_.open(file_name_, std::ios::binary | std::ios::in | std::ios::out);
+  next_page_id_ = 0;
 }
 
 /**

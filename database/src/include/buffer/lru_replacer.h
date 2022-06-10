@@ -33,8 +33,10 @@ class LRUReplacer : public Replacer {
 
   size_t Size() override;
 
+  void Clear() override;
+
  private:
-  linked_hashmap<frame_id_t, frame_id_t> queue;
+  linked_hashmap<frame_id_t, frame_id_t> queue_;
   std::mutex latch_;
   size_t num_pages_;
 };

@@ -28,6 +28,8 @@ class BPlusTreeIndexNTS {
 
   void SearchKey(const KeyType &key, vector<ValueType> *result);
 
+  void Clear();
+
   void Debug();
 
  private:
@@ -35,6 +37,7 @@ class BPlusTreeIndexNTS {
   DiskManager *disk_manager_;
   BufferPoolManager *bpm_;
   HeaderPage *header_page_;
+  int buffer_pool_size_;
 
   KeyComparator key_comparator_;
 
