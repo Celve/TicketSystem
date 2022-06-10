@@ -14,7 +14,6 @@ set(SOURCE_CPPS
     src/storage/disk/disk_manager.cpp
 
     src/buffer/lru_replacer.cpp
-    src/buffer/innodb_replacer.cpp
     src/buffer/buffer_pool_manager.cpp
 
     src/storage/page/b_plus_tree_page.cpp
@@ -31,6 +30,7 @@ set(SOURCE_CPPS
 )
 
 include_directories(../backend/src ../backend/libs)
+include_directories(src/include)
 
 add_executable(test example.cpp ${SOURCE_CPPS})
 add_library(database STATIC ${SOURCE_CPPS})

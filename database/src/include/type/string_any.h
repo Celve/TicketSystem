@@ -15,6 +15,7 @@ namespace thomas {
 template <class T, size_t StringSize>
 class StringAny {
  public:
+  StringAny() = default;
   explicit StringAny(const std::string &str, const T &value) { SetValue(str, value); }
 
   void SetValue(const std::string &str, const T &value) {
@@ -29,7 +30,7 @@ class StringAny {
     data_t_ = value;
   }
 
-  int CompareTypeWith(const StringAny &rhs) const {
+  int CompareAnyWith(const StringAny &rhs) const {
     return data_t_ < rhs.data_t_ ? -1 : (data_t_ == rhs.data_t_ ? 0 : 1);
   }
 
@@ -43,7 +44,7 @@ class StringAny {
     for (size_t i = 0; i < size; ++i) {
       os << src.data_str_[i];
     }
-    os << ", " << src.data_int_ << ")";
+    os << ", " << src.data_t_ << ")";
     return os;
   }
 
@@ -73,12 +74,12 @@ class StringAnyComparator {
       case 1:
         return lhs.CompareStringWith(rhs);
       case 2:
-        return lhs.CompareTypeWith(rhs);
+        return lhs.CompareAnyWith(rhs);
       case 3:
         temp_result = lhs.CompareStringWith(rhs);
-        return temp_result == 0 ? lhs.CompareTypeWith(rhs) : temp_result;
+        return temp_result == 0 ? lhs.CompareAnyWith(rhs) : temp_result;
       case 4:
-        temp_result = lhs.CompareIntWith(rhs);
+        temp_result = lhs.CompareAnyWith(rhs);
         return temp_result == 0 ? lhs.CompareStringWith(rhs) : temp_result;
       default:
         return 0;
