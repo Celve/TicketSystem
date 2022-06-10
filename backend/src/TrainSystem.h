@@ -127,7 +127,8 @@ namespace thomas {
         //num是票数, price 是单价
         char id[64];
         //todo: 实际上，ull中的关键字是 user_name + order_ID，应该修改为pair类型
-        // 排序时，以 order_id 为关键字
+        // 排序时，以 order_id 为关键字，
+        // 但是存储时是以user_name为第一关键字
         int pos; // refund_ticket 时临时用来存储位置
 
         TimeType start_day, leaving_time, arriving_time;
@@ -158,6 +159,7 @@ namespace thomas {
         //todo: 关键字是 train_ID + start_sale_date + order_ID
         // 把 start_sale_date 和 order_ID 合成为一个 pair,然后与 train_ID 复合
         // 排序时，以 order_id 为关键字
+        // 同理，但是存储时是以train_ID为第一关键字
         int pos; // refund_ticket 时临时用来存储位置
 
     public:
