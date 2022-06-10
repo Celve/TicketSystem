@@ -68,7 +68,8 @@ void BPLUSTREEINDEXNTS_TYPE::Debug() { tree_->Print(bpm_); }
 
 /**
  * @brief
- * insert a key value pair into the b+ tree, and the duplicate key is not allowed, repeated key is not allowed, too
+ * insert a key value pair into the b+ tree, and the duplicate key is not allowed, repeated key is allowed, but
+ * considered as modification
  * @param key the key to be inserted
  * @param value the value to be inserted
  * @return INDEX_TEMPLATE_ARGUMENTS

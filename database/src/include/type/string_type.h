@@ -8,7 +8,8 @@ namespace thomas {
 
 /**
  * @brief
- * A class with a string as the first key and a int as the second key
+ * A class with a string as the first key and a type as the second key
+ * type can be whatever you want, however, it should provide some basic compare operators
  * @tparam StringSize the size of the string
  */
 template <class T, size_t StringSize>

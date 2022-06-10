@@ -45,9 +45,8 @@ private:
     Ull train_id_to_pos, daytrain_id_to_pos, station_id_to_pos; //索引
     Ull order_id_to_pos, pending_order_id_to_pos;
 
-
     thomas::StringComparator<25> cmp1;
-    thomas::StringTypeComparator<>
+    thomas::StringTypeComparator<int, 64> cmp2;
 
     Ticket tickets[maxn]; //临时存储 query_ticket 的结果
     Order orders[maxn]; //临时存储 query_order 结果
