@@ -9,8 +9,9 @@
 #include "Management.h"
 
 using namespace std;
+using namespace thomas;
 
-vector<Command> commands; //用来回滚
+//vector<Command> commands; //用来回滚
 AccountManagement accounts; //声明在外部，防止数组太大，爆栈空间
 TrainManagement trains;
 
@@ -26,7 +27,7 @@ int main() {
         string time = cmd.next_token();
         int l = time.length();
         cmd.timestamp = string_to_int(time.substr(1, l - 2));
-        commands.push_back(cmd);
+//        commands.push_back(cmd);
 
         cout << "[" << cmd.timestamp << "] "; //输出时间戳，方便调试
         string s = cmd.next_token();
