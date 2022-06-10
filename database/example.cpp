@@ -28,12 +28,12 @@ int main() {
   BPlusTreeIndexNTS<StringAny<68, int>, int, StringAnyComparator<68, int>> *index_tree;
   StringAnyComparator<68, int> comparator(3);
   StringAnyComparator<68, int> standby_comparator(1);
-  index_tree = new BPlusTreeIndexNTS<StringAny<int, 68>, int, StringAnyComparator<int, 68>>("index", comparator);
+  index_tree = new BPlusTreeIndexNTS<StringAny<68, int>, int, StringAnyComparator<68, int>>("index", comparator);
   int n;
   char opt[16];
   char index[68];
   int value;
-  StringAny<int, 68> key;
+  StringAny<68, int> key;
   scanf("%d", &n);
   while ((n--) != 0) {
     scanf("%s", opt);
@@ -58,8 +58,10 @@ int main() {
         }
         puts("");
       }
-    } else {
+    } else if (strcmp(opt, "clear") == 0) {
       index_tree->Clear();
+    } else if (strcmp(opt, "size") == 0) {
+      printf("%d\n", index_tree->Size());
     }
 
     /* a debug function is provided */

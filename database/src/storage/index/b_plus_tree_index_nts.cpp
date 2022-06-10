@@ -7,6 +7,7 @@
 #include <stdexcept>
 
 #include "common/config.h"
+#include "common/exceptions.hpp"
 #include "common/macros.h"
 #include "concurrency/transaction.h"
 #include "storage/page/b_plus_tree_page.h"
@@ -41,6 +42,9 @@ BPLUSTREEINDEXNTS_TYPE::BPlusTreeIndexNTS(const std::string &index_name, const K
       throw metadata_error();
     }
     disk_manager_->SetNextPageId(next_page_id);
+    if (!header_page_->SearchRecord("size", &size_)) {
+      throw metadata_error();
+    }
   } catch (read_less_then_a_page &error) {
     /* complicated here, because the page is not fetched successfully */
     bpm_->UnpinPage(HEADER_PAGE_ID, false);
@@ -49,6 +53,7 @@ BPLUSTREEINDEXNTS_TYPE::BPlusTreeIndexNTS(const std::string &index_name, const K
     header_page_ = static_cast<HeaderPage *>(bpm_->NewPage(&header_page_id));
     header_page_->InsertRecord("index", -1);
     header_page_->InsertRecord("page_amount", 1);
+    header_page_->InsertRecord("size", 0);
   }
   tree_ = new BPLUSTREENTS_TYPE("index", bpm_, key_comparator_);
 }
@@ -79,7 +84,9 @@ void BPLUSTREEINDEXNTS_TYPE::Debug() { tree_->Print(bpm_); }
  * @return INDEX_TEMPLATE_ARGUMENTS
  */
 INDEX_TEMPLATE_ARGUMENTS
-void BPLUSTREEINDEXNTS_TYPE::InsertEntry(const KeyType &key, const ValueType &value) { tree_->Insert(key, value); }
+void BPLUSTREEINDEXNTS_TYPE::InsertEntry(const KeyType &key, const ValueType &value) {
+  size_ += tree_->Insert(key, value);
+}
 
 /**
  * @brief
@@ -88,7 +95,7 @@ void BPLUSTREEINDEXNTS_TYPE::InsertEntry(const KeyType &key, const ValueType &va
  * @return INDEX_TEMPLATE_ARGUMENTS
  */
 INDEX_TEMPLATE_ARGUMENTS
-void BPLUSTREEINDEXNTS_TYPE::DeleteEntry(const KeyType &key) { tree_->Remove(key); }
+void BPLUSTREEINDEXNTS_TYPE::DeleteEntry(const KeyType &key) { size_ -= tree_->Remove(key); }
 
 /**
  * @brief
@@ -118,8 +125,12 @@ void BPLUSTREEINDEXNTS_TYPE::Clear() {
   header_page_ = static_cast<HeaderPage *>(bpm_->NewPage(&header_page_id));
   header_page_->InsertRecord("index", -1);
   header_page_->InsertRecord("page_amount", 1);
+  header_page_->InsertRecord("size", 0);
   tree_ = new BPLUSTREENTS_TYPE("index", bpm_, key_comparator_);
 }
+
+INDEX_TEMPLATE_ARGUMENTS
+int BPLUSTREEINDEXNTS_TYPE::Size() { return size_; }
 
 DECLARE(BPlusTreeIndexNTS)
 
