@@ -16,3 +16,4 @@ output.txt
 build.log
 *.db
 testdata
+main.cpp
