@@ -117,8 +117,8 @@ namespace thomas {
             opt = line.next_token();
         }
 
-        vector<User> *ans;
-        user_database->SearchKey(String<32>(username), ans);
+        vector<User> ans;
+        user_database->SearchKey(String<32>(username), &ans);
 
         if (user_database->IsEmpty()) { //首次添加用户
             User u(username, name, mail, password, 10);
@@ -126,7 +126,7 @@ namespace thomas {
             return "0";
         } else {
             //操作失败：未登录/权限不足/用户名已存在
-            if (!login_pool.count(cur) || login_pool.at(cur) <= privilege || !ans->empty()) {
+            if (!login_pool.count(cur) || login_pool.at(cur) <= privilege || !ans.empty()) {
                 return "-1";
             } else {
                 User u(username, name, mail, password, privilege);
@@ -145,14 +145,14 @@ namespace thomas {
             opt = line.next_token();
         }
 
-        vector<User> *ans;
-        user_database->SearchKey(String<32>(username), ans);
+        vector<User> ans;
+        user_database->SearchKey(String<32>(username), &ans);
         //用户不存在/用户已登录
-        if (ans->empty() || login_pool.count(username)) return "-1";
+        if (ans.empty() || login_pool.count(username)) return "-1";
 
-        if (strcmp((*ans)[0].password, password.c_str())) return "-1"; //密码错误
+        if (strcmp(ans[0].password, password.c_str())) return "-1"; //密码错误
 
-        login_pool.insert(sjtu::pair<string, int>(username, (*ans)[0].privilege));
+        login_pool.insert(sjtu::pair<string, int>(username, ans[0].privilege));
         return "0";
     }
 
@@ -180,11 +180,11 @@ namespace thomas {
             opt = line.next_token();
         }
 
-        vector<User> *ans;
-        user_database->SearchKey(String<32>(username), ans);
-        if (ans->empty()) return "-1";                   //user不存在
+        vector<User> ans;
+        user_database->SearchKey(String<32>(username), &ans);
+        if (ans.empty()) return "-1";                   //user不存在
 
-        User u = (*ans)[0];
+        User u = ans[0];
         //cur未登录/cur权限<=u的权限 且 cur != u
         if (!login_pool.count(cur) || (login_pool.at(cur) <= u.privilege) && (cur != username)
             || privilege >= login_pool.at(cur))
@@ -210,10 +210,10 @@ namespace thomas {
             opt = line.next_token();
         }
 
-        vector<User> *ans;
-        user_database->SearchKey(String<32>(username), ans);
-        if (ans->empty()) return "-1";                   //u不存在
-        User u = (*ans)[0];
+        vector<User> ans;
+        user_database->SearchKey(String<32>(username), &ans);
+        if (ans.empty()) return "-1";                   //u不存在
+        User u = ans[0];
 
         //cur未登录/cur权限<=u的权限 且 cur != u
         if (!login_pool.count(cur) || (login_pool.at(cur) <= u.privilege) && (cur != username))
@@ -273,9 +273,9 @@ namespace thomas {
             opt = line.next_token();
         }
 
-        vector<Train> *ans;
-        train_database->SearchKey(String<32>(train_id), ans);
-        if (!ans->empty()) return "-1"; //train_ID 已存在，添加失败
+        vector<Train> ans;
+        train_database->SearchKey(String<32>(train_id), &ans);
+        if (!ans.empty()) return "-1"; //train_ID 已存在，添加失败
 
         Train new_train(train_id, station_num, seat_num, stations, prices, start_time, travel_times,
                         stop_over_times, sale_date, type);
@@ -287,10 +287,10 @@ namespace thomas {
         line.next_token(); //过滤-i
         string t_id = line.next_token();
 
-        vector<Train> *ans;
-        train_database->SearchKey(String<32>(t_id), ans);
-        if (ans->empty()) return "-1"; //车次不存在，失败
-        Train target_train = (*ans)[0];
+        vector<Train> ans;
+        train_database->SearchKey(String<32>(t_id), &ans);
+        if (ans.empty()) return "-1"; //车次不存在，失败
+        Train target_train = ans[0];
         if (target_train.is_released) return "-1"; //重复发布，失败
         target_train.is_released = true;
         train_database->InsertEntry(String<32>(t_id), target_train);
@@ -326,18 +326,18 @@ namespace thomas {
         }
         if (!is_legal(date + " 00:00")) return "-1"; //查询，要判断读入的日期是否合法
 
-        vector<Train> *ans;
+        vector<Train> ans;
         TimeType day(date + " 00:00");
-        train_database->SearchKey(String<32>(t_id), ans);
-        if (ans->empty()) return "-1"; //没有车
-        Train target_train = (*ans)[0];
+        train_database->SearchKey(String<32>(t_id), &ans);
+        if (ans.empty()) return "-1"; //没有车
+        Train target_train = ans[0];
 
         //不在售票日期内，不存在
         if (day < target_train.start_sale_date || day > target_train.end_sale_date) return "-1";
 
-        vector<DayTrain> *ans2;
-        daytrain_database->SearchKey(StringAny<32, int>(t_id, day.get_value()), ans2);
-        DayTrain current_daytrain = (*ans2)[0];
+        vector<DayTrain> ans2;
+        daytrain_database->SearchKey(StringAny<32, int>(t_id, day.get_value()), &ans2);
+        DayTrain current_daytrain = ans2[0];
 
         //第一行
         output = t_id + " " + target_train.type + "\n";
@@ -380,11 +380,11 @@ namespace thomas {
     string TrainManagement::delete_train(Command &line) {
         line.next_token();
         string t_id = line.next_token();
-        vector<Train> *ans;
-        train_database->SearchKey(String<32>(t_id), ans);
-        if (ans->empty()) return "-1"; //不存在，不能删
+        vector<Train> ans;
+        train_database->SearchKey(String<32>(t_id), &ans);
+        if (ans.empty()) return "-1"; //不存在，不能删
 
-        Train target_train = (*ans)[0];
+        Train target_train = ans[0];
         if (target_train.is_released) return "-1"; //已发布，不能删
 
         train_database->DeleteEntry(String<32>(t_id));
@@ -405,18 +405,18 @@ namespace thomas {
 
         if (s == t) return "0"; //起点等于终点，显然无票
         TimeType day(date + " 00:00");
-        vector<Station> *ans1, *ans2;
+        vector<Station> ans1, ans2;
 
         //todo:区间查找，查找所有 站点为 s 和 t 的 station 车站
-        station_database->ScanKey(DualString<32, 32>(s, ""), ans1, cmp2);
-        station_database->ScanKey(DualString<32, 32>(t, ""), ans2, cmp2);
+        station_database->ScanKey(DualString<32, 32>(s, ""), &ans1, cmp2);
+        station_database->ScanKey(DualString<32, 32>(t, ""), &ans2, cmp2);
 
-        if (ans1->empty() || ans2->empty()) return "0"; //无票
+        if (ans1.empty() || ans2.empty()) return "0"; //无票
         int cnt = 0;
         Station s1, t1; //起点和终点
 
-        for (int i1 = 0, i2 = 0; i1 < ans1->size() && i2 < ans2->size();) {
-            s1 = (*ans1)[i1], t1 = (*ans2)[i2];
+        for (int i1 = 0, i2 = 0; i1 < ans1.size() && i2 < ans2.size();) {
+            s1 = ans1[i1], t1 = ans2[i2];
             //判断是否为同一辆车
             if (strcmp(s1.train_ID, t1.train_ID) < 0) i1++;
             else if (strcmp(s1.train_ID, t1.train_ID) > 0) i2++;
@@ -438,13 +438,13 @@ namespace thomas {
         if (type == "time") Sort(tickets, 1, cnt, time_cmp);
         else Sort(tickets, 1, cnt, cost_cmp);
 
-        vector<DayTrain> *all;
+        vector<DayTrain> all;
         string output = to_string(cnt);
         for (int i = 1; i <= cnt; ++i) {
             TimeType start_day = day - tickets[i].s.leaving_time.get_date();
 
-            daytrain_database->SearchKey(StringAny<32, int>(tickets[i].s.train_ID, start_day.get_value()), all);
-            DayTrain tp_daytrain = (*all)[0];
+            daytrain_database->SearchKey(StringAny<32, int>(tickets[i].s.train_ID, start_day.get_value()), &all);
+            DayTrain tp_daytrain = all[0];
 
             string seat = to_string(tp_daytrain.query_seat(tickets[i].s.index, tickets[i].t.index - 1)); //终点站的座位数不影响
 
@@ -475,30 +475,30 @@ namespace thomas {
         //总花费，总时间，第一段列车的运行时间（越小表示 Train1_ID 也越小）
 
         //todo:区间查找，查找所有 站点为 s 和 t 的 station 车站
-        vector<Station> *ans1, *ans2;
-        station_database->ScanKey(DualString<32, 32>(s, ""), ans1, cmp2);
-        station_database->ScanKey(DualString<32, 32>(t, ""), ans2, cmp2);
+        vector<Station> ans1, ans2;
+        station_database->ScanKey(DualString<32, 32>(s, ""), &ans1, cmp2);
+        station_database->ScanKey(DualString<32, 32>(t, ""), &ans2, cmp2);
 
-        if (ans1->empty() || ans2->empty()) return "0"; //无票
+        if (ans1.empty() || ans2.empty()) return "0"; //无票
         int cnt = 0;
         Station s1, t1; //起点，终点
 
-        for (int i = 0; i < ans1->size(); ++i) {  //枚举经过起点s1的不同车次
-            s1 = (*ans1)[i];
+        for (int i = 0; i < ans1.size(); ++i) {  //枚举经过起点s1的不同车次
+            s1 = ans1[i];
             TimeType start_day1 = day - s1.leaving_time.get_date();
             if (start_day1 < s1.start_sale_time || start_day1 > s1.end_sale_time) continue;//买不到票
 
-            vector<Train> *all;
-            train_database->SearchKey(String<32>(s1.train_ID), all);
-            Train train1 = (*all)[0];
+            vector<Train> all;
+            train_database->SearchKey(String<32>(s1.train_ID), &all);
+            Train train1 = all[0];
 
-            for (int j = 0; j < ans2->size(); ++j) { //枚举经过终点t1的不同车次
-                t1 = (*ans2)[j];
+            for (int j = 0; j < ans2.size(); ++j) { //枚举经过终点t1的不同车次
+                t1 = ans2[j];
                 if (!strcmp(s1.train_ID, t1.train_ID)) continue; //换乘要求不同车次
 
-                vector<Train> *pos2;
-                train_database->SearchKey(String<32>(t1.train_ID), pos2);
-                Train train2 = (*pos2)[0]; //到达的车次
+                vector<Train> pos2;
+                train_database->SearchKey(String<32>(t1.train_ID), &pos2);
+                Train train2 = pos2[0]; //到达的车次
 
                 //把可能途径的车站全部读取出来，方便查询
                 //注意循环的范围
@@ -573,10 +573,10 @@ namespace thomas {
                         }
                         if (updated) { //如果更新答案，就保存结果
                             output.clear();
-                            vector<DayTrain> *f1, *f2;
-                            daytrain_database->SearchKey(StringAny<32, int>(train1.train_ID, start_day1.get_value()), f1);
-                            daytrain_database->SearchKey(StringAny<32, int>(train2.train_ID, start_day2.get_value()), f2);
-                            DayTrain S = (*f1)[0], T = (*f2)[0]; //读出当前的座位
+                            vector<DayTrain> f1, f2;
+                            daytrain_database->SearchKey(StringAny<32, int>(train1.train_ID, start_day1.get_value()), &f1);
+                            daytrain_database->SearchKey(StringAny<32, int>(train2.train_ID, start_day2.get_value()), &f2);
+                            DayTrain S = f1[0], T = f2[0]; //读出当前的座位
 
                             output += string(s1.train_ID) + " " + string(s1.station_name) + " "
                                       + (start_day1 + s1.leaving_time).transfer() + " -> "
@@ -619,10 +619,10 @@ namespace thomas {
 
         if (!accounts.login_pool.count(user_name)) return "-1"; //用户未登录
 
-        vector<Train> *ans;
-        train_database->SearchKey(String<32>(train_ID), ans);
-        if (ans->empty()) return "-1"; //车次不存在
-        Train target_train = (*ans)[0];
+        vector<Train> ans;
+        train_database->SearchKey(String<32>(train_ID), &ans);
+        if (ans.empty()) return "-1"; //车次不存在
+        Train target_train = ans[0];
 
         if (!target_train.is_released) return "-1"; //车次未发布，不能购票
         if (target_train.total_seat_num < num) return "-1"; //座位不够
@@ -637,9 +637,9 @@ namespace thomas {
         TimeType start_day = TimeType(date + " 00:00") - target_train.leaving_times[s].get_date();
         if (start_day < target_train.start_sale_date || start_day > target_train.end_sale_date) return "-1"; //不在售票日期
 
-        vector<DayTrain> *ans2;
-        daytrain_database->SearchKey(StringAny<32, int>(train_ID, start_day.get_value()), ans2);
-        DayTrain tp = (*ans2)[0];
+        vector<DayTrain> ans2;
+        daytrain_database->SearchKey(StringAny<32, int>(train_ID, start_day.get_value()), &ans2);
+        DayTrain tp = ans2[0];
 
         int remain_seat = tp.query_seat(s, t - 1);
         if (!is_pending && remain_seat < num) return "-1"; //不补票且座位不够
@@ -684,14 +684,14 @@ namespace thomas {
         int cnt = 0;
 
         //todo : 修改为区间查找，查找所有关键字包含 user_name 的 order
-        vector<Order> *all;
+        vector<Order> all;
         StringAnyComparator<32, int> tp_cmp(1);
         //todo: 分析真正的含义，只考虑user_name
-        order_database->ScanKey(StringAny<32, int>(user_name, 0), all, tp_cmp);
-        if (all->empty()) return "0"; //没有订单
+        order_database->ScanKey(StringAny<32, int>(user_name, 0), &all, tp_cmp);
+        if (all.empty()) return "0"; //没有订单
 
-        for (int i = 0; i < all->size(); ++i) {
-            orders[++cnt] = (*all)[i];
+        for (int i = 0; i < all.size(); ++i) {
+            orders[++cnt] = all[i];
         }
         //从新到旧排序（大到小） , 可能不需要？
         //todo: 修改为 bpt 后，按照关键字 Order_ID 读取，就不用排序
@@ -727,14 +727,14 @@ namespace thomas {
 
         // todo: 区间查询
         int cnt = 0;
-        vector<Order> *all;
+        vector<Order> all;
         StringAnyComparator<32, int> tp_cmp(1);
         //todo: 分析真正的含义，只考虑user_name
-        order_database->ScanKey(StringAny<32, int>(user_name, 0), all, tp_cmp);
-        if (all->empty()) return "0"; //没有订单
+        order_database->ScanKey(StringAny<32, int>(user_name, 0), &all, tp_cmp);
+        if (all.empty()) return "0"; //没有订单
 
-        for (int i = 0; i < all->size(); ++i) {
-            orders[++cnt] = (*all)[i];
+        for (int i = 0; i < all.size(); ++i) {
+            orders[++cnt] = all[i];
         }
         //从新到旧排序（大到小） , 可能不需要？
         //todo: 修改为 bpt 后，按照关键字 Order_ID 读取，就不用排序
@@ -763,20 +763,20 @@ namespace thomas {
 
         //如果原来的订单success，要修改座位，增加
         string key = string(refund_order.train_ID) + refund_order.start_day.transfer();
-        vector<DayTrain> *ans;
+        vector<DayTrain> ans;
         daytrain_database->SearchKey(StringAny<32, int>(
-                refund_order.train_ID, refund_order.start_day.get_value()), ans);
-        DayTrain tp_daytrain = (*ans)[0];
+                refund_order.train_ID, refund_order.start_day.get_value()), &ans);
+        DayTrain tp_daytrain = ans[0];
         tp_daytrain.modify_seat(refund_order.from, refund_order.to - 1, refund_order.num);
 
         //退票后有空缺，判断候补的订单现在是否能买
         int CNT = 0;
         //todo: 同样是区间查找
-        vector<PendingOrder> *ans2;
+        vector<PendingOrder> ans2;
         StringIntIntComparator<32> tp_cmp2(1);
-        pending_order_database->ScanKey(StringIntInt<32>(), ans2, tp_cmp2);
-        for (int i = 0; i < ans2->size(); ++i) {
-            pending_orders[++CNT] = (*ans2)[i];
+        pending_order_database->ScanKey(StringIntInt<32>(), &ans2, tp_cmp2);
+        for (int i = 0; i < ans2.size(); ++i) {
+            pending_orders[++CNT] = ans2[i];
         }
 
         //todo: 同理的排序修改，但是是从小到大，因为早买票就早补票
@@ -795,10 +795,10 @@ namespace thomas {
                 //修改 order 中的状态
                 Order success_order;
                 key = string(pending_orders[i].user_name) + to_string(pending_orders[i].order_ID);
-                all->clear();
+                all.clear();
                 order_database->SearchKey(StringAny<32, int>(
-                        pending_orders[i].user_name, pending_orders[i].order_ID), all);
-                success_order = (*all)[0];
+                        pending_orders[i].user_name, pending_orders[i].order_ID), &all);
+                success_order = all[0];
                 success_order.status = success;
                 order_database->InsertEntry(StringAny<32, int>(
                         pending_orders[i].user_name, pending_orders[i].order_ID), success_order);

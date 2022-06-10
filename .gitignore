@@ -11,7 +11,7 @@ index.db
 test.out
 Debug_record.md
 Cmake
-data
+test_data
 output.txt
 build.log
 *.db
