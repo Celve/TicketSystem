@@ -18,8 +18,8 @@ TrainManagement trains;
 int main() {
   string input;
 
-  freopen("test_data/normal/basic_1/1.in", "r", stdin);
-  freopen("output.txt", "w", stdout);
+  freopen("testdata/normal/basic_1/1.in", "r", stdin);
+  freopen("testdata/normal/basic_1/1.ans", "w", stdout);
 
   while (getline(cin, input)) {
     Command cmd(input);
