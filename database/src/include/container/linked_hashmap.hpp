@@ -2,8 +2,7 @@
 // Created by Celve on 2022/4/10.
 //
 
-#ifndef LINKED_HASHMAP_LINKED_HASHMAP_H
-#define LINKED_HASHMAP_LINKED_HASHMAP_H
+#pragma once
 
 // only for std::equal_to<T> and std::hash<T>
 #include <cstddef>
@@ -13,10 +12,12 @@
 #include "container/pair.hpp"
 
 namespace thomas {
-template <class Key, class Value, class Hash = std::hash<Key>, class Equal = std::equal_to<Key> >
+
+template <class Key, class Value, class Hash = std::hash<Key>, class Equal = std::equal_to<Key>>
 class linked_hashmap {
  public:
-  using value_type = pair<const Key, Value>;
+  // using value_type = pair<const Key, Value>;
+  typedef pair<const Key, Value> value_type;  // NOLINT
 
  private:
   /* a set of fundamental functions */
@@ -83,16 +84,6 @@ class linked_hashmap {
       this->prev_hash = prev;
     }
 
-    void InsertAfterLink(Node *const &prev) {
-      Node *next = prev->next_list;
-      if (next) {
-        next->prev_list = this;
-      }
-      this->next_list = next;
-      prev->next_list = this;
-      this->prev_list = prev;
-    }
-
     /*
      * InsertAfterLink - Insert a node in the link list, after a particular node.
      */
@@ -155,16 +146,6 @@ class linked_hashmap {
 
     curr->InsertAfterHash(&table[hash_value]);
     curr->InsertBeforeLink(tail);
-
-    return curr;
-  }
-
-  Node *InsertInFront(const value_type &packet) {
-    size_t hash_value = (*hash)(packet.first) % capacity;
-    Node *curr = new Node(packet);
-
-    curr->InsertAfterHash(&table[hash_value]);
-    curr->InsertAfterLink(head);
 
     return curr;
   }
@@ -603,18 +584,6 @@ class linked_hashmap {
     return pair<iterator, bool>(iterator(curr, this), flag);
   }
 
-  pair<iterator, bool> front_insert(const value_type &value) {
-    Node *curr = Find(value.first);
-    bool flag = false;
-    if (!curr) {
-      curr = InsertInFront(value);
-      flag = true;
-      ++sum;
-      Expand();
-    }
-    return pair<iterator, bool>(iterator(curr, this), flag);
-  }
-
   /*
    * erase - Erase the element at iterator pos.
    */
@@ -660,5 +629,3 @@ class linked_hashmap {
   }
 };
 }  // namespace thomas
-
-#endif  // LINKED_HASHMAP_LINKED_HASHMAP_H

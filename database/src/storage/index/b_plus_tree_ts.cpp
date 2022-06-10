@@ -1016,7 +1016,7 @@ void BPLUSTREETS_TYPE::ToString(BPlusTreePage *page, BufferPoolManager *bpm) con
     std::cout << "Leaf Page: " << leaf->GetPageId() << " parent: " << leaf->GetParentPageId()
               << " next: " << leaf->GetNextPageId() << std::endl;
     for (int i = 0; i < leaf->GetSize(); i++) {
-      std::cout << leaf->KeyAt(i) << ":" << leaf->GetItem(i).second << ",";
+      std::cout << leaf->KeyAt(i) << ",";
     }
     std::cout << std::endl;
     std::cout << std::endl;

@@ -1,5 +1,4 @@
-#ifndef SJTU_UTILITY_HPP
-#define SJTU_UTILITY_HPP
+#pragma once
 
 #include <utility>
 
@@ -30,5 +29,3 @@ class pair {
 };
 
 }  // namespace thomas
-
-#endif

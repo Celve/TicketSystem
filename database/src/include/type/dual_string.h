@@ -17,6 +17,7 @@ namespace thomas {
 template <size_t FirstStringSize, size_t SecondStringSize>
 class DualString {
  public:
+  DualString() = default;
   explicit DualString(const std::string &str1, const std::string &str2) : first_str_(str1), second_str_(str2) {}
 
   /**
@@ -44,12 +45,7 @@ class DualString {
   int CompareSecondWith(const DualString &rhs) const { return second_str_.CompareWith(rhs.second_str_); }
 
   friend std::ostream &operator<<(std::ostream &os, const DualString &src) {
-    size_t size = strlen(src.data_str_);
-    os << "(";
-    for (size_t i = 0; i < size; ++i) {
-      os << src.data_str_[i];
-    }
-    os << ", " << src.data_int_ << ")";
+    os << "(" << src.first_str_ << "," << src.second_str_ << ")";
     return os;
   }
 
