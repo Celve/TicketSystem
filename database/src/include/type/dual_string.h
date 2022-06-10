@@ -75,12 +75,12 @@ class DualStringComparator {
     auto first_result = lhs.CompareFirstWith(rhs);
     switch (type_) {
       case 1:
+        return first_result;
+      case 2:
         if (first_result != 0) {
           return first_result;
         }
         return lhs.CompareSecondWith(rhs);
-      case 2:
-        return first_result;
       default:
         return 0;
     }

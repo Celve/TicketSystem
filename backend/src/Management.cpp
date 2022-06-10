@@ -407,9 +407,10 @@ namespace thomas {
         TimeType day(date + " 00:00");
         vector<Station> ans1, ans2;
 
+        DualStringComparator<32, 32> tp_cmp(1);
         //todo:区间查找，查找所有 站点为 s 和 t 的 station 车站
-        station_database->ScanKey(DualString<32, 32>(s, ""), &ans1, cmp2);
-        station_database->ScanKey(DualString<32, 32>(t, ""), &ans2, cmp2);
+        station_database->ScanKey(DualString<32, 32>(s, ""), &ans1, tp_cmp);
+        station_database->ScanKey(DualString<32, 32>(t, ""), &ans2, tp_cmp);
 
         if (ans1.empty() || ans2.empty()) return "0"; //无票
         int cnt = 0;
@@ -474,10 +475,11 @@ namespace thomas {
         int COST = MAX_INT, TIME = MAX_INT, FIRST_TIME = MAX_INT; //用来比较答案
         //总花费，总时间，第一段列车的运行时间（越小表示 Train1_ID 也越小）
 
+        DualStringComparator<32, 32> tp_cmp(1);
         //todo:区间查找，查找所有 站点为 s 和 t 的 station 车站
         vector<Station> ans1, ans2;
-        station_database->ScanKey(DualString<32, 32>(s, ""), &ans1, cmp2);
-        station_database->ScanKey(DualString<32, 32>(t, ""), &ans2, cmp2);
+        station_database->ScanKey(DualString<32, 32>(s, ""), &ans1, tp_cmp);
+        station_database->ScanKey(DualString<32, 32>(t, ""), &ans2, tp_cmp);
 
         if (ans1.empty() || ans2.empty()) return "0"; //无票
         int cnt = 0;
