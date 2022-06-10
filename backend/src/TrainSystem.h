@@ -62,7 +62,8 @@ namespace thomas {
         TimeType start_sale_time, end_sale_time, arriving_time, leaving_time; //该车次中，到站与出站时间
         int price_sum, index; //继承自Train，index表示是该车次的第几站
         char id[64]; //这里只起到额外存储和提示作用
-        //todo : 同理把 train_id 和 station_name 复合起来, station_name是第一关键字
+        //todo : 同理把 train_id 和 station_name 复合起来,
+        // 排序时，只需要考虑station_name
 
     public:
         Station() = default;
@@ -99,7 +100,8 @@ namespace thomas {
     private:
         int seat_num[maxn]; //到每一站所剩的座位数
         char id[64];
-        //todo : 直接把 train_id 和 start_day 拼接起来
+        //todo : 直接把 train_id 和 start_day 拼接起来,
+        // train_id是第一关键字
         //注意是 date，没有时间，如果不是要先 get_date
         //start_day指的是 每趟车从起点站发车的日期
 
@@ -125,6 +127,7 @@ namespace thomas {
         //num是票数, price 是单价
         char id[64];
         //todo: 实际上，ull中的关键字是 user_name + order_ID，应该修改为pair类型
+        // 排序时，以 order_id 为关键字
         int pos; // refund_ticket 时临时用来存储位置
 
         TimeType start_day, leaving_time, arriving_time;
@@ -154,6 +157,7 @@ namespace thomas {
         char id[64];
         //todo: 关键字是 train_ID + start_sale_date + order_ID
         // 把 start_sale_date 和 order_ID 合成为一个 pair,然后与 train_ID 复合
+        // 排序时，以 order_id 为关键字
         int pos; // refund_ticket 时临时用来存储位置
 
     public:

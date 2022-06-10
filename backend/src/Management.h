@@ -48,17 +48,19 @@ namespace thomas {
 //    Ull train_id_to_pos, daytrain_id_to_pos, station_id_to_pos; //索引
 //    Ull order_id_to_pos, pending_order_id_to_pos;
 
+        //其类型在默认构造函数中指定，不能在这里写？
+        //Bpt中元素的排序规则
         StringComparator<32> cmp1;
         DualStringComparator<32, 32> cmp2;
         StringAnyComparator<TimeType, 32> cmp3;
         StringAnyComparator<int, 32> cmp4;
-        StringAnyComparator<sjtu::pair<int, int>, 32> cmp5;
+        StringAnyComparator<std::pair<int, int>, 32> cmp5; //要把order_ID放在最前面
 
         BPlusTreeIndexNTS<String<32>, Train, StringComparator<32> > *train_database;
         BPlusTreeIndexNTS<DualString<32, 32>, Station, DualStringComparator<32, 32> > *station_database;
         BPlusTreeIndexNTS<StringAny<TimeType, 32>, DayTrain, StringAnyComparator<TimeType, 32> > *daytrain_database;
         BPlusTreeIndexNTS<StringAny<int, 32>, Order, StringAnyComparator<int, 32> > *order_database;
-        BPlusTreeIndexNTS<StringAny<sjtu::pair<int, int>, 32>, PendingOrder, StringAnyComparator<sjtu::pair<int, int>, 32> > *pending_order_database;
+        BPlusTreeIndexNTS<StringAny<std::pair<int, int>, 32>, PendingOrder, StringAnyComparator<std::pair<int, int>, 32> > *pending_order_database;
 
         Ticket tickets[maxn]; //临时存储 query_ticket 的结果
         Order orders[maxn]; //临时存储 query_order 结果

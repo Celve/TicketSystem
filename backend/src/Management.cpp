@@ -228,18 +228,8 @@ namespace thomas {
 
 //-------------------------------------------------class TrainManagement
 
-    TrainManagement::TrainManagement() {
-//    train_data.initialise("train_data");
-//    day_train_data.initialise("day_train_data");
-//    station_data.initialise("station_data");
-//    order_data.initialise("order_data");
-//    pending_order_data.initialise("pending_order_data");
-//
-//    train_id_to_pos.init("train_id_to_pos");
-//    daytrain_id_to_pos.init("daytrain_id_to_pos");
-//    station_id_to_pos.init("station_id_to_pos");
-//    order_id_to_pos.init("order_id_to_pos");
-//    pending_order_id_to_pos.init("pending_order_id_to_pos");
+    TrainManagement::TrainManagement() : cmp2(2), cmp3(4), cmp4(2), cmp5(2){
+        //先指定 cmp 的类型
 
         train_database = new BPlusTreeIndexNTS<String<32>, Train, StringComparator<32> >
                 ("train_database", cmp1);
@@ -249,7 +239,7 @@ namespace thomas {
                 ("daytrain_database", cmp3);
         order_database = new BPlusTreeIndexNTS<StringAny<int, 32>, Order, StringAnyComparator<int, 32> >
                 ("order_database", cmp4);
-        pending_order_database = new BPlusTreeIndexNTS<StringAny<sjtu::pair<int, int>, 32>, PendingOrder, StringAnyComparator<sjtu::pair<int, int>, 32> >
+        pending_order_database = new BPlusTreeIndexNTS<StringAny<std::pair<int, int>, 32>, PendingOrder, StringAnyComparator<std::pair<int, int>, 32> >
                 ("pending_order_database", cmp5);
 
         //todo: 用栈的大小代替
@@ -418,28 +408,16 @@ namespace thomas {
         TimeType day(date + " 00:00");
         vector<Station> *ans1, *ans2;
 
-        //todo:区间查找，查找所有 站点为 s 和 t 的 station 车站-----> 必须优化
+        //todo:区间查找，查找所有 站点为 s 和 t 的 station 车站
         station_database->ScanKey(DualString<32, 32>(s, ""), ans1, cmp2);
+        station_database->ScanKey(DualString<32, 32>(t, ""), ans2, cmp2);
 
-
-        //因为关键字是直接拼接的，所以不好查，直接暴力遍历
-        train_id_to_pos.find_all(all); //全部读取出来，是按照 train_ID 升序排列的
-        Train tp_train;
-        for (int i = 0; i < all.size(); ++i) {
-            train_data.read(tp_train, all[i]);
-            string key1 = string(tp_train.train_ID) + s, key2 = string(tp_train.train_ID) + t;
-
-            station_id_to_pos.find_node(key1, ans1);
-            station_id_to_pos.find_node(key2, ans2);
-        }
-        //上述代码要修改，最后保证查询到的不同车次的车站要存在两个 vector 中
-
-        if (ans1.empty() || ans2.empty()) return "0"; //无票
+        if (ans1->empty() || ans2->empty()) return "0"; //无票
         int cnt = 0;
         Station s1, t1; //起点和终点
 
-        for (int i1 = 0, i2 = 0; i1 < ans1.size() && i2 < ans2.size();) {
-            station_data.read(s1, ans1[i1]), station_data.read(t1, ans2[i2]);
+        for (int i1 = 0, i2 = 0; i1 < ans1->size() && i2 < ans2->size();) {
+            s1 = (*ans1)[i1], t1 = (*ans2)[i2];
             //判断是否为同一辆车
             if (strcmp(s1.train_ID, t1.train_ID) < 0) i1++;
             else if (strcmp(s1.train_ID, t1.train_ID) > 0) i2++;
@@ -461,14 +439,13 @@ namespace thomas {
         if (type == "time") Sort(tickets, 1, cnt, time_cmp);
         else Sort(tickets, 1, cnt, cost_cmp);
 
+        vector<DayTrain> *all;
         string output = to_string(cnt);
         for (int i = 1; i <= cnt; ++i) {
             TimeType start_day = day - tickets[i].s.leaving_time.get_date();
-            string key = string(tickets[i].s.train_ID) + start_day.transfer();
-            all.clear();
-            daytrain_id_to_pos.find_node(key, all);
-            DayTrain tp_daytrain;
-            day_train_data.read(tp_daytrain, all[0]);
+
+            daytrain_database->SearchKey(StringAny<TimeType, 32>(tickets[i].s.train_ID, start_day), all);
+            DayTrain tp_daytrain = (*all)[0];
 
             string seat = to_string(tp_daytrain.query_seat(tickets[i].s.index, tickets[i].t.index - 1)); //终点站的座位数不影响
 
@@ -498,41 +475,31 @@ namespace thomas {
         int COST = MAX_INT, TIME = MAX_INT, FIRST_TIME = MAX_INT; //用来比较答案
         //总花费，总时间，第一段列车的运行时间（越小表示 Train1_ID 也越小）
 
-        vector<int> all, ans1, ans2;
         //todo:区间查找，查找所有 站点为 s 和 t 的 station 车站
-        //因为关键字是直接拼接的，所以不好查，直接暴力遍历
-        train_id_to_pos.find_all(all); //全部读取出来，是按照 train_ID 升序排列的
-        Train tp_train;
-        for (int i = 0; i < all.size(); ++i) {
-            train_data.read(tp_train, all[i]);
-            string key1 = string(tp_train.train_ID) + s, key2 = string(tp_train.train_ID) + t;
+        vector<Station> *ans1, *ans2;
+        station_database->ScanKey(DualString<32, 32>(s, ""), ans1, cmp2);
+        station_database->ScanKey(DualString<32, 32>(t, ""), ans2, cmp2);
 
-            station_id_to_pos.find_node(key1, ans1);
-            station_id_to_pos.find_node(key2, ans2);
-        }
-
-        if (ans1.empty() || ans2.empty()) return "0"; //无票
+        if (ans1->empty() || ans2->empty()) return "0"; //无票
         int cnt = 0;
         Station s1, t1; //起点，终点
 
-        for (int i = 0; i < ans1.size(); ++i) {  //枚举经过起点s1的不同车次
-            station_data.read(s1, ans1[i]);
+        for (int i = 0; i < ans1->size(); ++i) {  //枚举经过起点s1的不同车次
+            s1 = (*ans1)[i];
             TimeType start_day1 = day - s1.leaving_time.get_date();
             if (start_day1 < s1.start_sale_time || start_day1 > s1.end_sale_time) continue;//买不到票
 
-            all.clear();
-            Train train1;
-            train_id_to_pos.find_node(s1.train_ID, all);
-            train_data.read(train1, all[0]);
+            vector<Train> *all;
+            train_database->SearchKey(String<32>(s1.train_ID), all);
+            Train train1 = (*all)[0];
 
-            for (int j = 0; j < ans2.size(); ++j) { //枚举经过终点t1的不同车次
-                station_data.read(t1, ans2[j]);
+            for (int j = 0; j < ans2->size(); ++j) { //枚举经过终点t1的不同车次
+                t1 = (*ans2)[j];
                 if (!strcmp(s1.train_ID, t1.train_ID)) continue; //换乘要求不同车次
 
-                Train train2; //到达的车次
-                vector<int> pos2;
-                train_id_to_pos.find_node(t1.train_ID, pos2);
-                train_data.read(train2, pos2[0]);
+                vector<Train> *pos2;
+                train_database->SearchKey(String<32>(t1.train_ID), pos2);
+                Train train2 = (*pos2)[0]; //到达的车次
 
                 //把可能途径的车站全部读取出来，方便查询
                 //注意循环的范围
@@ -541,6 +508,8 @@ namespace thomas {
                     starts[++cnt1] = std::make_pair(train1.stations[k], k);
                 for (int k = 1; k < t1.index; ++k) ends[++cnt2] = std::make_pair(train2.stations[k], k);
                 if (!cnt1 || !cnt2) continue;
+
+                //todo: 或许可以删掉？因为已经按照 station_name 排序
                 Sort(starts, 1, cnt1, station_cmp);
                 Sort(ends, 1, cnt2, station_cmp); //先按车站名称排序，可以加快查找
 
@@ -562,7 +531,7 @@ namespace thomas {
                                               - train2.leaving_times[l].get_date() + 1440;
 
                         if (t1.end_sale_time < fast_start_day2) continue; //赶不上买票
-                        TimeType start_day2 = max(fast_start_day2, t1.start_sale_time);//真正的日期，发车且发售
+                        TimeType start_day2 = std::max(fast_start_day2, t1.start_sale_time);//真正的日期，发车且发售
                         bool updated = false;
 
                         //按照关键字更新答案
@@ -605,11 +574,10 @@ namespace thomas {
                         }
                         if (updated) { //如果更新答案，就保存结果
                             output.clear();
-                            vector<int> f1, f2;
-                            DayTrain S, T; //读出当前的座位
-                            daytrain_id_to_pos.find_node(string(train1.train_ID) + start_day1.transfer(), f1);
-                            daytrain_id_to_pos.find_node(string(train2.train_ID) + start_day2.transfer(), f2);
-                            day_train_data.read(S, f1[0]), day_train_data.read(T, f2[0]);
+                            vector<DayTrain> *f1, *f2;
+                            daytrain_database->SearchKey(StringAny<TimeType, 32>(train1.train_ID, start_day1), f1);
+                            daytrain_database->SearchKey(StringAny<TimeType, 32>(train2.train_ID, start_day2), f2);
+                            DayTrain S = (*f1)[0], T = (*f2)[0]; //读出当前的座位
 
                             output += string(s1.train_ID) + " " + string(s1.station_name) + " "
                                       + (start_day1 + s1.leaving_time).transfer() + " -> "
@@ -652,11 +620,10 @@ namespace thomas {
 
         if (!accounts.login_pool.count(user_name)) return "-1"; //用户未登录
 
-        vector<int> ans;
-        Train target_train;
-        train_id_to_pos.find_node(train_ID, ans);
-        if (ans.empty()) return "-1"; //车次不存在
-        train_data.read(target_train, ans[0]);
+        vector<Train> *ans;
+        train_database->SearchKey(String<32>(train_ID), ans);
+        if (ans->empty()) return "-1"; //车次不存在
+        Train target_train = (*ans)[0];
 
         if (!target_train.is_released) return "-1"; //车次未发布，不能购票
         if (target_train.total_seat_num < num) return "-1"; //座位不够
@@ -671,11 +638,9 @@ namespace thomas {
         TimeType start_day = TimeType(date + " 00:00") - target_train.leaving_times[s].get_date();
         if (start_day < target_train.start_sale_date || start_day > target_train.end_sale_date) return "-1"; //不在售票日期
 
-        string key = train_ID + start_day.transfer();
-        vector<int> ans2;
-        daytrain_id_to_pos.find_node(key, ans2);
-        DayTrain tp;
-        day_train_data.read(tp, ans2[0]);
+        vector<DayTrain> *ans2;
+        daytrain_database->SearchKey(StringAny<TimeType, 32>(train_ID, start_day), ans2);
+        DayTrain tp = (*ans2)[0];
 
         int remain_seat = tp.query_seat(s, t - 1);
         if (!is_pending && remain_seat < num) return "-1"; //不补票且座位不够
@@ -683,6 +648,7 @@ namespace thomas {
         int price = target_train.price_sum[t] - target_train.price_sum[s]; //刚好不是 s-1
 
 //    order_data.get_info(order_ID, 1); //相当于size操作，求有几个元素
+        //todo: 可能要修改为栈的大小
         order_num++; //不能用 get_info
         int order_ID = order_num;
 
@@ -691,31 +657,20 @@ namespace thomas {
                         s, t, target_train.stations[s], target_train.stations[t]);
 //    strcpy(new_order.id, (user_name + to_string(order_ID)).c_str());
 
-        //todo: 要修改为pair
-        key = user_name + to_string(order_ID);
-
         if (remain_seat >= num) { //座位足够
             tp.modify_seat(s, t - 1, -num);
-            day_train_data.update(tp, ans2[0]);
-            int pos = order_data.write(new_order);
-            order_id_to_pos.add_node(UllNode(key, pos));
+            daytrain_database->InsertEntry(StringAny<TimeType, 32>(train_ID, start_day), tp);
+            order_database->InsertEntry(StringAny<int, 32>(user_name, order_ID), new_order);
             long long total = num * price;
-
-//        cout << to_string(total) << endl;
-//        OUTPUT(*this, target_train.train_ID);
-
             return to_string(total);
         } else { //要候补
             new_order.status = pending;
             PendingOrder pending_order(train_ID, user_name, start_day, num, s, t, order_ID);
-//        strcpy(pending_order.id , (train_ID + start_day.transfer() + to_string(order_ID)).c_str());
 
-            int pos = order_data.write(new_order), pos2 = pending_order_data.write(pending_order);
-            order_id_to_pos.add_node(UllNode(key, pos));
-
-            // todo: 要修改，3个关键字复合成的 key
-            string key2 = train_ID + start_day.transfer() + to_string(order_ID);
-            pending_order_id_to_pos.add_node(UllNode(key2, pos2));
+            order_database->InsertEntry(StringAny<int, 32>(user_name, order_ID), new_order);
+            pending_order_database->InsertEntry(
+                    StringAny<std::pair<int, int>, 32>(train_ID, std::make_pair(order_ID, start_day.get_value()) ),
+                    pending_order );
 
 //        cout << "queue" << endl;
 //        OUTPUT(*this, target_train.train_ID);
@@ -731,19 +686,22 @@ namespace thomas {
         int cnt = 0;
 
         //todo : 修改为区间查找，查找所有关键字包含 user_name 的 order
-        vector<int> all;
-        order_id_to_pos.find_all(all);
-        if (all.empty()) return "0"; //没有订单
-        for (int i = 0; i < all.size(); ++i) {
-            Order tp_order;
-            order_data.read(tp_order, all[i]); //按顺序读出每一个order，应该按照 ID 排序好了？
-            if (!strcmp(tp_order.user_name, user_name.c_str()))
-                orders[++cnt] = tp_order;
-        }
+        vector<Order> *all;
+        StringAnyComparator<int, 32> tp_cmp(1);
+        //todo: 分析真正的含义，只考虑user_name(即第二个关键字)
+        order_database->ScanKey(StringAny<int, 32>(user_name, 0), all, tp_cmp);
+        if (all->empty()) return "0"; //没有订单
+//        for (int i = 0; i < all.size(); ++i) {
+//            Order tp_order;
+//            order_data.read(tp_order, all[i]); //按顺序读出每一个order，应该按照 ID 排序好了？
+//            if (!strcmp(tp_order.user_name, user_name.c_str()))
+//                orders[++cnt] = tp_order;
+//        }
 
-        //从新到旧排序 , 可能不需要？
+        //从新到旧排序（大到小） , 可能不需要？
         //todo: 修改为 bpt 后，按照关键字 Order_ID 读取，就不用排序
-        Sort(orders, 1, cnt, order_cmp);
+        //原本在bpt中是升序排列的，所以要倒着读
+//        Sort(orders, 1, cnt, order_cmp);
         string output = to_string(cnt);
         for (int i = 1; i <= cnt; ++i) {
             if (orders[i].status == success) output += "\n[success] ";
