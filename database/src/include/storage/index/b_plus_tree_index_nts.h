@@ -18,6 +18,8 @@ class BPlusTreeIndexNTS {
                              int buffer_pool_size = 1000);
   ~BPlusTreeIndexNTS();
 
+  bool IsEmpty();
+
   void InsertEntry(const KeyType &key, const ValueType &value);
 
   void DeleteEntry(const KeyType &key);

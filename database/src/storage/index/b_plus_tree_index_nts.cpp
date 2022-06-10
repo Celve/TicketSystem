@@ -9,6 +9,7 @@
 #include "common/config.h"
 #include "common/macros.h"
 #include "concurrency/transaction.h"
+#include "storage/page/b_plus_tree_page.h"
 
 namespace thomas {
 
@@ -62,6 +63,9 @@ BPLUSTREEINDEXNTS_TYPE::~BPlusTreeIndexNTS() {
   delete bpm_;
   delete tree_;
 }
+
+INDEX_TEMPLATE_ARGUMENTS
+bool BPLUSTREEINDEXNTS_TYPE::IsEmpty() { return tree_->IsEmpty(); }
 
 INDEX_TEMPLATE_ARGUMENTS
 void BPLUSTREEINDEXNTS_TYPE::Debug() { tree_->Print(bpm_); }
