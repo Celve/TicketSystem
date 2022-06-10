@@ -416,9 +416,12 @@ namespace thomas {
 
         if (s == t) return "0"; //起点等于终点，显然无票
         TimeType day(date + " 00:00");
-        vector<int> all, ans1, ans2;
+        vector<Station> *ans1, *ans2;
 
         //todo:区间查找，查找所有 站点为 s 和 t 的 station 车站-----> 必须优化
+        station_database->ScanKey(DualString<32, 32>(s, ""), ans1, cmp2);
+
+
         //因为关键字是直接拼接的，所以不好查，直接暴力遍历
         train_id_to_pos.find_all(all); //全部读取出来，是按照 train_ID 升序排列的
         Train tp_train;
@@ -871,23 +874,14 @@ namespace thomas {
     string TrainManagement::clean(AccountManagement &accounts) {
 //        accounts.user_data.clear();
 //        accounts.username_to_pos.clear();
-
+        accounts.user_database->Clear();
         accounts.login_pool.clear();
 
-        train_data.clear();
-        day_train_data.clear();
-        station_data.clear();
-        order_data.clear();
-        pending_order_data.clear();
-//    ticket_data.clear();
-
-        train_id_to_pos.clear();
-        daytrain_id_to_pos.clear();
-        station_id_to_pos.clear();
-        order_id_to_pos.clear();
-        pending_order_id_to_pos.clear();
-//    time_to_pos.clear();
-//    cost_to_pos.clear();
+        train_database->Clear();
+        daytrain_database->Clear();
+        station_database->Clear();
+        order_database->Clear();
+        pending_order_database->Clear();
 
         return "0";
     }
