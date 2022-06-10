@@ -65,7 +65,7 @@ class StringAnyComparator {
    * @param type 1 only compares string; 2 only compares type; 3 use string as first key; 4 use type as first key
    * comparing only the first key; other values are invalid
    */
-  explicit StringAnyComparator(int category = 0) : category_(category) {}
+  explicit StringAnyComparator(int category) : category_(category) {}
 
   int operator()(const StringAny<T, StringSize> &lhs, const StringAny<T, StringSize> &rhs) const {
     int temp_result = 0;

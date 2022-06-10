@@ -4,7 +4,7 @@
 
 #include "storage/page/b_plus_tree_page.h"
 #include "type/string.h"
-#include "type/string_int.h"
+#include "type/string_any.h"
 
 namespace thomas {
 
