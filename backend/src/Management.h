@@ -14,15 +14,26 @@
 #include "src/include/stack/stack_manager.hpp"
 
 namespace thomas {
-    class rollback_commmand{
+    template<typename T>
+    class Record_stack{
+//        template<typename T>
+        class Record{ //内置
+        public:
+            int type, time;// type=0:insert, 1:delete, 2:modify
+            T data;
+
+            Record() = default;
+            Record(const int &_type, const int &_time, const T &_data) : data(_data), type(_type), time(_time) {}
+        };
+
     private:
-        int type;
-        char pre_key[32];
+        StackManager<Record> stack;
 
     public:
-        rollback_commmand() = default;
-        rollback_commmand(const int &_type, const string &cmd);
-
+        Record_stack() = default;
+        Record_stack(const string &file_name);
+        void add(const int &_type, const int &_time, const T &_data);
+        void back(const int &t); //后退到t时刻
     };
 
     class AccountManagement {
@@ -40,10 +51,12 @@ namespace thomas {
         BPlusTreeIndexNTS<String<24>, User, StringComparator<24>> *user_database;
         StringComparator<24> cmp1;
 
+        Record_stack<User> user_stack; //用于 rollback
+
     public:
         AccountManagement();
 
-        AccountManagement(const string &file_name);
+//        AccountManagement(const string &file_name);
 
         ~AccountManagement();
 

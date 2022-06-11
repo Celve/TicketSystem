@@ -121,19 +121,34 @@ namespace thomas {
         cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
     }
 
-//----------------------------------------------class AccountManagement
+//----------------------------------------------class Record_stack
 
-    AccountManagement::AccountManagement() {
+    template<typename T>
+    Record_stack<T>::Record_stack(const string &file_name) : stack(file_name) {}
+
+    template<typename T>
+    void Record_stack<T>::add(const int &_type, const int &_time, const T &_data) {
+        stack.Push(Record(_type, _time, _data));
+    }
+
+    template<typename T>
+    void Record_stack<T>::back(const int &t) {
+        T temp;
+    }
+
+    //----------------------------------------------class AccountManagement
+
+    AccountManagement::AccountManagement() : user_stack("user_stack") {
         //    user_data.initialise("user_data");
         //    username_to_pos.init("username_to_pos");
         user_database = new BPlusTreeIndexNTS<String<24>, User, StringComparator<24>>(
                 "user_database", cmp1);
     }
 
-    AccountManagement::AccountManagement(const string &file_name) {
-        user_database = new BPlusTreeIndexNTS<String<24>, User, StringComparator<24>>(
-                file_name, cmp1);
-    }
+//    AccountManagement::AccountManagement(const string &file_name) {
+//        user_database = new BPlusTreeIndexNTS<String<24>, User, StringComparator<24>>(
+//                file_name, cmp1);
+//    }
 
     string AccountManagement::add_user(Command &line) {
         //    line.set_delimiter(' ');
@@ -162,6 +177,7 @@ namespace thomas {
         if (user_database->IsEmpty()) { //首次添加用户
             User u(username, name, mail, password, 10);
             user_database->InsertEntry(String<24>(username), u);
+            user_stack.add(0, line.timestamp, u);
             return "0";
         } else {
             //操作失败：未登录/权限不足/用户名已存在

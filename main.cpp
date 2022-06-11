@@ -15,6 +15,9 @@ using namespace thomas;
 AccountManagement accounts; //声明在外部，防止数组太大，爆栈空间
 TrainManagement trains;
 
+//Record_stack records;
+//StackManager<Records> records("records"); // 用于 rollback
+
 int main() {
     string input;
 
