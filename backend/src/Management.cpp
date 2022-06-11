@@ -7,7 +7,21 @@
 namespace thomas {
 
     template<typename T>
-    void Sort(T *a, int l, int r, bool cmp(const T &u, const T &v)) {
+    void Sort(T *a, int l, int r, bool cmp(const T &u, const T &v)) { //对数组
+        if (l >= r) return;
+        int pl = l, pr = r;
+        T mid_val = a[(l + r) / 2];
+        while (pl <= pr) {
+            while (cmp(a[pl], mid_val)) ++pl;
+            while (cmp(mid_val, a[pr])) --pr;
+            if (pl <= pr) std::swap(a[pl], a[pr]), ++pl, --pr;
+        }
+        if (l < pr) Sort(a, l, pr, cmp);
+        if (pl < r) Sort(a, pl, r, cmp);
+    }
+
+    template<typename T>
+    void Sort(vector<T> &a, int l, int r, bool cmp(const T &u, const T &v)) { //对vector
         if (l >= r) return;
         int pl = l, pr = r;
         T mid_val = a[(l + r) / 2];
@@ -416,6 +430,7 @@ namespace thomas {
         int cnt = 0;
         Station s1, t1; //起点和终点
 
+        vector<Ticket> tickets;
         for (int i1 = 0, i2 = 0; i1 < ans1.size() && i2 < ans2.size();) {
             s1 = ans1[i1], t1 = ans2[i2];
             //判断是否为同一辆车
@@ -428,19 +443,19 @@ namespace thomas {
                 TimeType start_day = day - s1.leaving_time.get_date(); //要在day这一天上车，对应车次的首发时间
                 //也就是从第一站出发的日期
                 if (s1.start_sale_time <= start_day && start_day <= s1.end_sale_time) { //能买到
-                    tickets[++cnt] = Ticket(s1, t1);
+                    tickets.push_back(Ticket(s1, t1));
                 }
                 i1++, i2++;
             }
         }
-
+        cnt = tickets.size();
         if (!cnt) return "0"; //无符合条件的车票
 
-        if (type == "time") Sort(tickets, 1, cnt, time_cmp);
-        else Sort(tickets, 1, cnt, cost_cmp);
+        if (type == "time") Sort(tickets, 0, cnt - 1, time_cmp);
+        else Sort(tickets, 0, cnt - 1, cost_cmp);
 
         string output = to_string(cnt);
-        for (int i = 1; i <= cnt; ++i) {
+        for (int i = 0; i <= cnt - 1; ++i) {
             TimeType start_day = day - tickets[i].s.leaving_time.get_date();
             vector<DayTrain> all;
             daytrain_database->SearchKey(StringAny<32, int>(tickets[i].s.train_ID, start_day.get_value()), &all);
@@ -504,17 +519,19 @@ namespace thomas {
                 //把可能途径的车站全部读取出来，方便查询
                 //注意循环的范围
                 int cnt1 = 0, cnt2 = 0;
+                vector<std::pair<string, int> > starts, ends;
                 for (int k = s1.index + 1; k <= train1.station_num; ++k)
-                    starts[++cnt1] = std::make_pair(train1.stations[k], k);
-                for (int k = 1; k < t1.index; ++k) ends[++cnt2] = std::make_pair(train2.stations[k], k);
+                    starts.push_back(std::make_pair(train1.stations[k], k));
+                for (int k = 1; k < t1.index; ++k) ends.push_back(std::make_pair(train2.stations[k], k));
+                cnt1 = starts.size(), cnt2 = ends.size();
                 if (!cnt1 || !cnt2) continue;
 
                 //todo: 或许可以删掉？因为已经按照 station_name 排序
-                Sort(starts, 1, cnt1, station_cmp);
-                Sort(ends, 1, cnt2, station_cmp); //先按车站名称排序，可以加快查找
+                Sort(starts,  0, cnt1 - 1, station_cmp);
+                Sort(ends, 0, cnt2 - 1, station_cmp); //先按车站名称排序，可以加快查找
 
                 //枚举中转站
-                for (int i1 = 1, i2 = 1; i1 <= cnt1 && i2 <= cnt2;) {
+                for (int i1 = 0, i2 = 0; i1 < cnt1 && i2 < cnt2;) {
                     if (starts[i1].first < ends[i2].first) i1++; //找到相同的一站
                     else if (starts[i1].first > ends[i2].first) i2++;
                     else {
@@ -685,22 +702,20 @@ namespace thomas {
         int cnt = 0;
 
         //todo : 修改为区间查找，查找所有关键字包含 user_name 的 order
-        vector<Order> all;
+        vector<Order> orders;
         StringAnyComparator<32, int> tp_cmp(1);
         //todo: 分析真正的含义，只考虑user_name
-        order_database->ScanKey(StringAny<32, int>(user_name, 0), &all, tp_cmp);
-        if (all.empty()) return "0"; //没有订单
+        order_database->ScanKey(StringAny<32, int>(user_name, 0), &orders, tp_cmp);
+        if (orders.empty()) return "0"; //没有订单
 
-        for (int i = 0; i < all.size(); ++i) {
-            orders[++cnt] = all[i];
-        }
+        cnt = orders.size();
         //从新到旧排序（大到小） , 可能不需要？
         //todo: 修改为 bpt 后，按照关键字 Order_ID 读取，就不用排序
         // 事实上，目前的bpt做不到，所以还是要 sort
-        Sort(orders, 1, cnt, order_cmp);
+        Sort(orders, 0, cnt - 1, order_cmp);
 
         string output = to_string(cnt);
-        for (int i = 1; i <= cnt; ++i) {
+        for (int i = 0; i <= cnt - 1; ++i) {
             if (orders[i].status == success) output += "\n[success] ";
             else if (orders[i].status == pending) output += "\n[pending] ";
             else output += "\n[refunded] ";
@@ -728,21 +743,18 @@ namespace thomas {
 
         // todo: 区间查询
         int cnt = 0;
-        vector<Order> all;
+        vector<Order> orders;
         StringAnyComparator<32, int> tp_cmp(1);
         //todo: 分析真正的含义，只考虑user_name
-        order_database->ScanKey(StringAny<32, int>(user_name, 0), &all, tp_cmp);
-        if (all.empty()) return "0"; //没有订单
-
-        for (int i = 0; i < all.size(); ++i) {
-            orders[++cnt] = all[i];
-        }
+        order_database->ScanKey(StringAny<32, int>(user_name, 0), &orders, tp_cmp);
+        if (orders.empty()) return "0"; //没有订单
+        cnt = orders.size();
         //从新到旧排序（大到小） , 可能不需要？
         //todo: 修改为 bpt 后，按照关键字 Order_ID 读取，就不用排序
         // 事实上，目前的bpt做不到，所以还是要 sort
-        Sort(orders, 1, cnt, order_cmp);
-
+        Sort(orders, 0, cnt - 1, order_cmp);
         if (x > cnt) return "-1"; //显然超出订单总数
+        x--; //1-base--->0-base
         if (orders[x].status == refunded) return "-1"; //重复退款
 
         Order refund_order = orders[x]; //临时存储
@@ -773,19 +785,17 @@ namespace thomas {
         //退票后有空缺，判断候补的订单现在是否能买
         int CNT = 0;
         //todo: 同样是区间查找
-        vector<PendingOrder> ans2;
+        vector<PendingOrder> pending_orders;
         StringIntIntComparator<32> tp_cmp2(1);
         pending_order_database->ScanKey(StringIntInt<32>(
                                                 refund_order.train_ID, refund_order.start_day.get_value(), refund_order.order_ID),
-                                        &ans2, tp_cmp2);
-        for (int i = 0; i < ans2.size(); ++i) {
-            pending_orders[++CNT] = ans2[i];
-        }
+                                        &pending_orders, tp_cmp2);
+        CNT = pending_orders.size();
 
         //todo: 同理的排序修改，但是是从小到大，因为早买票就早补票
-        Sort(pending_orders, 1, CNT, pending_order_cmp);
+        Sort(pending_orders, 0, CNT - 1, pending_order_cmp);
 
-        for (int i = 1; i <= CNT; ++i) {
+        for (int i = 0; i <= CNT - 1; ++i) {
             //之前写错了，只要候补订单的区间和退掉的票有交集，就可以买
             if (pending_orders[i].from > refund_order.to || pending_orders[i].to < refund_order.from) continue;
             if (tp_daytrain.query_seat(pending_orders[i].from, pending_orders[i].to - 1) >= pending_orders[i].num) {
@@ -796,12 +806,11 @@ namespace thomas {
                         pending_orders[i].train_ID, pending_orders[i].start_day.get_value(), pending_orders[i].order_ID));
 
                 //修改 order 中的状态
-                Order success_order;
 //                key = string(pending_orders[i].user_name) + to_string(pending_orders[i].order_ID);
-                all.clear();
+                vector<Order> tmp;
                 order_database->SearchKey(StringAny<32, int>(
-                        pending_orders[i].user_name, pending_orders[i].order_ID), &all);
-                success_order = all[0];
+                        pending_orders[i].user_name, pending_orders[i].order_ID), &tmp);
+                Order success_order = tmp[0];
                 success_order.status = success;
                 order_database->InsertEntry(StringAny<32, int>(
                         pending_orders[i].user_name, pending_orders[i].order_ID), success_order);
