@@ -7,7 +7,7 @@ set(CMAKE_CXX_FLAGS "-O3")
 
 add_subdirectory(database)
 
-include_directories(backend/src backend/libs log)
+include_directories(backend/src backend/libs log/src/include)
 
 add_executable(code main.cpp
   backend/src/Command.cpp

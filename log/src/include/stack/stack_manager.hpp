@@ -65,7 +65,7 @@ STACK_TEMPLATE
 void STACK_TYPE::Push(const T &value) {
   int offset = sizeof(size_t) + sizeof(T) * (sum_++);
   stack_io_.seekp(offset);
-  stack_io_.write(reinterpret_cast<char *>(&value), sizeof(T));
+  stack_io_.write(reinterpret_cast<const char *>(&value), sizeof(T));
   if (stack_io_.bad()) {
     throw std::runtime_error("I/O error while writing");
   }
