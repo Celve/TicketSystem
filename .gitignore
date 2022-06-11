@@ -1,4 +1,5 @@
 database/build
+database/Makefile
 build
 main.cpp
 cmake-build-debug
