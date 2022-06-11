@@ -16,4 +16,7 @@ namespace thomas {
         return strcmp(user_name, rhs.user_name) < 0;
     }
 
+    string User::get_id() {
+        return user_name;
+    }
 }

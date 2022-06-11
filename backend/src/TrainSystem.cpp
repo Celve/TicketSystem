@@ -55,6 +55,10 @@ namespace thomas {
         return strcmp(train_ID, rhs.train_ID) < 0;
     }
 
+    string Train::get_id() {
+        return train_ID;
+    }
+
 //--------------------------------------------------class DayTrain
 
     void DayTrain::modify_seat(int l, int r, int val) {
@@ -69,6 +73,10 @@ namespace thomas {
         return ans;
     }
 
+    string DayTrain::get_id() {
+        return string(train_ID) + " " + std::to_string(start_day.get_value());
+    }
+
 //--------------------------------------------------class Station
 
     Station::Station(const string &_train_ID, const string &_station_name,
@@ -80,6 +88,10 @@ namespace thomas {
               leaving_time(_leaving_time), index(_index) {
         strcpy(train_ID, _train_ID.c_str());
         strcpy(station_name, _station_name.c_str());
+    }
+
+    string Station::get_id() {
+        return string(station_name) + " " + string(train_ID);
     }
 
 //---------------------------------------------------class Ticket
@@ -107,6 +119,10 @@ namespace thomas {
         strcpy(to_station, _to_station.c_str());
     }
 
+    string Order::get_id() {
+        return string(user_name) + " " + std::to_string(order_ID);
+    }
+
 //---------------------------------------------------class PendingOrder
 
     PendingOrder::PendingOrder(const string &_train_ID, const string &_user_name,
@@ -118,4 +134,9 @@ namespace thomas {
         strcpy(train_ID, _train_ID.c_str());
         strcpy(user_name, _user_name.c_str());
     }
+
+    string PendingOrder::get_id() {
+        return string(train_ID) + " " + std::to_string(start_day.get_value()) + " " + std::to_string(order_ID);
+    }
+
 } // namespace thomas

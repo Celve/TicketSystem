@@ -11,19 +11,22 @@
 #include "type/string_any.h"
 #include "type/string_int_int.h"
 
-#include "src/include/stack/stack_manager.hpp"
+#include "stack/stack_manager.hpp"
 
 namespace thomas {
+
     template<typename T>
-    class Record_stack{
-//        template<typename T>
-        class Record{ //内置
+    class Record_stack {
+        //        template<typename T>
+        class Record { //内置
         public:
-            int type, time;// type=0:insert, 1:delete, 2:modify
+            int type, time; // type=0:insert, 1:delete, 2:modify
             T data;
 
             Record() = default;
-            Record(const int &_type, const int &_time, const T &_data) : data(_data), type(_type), time(_time) {}
+
+            Record(const int &_type, const int &_time, const T &_data)
+                    : data(_data), type(_type), time(_time) {}
         };
 
     private:
@@ -31,9 +34,12 @@ namespace thomas {
 
     public:
         Record_stack() = default;
+
         Record_stack(const string &file_name);
+
         void add(const int &_type, const int &_time, const T &_data);
-        void back(const int &t); //后退到t时刻
+
+        Record pop(); //后退到t时刻
     };
 
     class AccountManagement {
@@ -56,7 +62,7 @@ namespace thomas {
     public:
         AccountManagement();
 
-//        AccountManagement(const string &file_name);
+        //        AccountManagement(const string &file_name);
 
         ~AccountManagement();
 
@@ -123,9 +129,13 @@ namespace thomas {
         string buy_ticket(Command &line, AccountManagement &accounts);
 
         string query_order(Command &line, AccountManagement &accounts);
+
         string refund_ticket(Command &line, AccountManagement &accounts);
+
         string rollback(Command &line, AccountManagement &accounts);
+
         string clean(AccountManagement &accounts);
+
         string exit(AccountManagement &accounts); //退出系统，所有用户下线
     };
 

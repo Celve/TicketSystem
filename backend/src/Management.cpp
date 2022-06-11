@@ -132,13 +132,15 @@ namespace thomas {
     }
 
     template<typename T>
-    void Record_stack<T>::back(const int &t) {
-        T temp;
+    typename Record_stack<T>::Record Record_stack<T>::pop() {
+        Record temp;
+        stack.Pop(temp);
+        return temp;
     }
 
     //----------------------------------------------class AccountManagement
 
-    AccountManagement::AccountManagement() : user_stack("user_stack") {
+    AccountManagement::AccountManagement() : user_stack("user_stack.db") {
         //    user_data.initialise("user_data");
         //    username_to_pos.init("username_to_pos");
         user_database = new BPlusTreeIndexNTS<String<24>, User, StringComparator<24>>(
@@ -310,9 +312,9 @@ namespace thomas {
 //-------------------------------------------------class TrainManagement
 
     TrainManagement::TrainManagement() : cmp2(2), cmp3(3), cmp4(3), cmp5(2),
-                                         train_stack("train_stack"), station_stack("station_stack"),
-                                         daytrain_stack("daytrain_stack"), order_stack("order_stack"),
-                                         pending_order_stack("pending_order_stack") {
+                                         train_stack("train_stack.db"), station_stack("station_stack.db"),
+                                         daytrain_stack("daytrain_stack.db"), order_stack("order_stack.db"),
+                                         pending_order_stack("pending_order_stack.db") {
         //先指定 cmp 的类型
 
         train_database =
@@ -380,6 +382,8 @@ namespace thomas {
         Train new_train(train_id, station_num, seat_num, stations, prices, start_time,
                         travel_times, stop_over_times, sale_date, type);
         train_database->InsertEntry(String<24>(train_id), new_train);
+        train_stack.add(0, line.timestamp, new_train);
+
         return "0";
     }
 
@@ -394,19 +398,23 @@ namespace thomas {
         Train target_train = ans[0];
         if (target_train.is_released)
             return "-1"; //重复发布，失败
+
         target_train.is_released = true;
         train_database->InsertEntry(String<24>(t_id), target_train);
+        train_stack.add(2, line.timestamp, target_train);
 
         //维护 每天的车次座位数
         for (auto i = target_train.start_sale_date; i <= target_train.end_sale_date;
              i += 1440) {
             DayTrain tp_daytrain; // todo: 可能要开在外面，不然会炸
+            strcpy(tp_daytrain.train_ID, target_train.train_ID);
+            tp_daytrain.start_day = i;
             for (int j = 1; j <= target_train.station_num; ++j)
                 tp_daytrain.seat_num[j] = target_train.total_seat_num;
 
-            //目前直接用 train_id + time 替代
             daytrain_database->InsertEntry(StringAny<24, int>(t_id, i.get_value()),
                                            tp_daytrain);
+            daytrain_stack.add(0, line.timestamp, tp_daytrain);
         }
 
         //维护 沿途的每个车站
@@ -415,9 +423,10 @@ namespace thomas {
                     t_id, target_train.stations[i], target_train.price_sum[i],
                     target_train.start_sale_date, target_train.end_sale_date,
                     target_train.arriving_times[i], target_train.leaving_times[i], i);
-            //同理，目前直接用 train_id + station_name 替代
+
             station_database->InsertEntry(
                     DualString<32, 24>(target_train.stations[i], t_id), tp_station);
+            station_stack.add(0, line.timestamp, tp_station);
         }
 
         return "0";
@@ -508,6 +517,7 @@ namespace thomas {
         if (target_train.is_released)
             return "-1"; //已发布，不能删
 
+        train_stack.add(1, line.timestamp, target_train);
         train_database->DeleteEntry(String<24>(t_id));
         return "0";
     }
@@ -836,8 +846,7 @@ namespace thomas {
         if (!is_pending && remain_seat < num)
             return "-1"; //不补票且座位不够
 
-        int price =
-                target_train.price_sum[t] - target_train.price_sum[s]; //刚好不是 s-1
+        int price = target_train.price_sum[t] - target_train.price_sum[s]; //刚好不是 s-1
 
         //    order_data.get_info(order_ID, 1); //相当于size操作，求有几个元素
         order_num++; //不能用 get_info
@@ -850,11 +859,15 @@ namespace thomas {
         //    strcpy(new_order.id, (user_name + to_string(order_ID)).c_str());
 
         if (remain_seat >= num) { //座位足够
+            daytrain_stack.add(2, line.timestamp, tp);
+
             tp.modify_seat(s, t - 1, -num);
             daytrain_database->InsertEntry(
                     StringAny<24, int>(train_ID, start_day.get_value()), tp);
             order_database->InsertEntry(StringAny<24, int>(user_name, order_ID),
                                         new_order);
+            order_stack.add(0, line.timestamp, new_order);
+
             long long total = num * price;
             return to_string(total);
         } else { //要候补
@@ -864,10 +877,11 @@ namespace thomas {
 
             order_database->InsertEntry(StringAny<24, int>(user_name, order_ID),
                                         new_order);
+            order_stack.add(0, line.timestamp, new_order);
             pending_order_database->InsertEntry(
                     StringIntInt<24>(train_ID, start_day.get_value(), order_ID),
                     pending_order);
-
+            pending_order_stack.add(0, line.timestamp, pending_order);
             //        cout << "queue" << endl;
             //        OUTPUT(*this, target_train.train_ID);
 
@@ -952,6 +966,7 @@ namespace thomas {
             return "-1"; //重复退款
 
         Order refund_order = orders[x]; //临时存储
+        order_stack.add(2, line.timestamp, refund_order);
         orders[x].status = refunded;
         order_database->InsertEntry(StringAny<24, int>(user_name, orders[x].order_ID),
                                     orders[x]);
@@ -960,6 +975,12 @@ namespace thomas {
             //            string key = string(refund_order.train_ID) +
             //            refund_order.start_day.transfer()
             //                         + to_string(refund_order.order_ID);
+            vector<PendingOrder> tmp;
+            pending_order_database->SearchKey(StringIntInt<24>(
+                    refund_order.train_ID, refund_order.start_day.get_value(),
+                    refund_order.order_ID), &tmp);
+            pending_order_stack.add(1, line.timestamp, tmp[0]);
+
             pending_order_database->DeleteEntry(StringIntInt<24>(
                     refund_order.train_ID, refund_order.start_day.get_value(),
                     refund_order.order_ID));
@@ -978,6 +999,8 @@ namespace thomas {
                                    refund_order.start_day.get_value()),
                 &ans);
         DayTrain tp_daytrain = ans[0];
+        daytrain_stack.add(2, line.timestamp, tp_daytrain); //修改前
+
         tp_daytrain.modify_seat(refund_order.from, refund_order.to - 1,
                                 refund_order.num);
 
@@ -1008,6 +1031,7 @@ namespace thomas {
                 tp_daytrain.modify_seat(pending_orders[i].from, pending_orders[i].to - 1,
                                         -pending_orders[i].num);
                 //相应地删除pending_database
+                pending_order_stack.add(1, line.timestamp, pending_orders[i]);
                 pending_order_database->DeleteEntry(StringIntInt<24>(
                         pending_orders[i].train_ID, pending_orders[i].start_day.get_value(),
                         pending_orders[i].order_ID));
@@ -1020,6 +1044,7 @@ namespace thomas {
                                                              pending_orders[i].order_ID),
                                           &tmp);
                 Order success_order = tmp[0];
+                order_stack.add(2, line.timestamp, tmp[0]); //修改前
                 success_order.status = success;
                 order_database->InsertEntry(
                         StringAny<24, int>(pending_orders[i].user_name,
@@ -1042,9 +1067,97 @@ namespace thomas {
 
     string TrainManagement::rollback(Command &line, AccountManagement &accounts) {
         line.next_token();
-        int time = string_to_int(line.next_token());
+        int to = string_to_int(line.next_token()), now = line.timestamp;
 
+        //回滚的时间不存在
+        if (to > now) return "-1";
 
+        for (auto tp = accounts.user_stack.pop(); ; tp = accounts.user_stack.pop()  ) {
+            if (tp.time < to) { //防止越界
+                accounts.user_stack.add(tp.type, tp.time, tp.data);
+                break;
+            }
+            auto key = String<24>(tp.data.get_id());
+            if (!tp.type) accounts.user_database->DeleteEntry(key); //insert
+            else accounts.user_database->InsertEntry(key, tp.data); //delete/modify
+        }
+
+        for (auto tp = train_stack.pop(); ;tp = train_stack.pop()) {
+            if (tp.time < to) {
+                train_stack.add(tp.type, tp.time, tp.data);
+                break;
+            }
+            auto key = String<24>(tp.data.get_id());
+            if (!tp.type) train_database->DeleteEntry(key);
+            else train_database->InsertEntry(key, tp.data);
+        }
+
+        for (auto tp = station_stack.pop(); ; tp = station_stack.pop()) {
+            if (tp.time < to) {
+                station_stack.add(tp.type, tp.time, tp.data);
+                break;
+            }
+            string s0 = tp.data.get_id();
+            int x = 0;
+            for (int i = 0;i < s0.length(); ++i) {
+                if (s0[i] == ' ') {x = i; break;}
+            }
+            auto key = DualString<32, 24>(s0.substr(0, x), s0.substr(x + 1, s0.length() - x - 1));
+            if (!tp.type) station_database->DeleteEntry(key);
+            else station_database->InsertEntry(key, tp.data);
+        }
+
+        for (auto tp = daytrain_stack.pop(); ; tp = daytrain_stack.pop()) {
+            if (tp.time < to) {
+                daytrain_stack.add(tp.type, tp.time, tp.data);
+                break;
+            }
+            string s0 = tp.data.get_id();
+            int x = 0;
+            for (int i = 0;i < s0.length(); ++i) {
+                if (s0[i] == ' ') {x = i; break;}
+            }
+            auto key = StringAny<24, int>(s0.substr(0, x),
+                                          string_to_int(s0.substr(x + 1, s0.length() - x - 1)) );
+            if (!tp.type) daytrain_database->DeleteEntry(key);
+            else daytrain_database->InsertEntry(key, tp.data);
+        }
+
+        for (auto tp = order_stack.pop(); ; tp = order_stack.pop()) {
+            if (tp.time < to) {
+                order_stack.add(tp.type, tp.time, tp.data);
+                break;
+            }
+            string s0 = tp.data.get_id();
+            int x = 0;
+            for (int i = 0;i < s0.length(); ++i) {
+                if (s0[i] == ' ') {x = i; break;}
+            }
+            auto key = StringAny<24, int>(s0.substr(0, x),
+                                          string_to_int(s0.substr(x + 1, s0.length() - x - 1)) );
+            if (!tp.type) order_database->DeleteEntry(key);
+            else order_database->InsertEntry(key, tp.data);
+        }
+
+        for (auto tp = pending_order_stack.pop(); ; tp = pending_order_stack.pop()) {
+            if (tp.time < to) {
+                pending_order_stack.add(tp.type, tp.time, tp.data);
+                break;
+            }
+            string s0 = tp.data.get_id();
+            int x1 = 0, x2 = 0;
+            for (int i = 0;i < s0.length(); ++i) {
+                if (s0[i] == ' ') {x1 = i; break;}
+            }
+            for (int i = s0.length() - 1; i >= 0; --i) {
+                if (s0[i] == ' ') {x2 = i; break;}
+            }
+            auto key = StringIntInt<24>(s0.substr(0, x1),
+                                        string_to_int(s0.substr(x1 + 1, x2 - x1 - 1)),
+                                        string_to_int(s0.substr(x2 + 1, s0.length() - x2 - 1)));
+            if (!tp.type) pending_order_database->DeleteEntry(key);
+            else pending_order_database->InsertEntry(key, tp.data);
+        }
 
         return "0";
     }

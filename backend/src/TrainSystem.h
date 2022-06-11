@@ -48,6 +48,7 @@ namespace thomas {
               const string &_sale_date, const string &_type);
 
         bool operator<(const Train &rhs) const; //不需要？
+        string get_id();
         friend void OUTPUT(TrainManagement &all, const string &train_ID);
     };
 
@@ -64,7 +65,7 @@ namespace thomas {
         TimeType start_sale_time, end_sale_time, arriving_time,
                 leaving_time;     //该车次中，到站与出站时间
         int price_sum, index; //继承自Train，index表示是该车次的第几站
-        // todo : 同理把 train_id 和 station_name 复合起来,
+        // todo : 同理把 station_name 和 train_id 复合起来,
         //  排序时，只需要考虑station_name
 
     public:
@@ -74,6 +75,8 @@ namespace thomas {
                 const int &_price_sum, const TimeType &_start_sale_time,
                 const TimeType &_end_sale_time, const TimeType &_arriving_time,
                 const TimeType &_leaving_time, const int &_index);
+
+        string get_id();
 
         friend bool time_cmp(const Ticket &a, const Ticket &b);
 
@@ -92,6 +95,7 @@ namespace thomas {
         Ticket(const Station &x, const Station &y); //起点为x,终点为y
         int time() const;                           //查询总时间
         int cost() const;                           //查询总价格
+
         friend bool time_cmp(const Ticket &a, const Ticket &b);
 
         friend bool cost_cmp(const Ticket &a, const Ticket &b);
@@ -102,6 +106,8 @@ namespace thomas {
 
     private:
         int seat_num[maxn]; //到每一站所剩的座位数
+        TimeType start_day;
+        char train_ID[22];
         // todo : 直接把 train_id 和 start_day 拼接起来,
         //  train_id是第一关键字
         //注意是 date，没有时间，如果不是要先 get_date
@@ -112,6 +118,7 @@ namespace thomas {
 
         int query_seat(int l, int r); //查询第l站到第r站,最多能坐的人数
         void modify_seat(int l, int r, int val); //区间修改
+        string get_id();
 
         friend void OUTPUT(TrainManagement &all, const string &train_ID);
     };
@@ -145,6 +152,7 @@ namespace thomas {
               const TimeType &_leaving_time, const TimeType &_arriving_time,
               const Status &_status, const int &_from, const int &_to,
               const string &_from_station, const string &_to_station);
+        string get_id();
 
         friend bool order_cmp(const Order &a, const Order &b);
     };
@@ -168,6 +176,7 @@ namespace thomas {
         PendingOrder(const string &_train_ID, const string &_user_name,
                      const TimeType &_start_day, const int &_num, const int &_from,
                      const int &_to, const int &_order_ID);
+        string get_id();
 
         friend bool pending_order_cmp(const PendingOrder &a, const PendingOrder &b);
     };

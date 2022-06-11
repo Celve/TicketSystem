@@ -24,6 +24,7 @@ namespace thomas {
              const string &_password, const int &_p);
 
         bool operator<(const User &rhs) const;
+        string get_id();
     };
 } // namespace thomas
 
