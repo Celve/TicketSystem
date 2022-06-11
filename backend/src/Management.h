@@ -63,15 +63,7 @@ namespace thomas {
         BPlusTreeIndexNTS<StringAny<32, int>, Order, StringAnyComparator<32, int> > *order_database;
         BPlusTreeIndexNTS<StringIntInt<32>, PendingOrder, StringIntIntComparator<32> > *pending_order_database;
 
-        //临时数组的大小不是110.
-//        vector<Ticket> tickets;
-//        vector<Order> orders;
-//        vector<PendingOrder> pending_orders;
-//        vector<std::pair<string, int> > starts, ends;
-//        Ticket tickets[maxn]; //临时存储 query_ticket 的结果
-//        Order orders[maxn]; //临时存储 query_order 结果
-//        PendingOrder pending_orders[maxn];
-//        std::pair<string, int> starts[maxn], ends[maxn]; //临时存储 query_transfer 2趟车次的 所有车站
+        //临时数组的大小不是110
         int order_num; //临时存储 order 总数
 
     public:
