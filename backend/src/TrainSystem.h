@@ -27,7 +27,7 @@ class Train { //一列火车
   friend class TrainManagement;
 
 private:
-  char train_ID[25], stations[maxn][32]; //途径车站
+  char train_ID[22], stations[maxn][32]; //途径车站
   int station_num, total_seat_num;       //途径的车站数、座位数
   TimeType start_time, arriving_times[maxn],
       leaving_times[maxn]; //每日出发时间（hh-mm）
@@ -60,11 +60,10 @@ class Station { //属于某个车次的车站，额外存储一次信息;
   friend class Ticket;
 
 private:
-  char train_ID[25], station_name[32];
+  char train_ID[22], station_name[32];
   TimeType start_sale_time, end_sale_time, arriving_time,
       leaving_time;     //该车次中，到站与出站时间
   int price_sum, index; //继承自Train，index表示是该车次的第几站
-  char id[64];          //这里只起到额外存储和提示作用
   // todo : 同理把 train_id 和 station_name 复合起来,
   //  排序时，只需要考虑station_name
 
@@ -103,7 +102,6 @@ class DayTrain { //每天的车次，用来维护座位信息
 
 private:
   int seat_num[maxn]; //到每一站所剩的座位数
-  char id[64];
   // todo : 直接把 train_id 和 start_day 拼接起来,
   //  train_id是第一关键字
   //注意是 date，没有时间，如果不是要先 get_date
@@ -124,10 +122,9 @@ class Order { //订单
   friend class TrainManagement;
 
 private:
-  char user_name[25], train_ID[25]; //用户名，车次
+  char user_name[22], train_ID[22]; //用户名，车次
   int num, price, order_ID; //订单编号,从1开始(充当下单时间，用来排序)
   // num是票数, price 是单价
-  char id[64];
   // todo: 实际上，ull中的关键字是 user_name + order_ID，应该修改为pair类型
   //  排序时，以 order_id 为关键字，
   //  但是存储时是以user_name为第一关键字
@@ -154,10 +151,9 @@ class PendingOrder { //候补的订单
   friend class TrainManagement;
 
 private:
-  char train_ID[25], user_name[25];
+  char train_ID[22], user_name[22];
   TimeType start_day;
   int num, from, to, order_ID;
-  char id[64];
   // todo: 关键字是 train_ID + start_sale_date + order_ID
   //  把 start_sale_date 和 order_ID 合成为一个 pair,然后与 train_ID 复合
   //  排序时，以 order_id 为关键字
