@@ -187,6 +187,7 @@ namespace thomas {
             } else {
                 User u(username, name, mail, password, privilege);
                 user_database->InsertEntry(String<24>(username), u);
+                user_stack.add(0, line.timestamp, u);
                 return "0";
             }
         }
@@ -259,6 +260,9 @@ namespace thomas {
             privilege >= login_pool.at(cur))
             return "-1";
 
+        //todo: 注意：应该要保存的是修改前的元素
+        user_stack.add(2, line.timestamp, u);
+
         if (!password.empty())
             strcpy(u.password, password.c_str());
         if (!name.empty())
@@ -305,7 +309,10 @@ namespace thomas {
 
 //-------------------------------------------------class TrainManagement
 
-    TrainManagement::TrainManagement() : cmp2(2), cmp3(3), cmp4(3), cmp5(2) {
+    TrainManagement::TrainManagement() : cmp2(2), cmp3(3), cmp4(3), cmp5(2),
+                                         train_stack("train_stack"), station_stack("station_stack"),
+                                         daytrain_stack("daytrain_stack"), order_stack("order_stack"),
+                                         pending_order_stack("pending_order_stack") {
         //先指定 cmp 的类型
 
         train_database =
@@ -1035,7 +1042,8 @@ namespace thomas {
 
     string TrainManagement::rollback(Command &line, AccountManagement &accounts) {
         line.next_token();
-        string time = line.next_token();
+        int time = string_to_int(line.next_token());
+
 
 
         return "0";

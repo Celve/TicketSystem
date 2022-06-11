@@ -98,6 +98,13 @@ namespace thomas {
         //临时数组的大小不是110
         int order_num; //临时存储 order 总数
 
+        //用于回滚的stack
+        Record_stack<Train> train_stack;
+        Record_stack<Station> station_stack;
+        Record_stack<DayTrain> daytrain_stack;
+        Record_stack<Order> order_stack;
+        Record_stack<PendingOrder> pending_order_stack;
+
     public:
         friend void OUTPUT(TrainManagement &all, const string &train_ID);
 
