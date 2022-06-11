@@ -1,7 +1,7 @@
 database/build
 database/Makefile
 build
-main.cpp
+# main.cpp
 cmake-build-debug
 .idea
 .vscode
