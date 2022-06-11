@@ -13,6 +13,7 @@ test.out
 Debug_record.md
 Cmake
 test_data
+data
 output.txt
 build.log
 *.db
