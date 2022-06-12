@@ -40,6 +40,8 @@ namespace thomas {
         void add(const int &_type, const int &_time, const T &_data);
 
         Record pop(); //后退到t时刻
+
+        bool empty();
     };
 
     class AccountManagement {

@@ -138,6 +138,11 @@ namespace thomas {
         return temp;
     }
 
+    template<typename T>
+    bool Record_stack<T>::empty() {
+        return stack.IsEmpty();
+    }
+
     //----------------------------------------------class AccountManagement
 
     AccountManagement::AccountManagement() : user_stack("user_stack.db") {
@@ -953,7 +958,7 @@ namespace thomas {
         // todo: 分析真正的含义，只考虑user_name
         order_database->ScanKey(StringAny<24, int>(user_name, 0), &orders, tp_cmp);
         if (orders.empty())
-            return "0"; //没有订单
+            return "-1"; //没有订单
         cnt = orders.size();
         //从新到旧排序（大到小） , 可能不需要？
         // todo: 修改为 bpt 后，按照关键字 Order_ID 读取，就不用排序
@@ -1072,7 +1077,10 @@ namespace thomas {
         //回滚的时间不存在
         if (to > now) return "-1";
 
-        for (auto tp = accounts.user_stack.pop(); ; tp = accounts.user_stack.pop()  ) {
+        //清空登录池
+        accounts.login_pool.clear();
+
+        for (auto tp = accounts.user_stack.pop(); !accounts.user_stack.empty(); tp = accounts.user_stack.pop()  ) {
             if (tp.time < to) { //防止越界
                 accounts.user_stack.add(tp.type, tp.time, tp.data);
                 break;
@@ -1082,7 +1090,7 @@ namespace thomas {
             else accounts.user_database->InsertEntry(key, tp.data); //delete/modify
         }
 
-        for (auto tp = train_stack.pop(); ;tp = train_stack.pop()) {
+        for (auto tp = train_stack.pop(); !train_stack.empty(); tp = train_stack.pop()) {
             if (tp.time < to) {
                 train_stack.add(tp.type, tp.time, tp.data);
                 break;
@@ -1092,7 +1100,7 @@ namespace thomas {
             else train_database->InsertEntry(key, tp.data);
         }
 
-        for (auto tp = station_stack.pop(); ; tp = station_stack.pop()) {
+        for (auto tp = station_stack.pop(); !station_stack.empty(); tp = station_stack.pop()) {
             if (tp.time < to) {
                 station_stack.add(tp.type, tp.time, tp.data);
                 break;
@@ -1107,7 +1115,7 @@ namespace thomas {
             else station_database->InsertEntry(key, tp.data);
         }
 
-        for (auto tp = daytrain_stack.pop(); ; tp = daytrain_stack.pop()) {
+        for (auto tp = daytrain_stack.pop(); !daytrain_stack.empty(); tp = daytrain_stack.pop()) {
             if (tp.time < to) {
                 daytrain_stack.add(tp.type, tp.time, tp.data);
                 break;
@@ -1123,7 +1131,7 @@ namespace thomas {
             else daytrain_database->InsertEntry(key, tp.data);
         }
 
-        for (auto tp = order_stack.pop(); ; tp = order_stack.pop()) {
+        for (auto tp = order_stack.pop(); !order_stack.empty(); tp = order_stack.pop()) {
             if (tp.time < to) {
                 order_stack.add(tp.type, tp.time, tp.data);
                 break;
@@ -1139,7 +1147,7 @@ namespace thomas {
             else order_database->InsertEntry(key, tp.data);
         }
 
-        for (auto tp = pending_order_stack.pop(); ; tp = pending_order_stack.pop()) {
+        for (auto tp = pending_order_stack.pop(); !pending_order_stack.empty(); tp = pending_order_stack.pop()) {
             if (tp.time < to) {
                 pending_order_stack.add(tp.type, tp.time, tp.data);
                 break;
