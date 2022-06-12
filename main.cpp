@@ -21,8 +21,8 @@ TrainManagement trains;
 int main() {
     string input;
 
-    freopen("test_data/roll_back/basic_1/1.in", "r", stdin);
-    freopen("output.txt", "w", stdout);
+//    freopen("test_data/roll_back/basic_extra/11.in", "r", stdin);
+//    freopen("output.txt", "w", stdout);
 
     while (getline(cin, input)) {
         Command cmd(input);

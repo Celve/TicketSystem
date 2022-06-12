@@ -237,7 +237,7 @@ namespace thomas {
 
     string AccountManagement::modify_profile(Command &line) {
         string opt = line.next_token(), cur, username, password, name, mail;
-        int privilege = 0; //记得赋初值！
+        int privilege = -1; //记得赋初值！范围是0-10，所以初值为 -1
         while (!opt.empty()) {
             if (opt == "-c")
                 cur = line.next_token();
@@ -261,10 +261,11 @@ namespace thomas {
             return "-1"; // user不存在
 
         User u = ans[0];
-        // cur未登录/cur权限<=u的权限 且 cur != u
-        if (!login_pool.count(cur) ||
-            (login_pool.at(cur) <= u.privilege) && (cur != username) ||
-            privilege >= login_pool.at(cur))
+        //cur未登录
+        if (!login_pool.count(cur)) return "-1";
+        // cur权限<=u的权限 且 cur != u
+        if ((login_pool.at(cur) <= u.privilege) && (cur != username) ||
+            privilege >= login_pool.at(cur)) //要修改的权限太大
             return "-1";
 
         //todo: 注意：应该要保存的是修改前的元素
@@ -276,8 +277,14 @@ namespace thomas {
             strcpy(u.name, name.c_str());
         if (!mail.empty())
             strcpy(u.mail_addr, mail.c_str());
-        if (privilege)
+        if (privilege != -1) {
             u.privilege = privilege;
+            //  实时更新login_pool中u的权限
+            if (login_pool.count(username)) {
+                login_pool.erase(login_pool.find(username));
+                login_pool.insert(sjtu::pair<string, int>(username, privilege));
+            }
+        }
 
         //    user_data.update(u, ans[0]);
         user_database->InsertEntry(String<24>(username), u);
@@ -404,9 +411,9 @@ namespace thomas {
         if (target_train.is_released)
             return "-1"; //重复发布，失败
 
+        train_stack.add(2, line.timestamp, target_train); //相当于modify
         target_train.is_released = true;
         train_database->InsertEntry(String<24>(t_id), target_train);
-        train_stack.add(2, line.timestamp, target_train);
 
         //维护 每天的车次座位数
         for (auto i = target_train.start_sale_date; i <= target_train.end_sale_date;
@@ -873,7 +880,7 @@ namespace thomas {
                                         new_order);
             order_stack.add(0, line.timestamp, new_order);
 
-            long long total = num * price;
+            long long total = 1ll * num * price; //一定要加上 1ll
             return to_string(total);
         } else { //要候补
             new_order.status = pending;
@@ -1080,7 +1087,8 @@ namespace thomas {
         //清空登录池
         accounts.login_pool.clear();
 
-        for (auto tp = accounts.user_stack.pop(); !accounts.user_stack.empty(); tp = accounts.user_stack.pop()  ) {
+        while (!accounts.user_stack.empty()) {
+            auto tp = accounts.user_stack.pop();
             if (tp.time < to) { //防止越界
                 accounts.user_stack.add(tp.type, tp.time, tp.data);
                 break;
@@ -1090,7 +1098,8 @@ namespace thomas {
             else accounts.user_database->InsertEntry(key, tp.data); //delete/modify
         }
 
-        for (auto tp = train_stack.pop(); !train_stack.empty(); tp = train_stack.pop()) {
+        while (!train_stack.empty()) {
+            auto tp = train_stack.pop();
             if (tp.time < to) {
                 train_stack.add(tp.type, tp.time, tp.data);
                 break;
@@ -1098,67 +1107,87 @@ namespace thomas {
             auto key = String<24>(tp.data.get_id());
             if (!tp.type) train_database->DeleteEntry(key);
             else train_database->InsertEntry(key, tp.data);
+
         }
 
-        for (auto tp = station_stack.pop(); !station_stack.empty(); tp = station_stack.pop()) {
+        while (!station_stack.empty()) {
+            auto tp = station_stack.pop();
             if (tp.time < to) {
                 station_stack.add(tp.type, tp.time, tp.data);
                 break;
             }
             string s0 = tp.data.get_id();
             int x = 0;
-            for (int i = 0;i < s0.length(); ++i) {
-                if (s0[i] == ' ') {x = i; break;}
+            for (int i = 0; i < s0.length(); ++i) {
+                if (s0[i] == ' ') {
+                    x = i;
+                    break;
+                }
             }
             auto key = DualString<32, 24>(s0.substr(0, x), s0.substr(x + 1, s0.length() - x - 1));
             if (!tp.type) station_database->DeleteEntry(key);
             else station_database->InsertEntry(key, tp.data);
         }
 
-        for (auto tp = daytrain_stack.pop(); !daytrain_stack.empty(); tp = daytrain_stack.pop()) {
+        while (!daytrain_stack.empty()) {
+            auto tp = daytrain_stack.pop();
             if (tp.time < to) {
                 daytrain_stack.add(tp.type, tp.time, tp.data);
                 break;
             }
             string s0 = tp.data.get_id();
             int x = 0;
-            for (int i = 0;i < s0.length(); ++i) {
-                if (s0[i] == ' ') {x = i; break;}
+            for (int i = 0; i < s0.length(); ++i) {
+                if (s0[i] == ' ') {
+                    x = i;
+                    break;
+                }
             }
             auto key = StringAny<24, int>(s0.substr(0, x),
-                                          string_to_int(s0.substr(x + 1, s0.length() - x - 1)) );
+                                          string_to_int(s0.substr(x + 1, s0.length() - x - 1)));
             if (!tp.type) daytrain_database->DeleteEntry(key);
             else daytrain_database->InsertEntry(key, tp.data);
         }
 
-        for (auto tp = order_stack.pop(); !order_stack.empty(); tp = order_stack.pop()) {
+        while (!order_stack.empty()) {
+            auto tp = order_stack.pop();
             if (tp.time < to) {
                 order_stack.add(tp.type, tp.time, tp.data);
                 break;
             }
             string s0 = tp.data.get_id();
             int x = 0;
-            for (int i = 0;i < s0.length(); ++i) {
-                if (s0[i] == ' ') {x = i; break;}
+            for (int i = 0; i < s0.length(); ++i) {
+                if (s0[i] == ' ') {
+                    x = i;
+                    break;
+                }
             }
             auto key = StringAny<24, int>(s0.substr(0, x),
-                                          string_to_int(s0.substr(x + 1, s0.length() - x - 1)) );
+                                          string_to_int(s0.substr(x + 1, s0.length() - x - 1)));
             if (!tp.type) order_database->DeleteEntry(key);
             else order_database->InsertEntry(key, tp.data);
         }
 
-        for (auto tp = pending_order_stack.pop(); !pending_order_stack.empty(); tp = pending_order_stack.pop()) {
+        while (!pending_order_stack.empty()) {
+            auto tp = pending_order_stack.pop();
             if (tp.time < to) {
                 pending_order_stack.add(tp.type, tp.time, tp.data);
                 break;
             }
             string s0 = tp.data.get_id();
             int x1 = 0, x2 = 0;
-            for (int i = 0;i < s0.length(); ++i) {
-                if (s0[i] == ' ') {x1 = i; break;}
+            for (int i = 0; i < s0.length(); ++i) {
+                if (s0[i] == ' ') {
+                    x1 = i;
+                    break;
+                }
             }
             for (int i = s0.length() - 1; i >= 0; --i) {
-                if (s0[i] == ' ') {x2 = i; break;}
+                if (s0[i] == ' ') {
+                    x2 = i;
+                    break;
+                }
             }
             auto key = StringIntInt<24>(s0.substr(0, x1),
                                         string_to_int(s0.substr(x1 + 1, x2 - x1 - 1)),
