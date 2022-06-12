@@ -1,7 +1,6 @@
 #pragma once
 
 #include <mutex>  // NOLINT
-#include <ratio>
 
 #include "buffer/replacer.h"
 #include "common/config.h"
@@ -14,7 +13,7 @@ namespace thomas {
  * LRUReplacer implements the lru replacement policy, which approximates the Least Recently Used policy.
  */
 class InnodbReplacer : public Replacer {
-  const double FACTOR = 1.0 / 32;
+  const double factor_ = 1.0 / 32;
 
  public:
   /**
@@ -39,7 +38,7 @@ class InnodbReplacer : public Replacer {
  private:
   void Adjust();
 
-  linked_hashmap<frame_id_t, frame_id_t> left_half, right_half;
+  linked_hashmap<frame_id_t, frame_id_t> left_half_, right_half_;
   std::mutex latch_;
   size_t num_pages_;
 };

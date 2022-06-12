@@ -1,7 +1,7 @@
 #pragma once
 
+#include <cstdlib>
 #include <fstream>
-#include <stdexcept>
 namespace thomas {
 
 #define STACK_TEMPLATE template <typename T>
@@ -73,7 +73,7 @@ void STACK_TYPE::Push(const T &value) {
 
 STACK_TEMPLATE
 void STACK_TYPE::Pop(T &value) {
-  if (sum_ <= 0) {
+  if (sum_ == 0) {
     throw std::runtime_error("cannot pop, no element inside");
   }
   int offset = sizeof(size_t) + sizeof(T) * (--sum_);
