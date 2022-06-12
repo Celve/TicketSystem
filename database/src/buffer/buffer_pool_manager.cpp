@@ -1,8 +1,6 @@
 #include "buffer/buffer_pool_manager.h"
 
-#include <list>
 #include <mutex>
-#include <unordered_map>
 
 #include "buffer/innodb_replacer.h"
 #include "buffer/lru_replacer.h"
