@@ -20,3 +20,4 @@ build.log
 testdata
 diff.log
 judge.py
+.cz.json
