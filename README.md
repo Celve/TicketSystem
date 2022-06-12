@@ -8,14 +8,14 @@
 
 ## 组员分工
 
-- 吴林昱：存储结构B+树的实现
+- Limer：存储结构 B+树的实现
 - 陈文韬：后端的主体逻辑
 
 ## 实现端口
 
 ### 文件读写：`file_io,h`
 
-具体实现，之前已经在Bookstore中实现的 `MemoryRiver` 类，直接使用
+具体实现，之前已经在 Bookstore 中实现的 `MemoryRiver` 类，直接使用
 
 ### 文件存储：`b_plus_tree.h`
 
@@ -116,7 +116,7 @@ class BPlusTreeInternalPage : public BPlusTreePage {
 ### 文件存储：`b_plus_tree_leaf_page.h`
 
 ```cpp
-// the license is included in the source files 
+// the license is included in the source files
 class BPlusTreeLeafPage : public BPlusTreePage {
  public:
   void Init(page_id_t page_id, page_id_t parent_id = INVALID_PAGE_ID, int max_size = LEAF_PAGE_SIZE);
@@ -148,20 +148,20 @@ class BPlusTreeLeafPage : public BPlusTreePage {
 ### 缓存池：`buffer_pool_manager.h`
 
 ```cpp
-// the license is included in the source files 
+// the license is included in the source files
 class BufferPoolManager {
  public:
   BufferPoolManager(size_t pool_size, DiskManager *disk_manager, LogManager *log_manager = nullptr);
 
   ~BufferPoolManager();
 
-  Page *FetchPage(page_id_t page_id, bufferpool_callback_fn callback = nullptr); 
+  Page *FetchPage(page_id_t page_id, bufferpool_callback_fn callback = nullptr);
 
   bool UnpinPage(page_id_t page_id, bool is_dirty, bufferpool_callback_fn callback = nullptr);
 
   bool FlushPage(page_id_t page_id, bufferpool_callback_fn callback = nullptr);
 
-  Page *NewPage(page_id_t *page_id, bufferpool_callback_fn callback = nullptr); 
+  Page *NewPage(page_id_t *page_id, bufferpool_callback_fn callback = nullptr);
 
   bool DeletePage(page_id_t page_id, bufferpool_callback_fn callback = nullptr);
 
@@ -215,17 +215,17 @@ public:
 };
 ```
 
-### 用户操作：`Account.h` 
+### 用户操作：`Account.h`
 
-//需要使用之前写过的vector类
+//需要使用之前写过的 vector 类
 
 ```cpp
 class User{
-private:    
-    char user_name[20], password[30], mail_addr[30], name[20]; 
+private:
+    char user_name[20], password[30], mail_addr[30], name[20];
     int privilege; //优先等级
     vector<Tickets> ticket; //购买的车票
-    
+
 public:
     User() = default; //构造函数
     bool operator<(const User &rhs) const;
@@ -240,7 +240,7 @@ private:
 
 public:
     AccountManagement() = default;
-    
+
     void add_user(Command &line); //增加用户
     void login(Command &line); //登录
     void logout(Command &line); //登出
@@ -257,7 +257,7 @@ public:
 const int maxn = 100010; //最大车站数
 
 class Train{ //一列火车
-private:    
+private:
     char train_ID[20], stations[maxn][30]; //途径车站
     int station_num, total_seat_num; //途径的车站数、座位数
     TimeType start_time, arrving_times[maxn], leaving_times[maxn]; //每日出发时间（hh-mm）
@@ -291,7 +291,7 @@ public:
 class DayTrain{ //车次，用来维护座位信息
 private:
     int seat_num[maxn]; //到每一站所剩的座位数
-    
+
 public:
     int query_seat(int l, int r); //查询[l,r]最多能坐的人数
     int modify_seat(int l, int r, int val); //区间修改
@@ -301,11 +301,11 @@ class TrainManagement{ //总接口
 private:
     MemoryRiver<Train> train_data; //车次数据
     MemoryRiver<Tickets> ticket_data; //购票数据
-    
+
     BpTree<Train> id_to_pos; //索引
     BpTree<Tickets> time_to_pos, cost_to_pos; //按照不同关键字排序
     BpTree<>
-    
+
 
 public:
     TrainManagement() = default;
@@ -314,7 +314,7 @@ public:
     string release_train(Command &line); //发布列车，可售票
     string query_train(Command &line); //查询车次
     string query_ticket(Command &line); //查询车票
-    string query_transfer(Command &line); 
+    string query_transfer(Command &line);
     string buy_ticket(Command &line, AccountManagement &accounts);
     string query_order(Command &line, AccountManagement &accounts);
     string refund_ticket(Command &line, AccountManagement &accounts);
@@ -325,7 +325,7 @@ public:
 }
 ```
 
-### 其他库：`Library.h` 
+### 其他库：`Library.h`
 
 ```cpp
 //之前写好的类
@@ -337,7 +337,7 @@ class calendar{}
 class TimeType{
 private:
     int minute; //表示当前的时间距离 起始时间2021-6-1 00:00 有多少 分钟
-    
+
 public:
     TimeType() = default;
     TimeType(string s); //通过：Month-Day Hour:Minute 字符串来构造
@@ -354,7 +354,7 @@ public:
 ```cpp
 int main() {
     Command cmd;
-    
+
 }
 ```
 
