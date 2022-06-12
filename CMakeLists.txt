@@ -9,7 +9,7 @@ add_subdirectory(database)
 
 include_directories(backend/src backend/libs)
 
-add_executable(code main.cpp
+add_executable(code backend/src/main.cpp
   backend/src/Command.cpp
   backend/src/Account.cpp
   backend/src/TrainSystem.cpp
