@@ -73,6 +73,9 @@ void STACK_TYPE::Push(const T &value) {
 
 STACK_TEMPLATE
 void STACK_TYPE::Pop(T &value) {
+  if (sum_ <= 0) {
+    throw std::runtime_error("cannot pop, no element inside");
+  }
   int offset = sizeof(size_t) + sizeof(T) * (--sum_);
   stack_io_.seekp(offset);
   stack_io_.read(reinterpret_cast<char *>(&value), sizeof(T));
