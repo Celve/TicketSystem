@@ -80,7 +80,7 @@ void STACK_TYPE::Pop(T &value) {
   stack_io_.seekp(offset);
   stack_io_.read(reinterpret_cast<char *>(&value), sizeof(T));
   if (stack_io_.bad()) {
-    throw std::runtime_error("I/O error whilg reading");
+    throw std::runtime_error("I/O error while reading");
   }
 }
 
