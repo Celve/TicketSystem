@@ -50,7 +50,7 @@ namespace thomas {
     private:
         sjtu::map<string, int> login_pool; //登录池,username -> privilege
         //可以用二叉查找树实现(红黑树)，以加快查询速度
-        //更新：不能保证实时修改，所以login_pool里面的权限没有用...
+        //更新：为了保证实时修改，在权限发生修改的时候，要同时修改 map 中的值
 
         //    MemoryRiver<User> user_data;//保存数据
         //    Ull username_to_pos; //索引，暂时用 Ull 完成，最后要改为 BpTree
