@@ -1,9 +1,5 @@
 #pragma once
 
-#include <cassert>
-#include <climits>
-#include <cstdlib>
-
 #include "buffer/buffer_pool_manager.h"
 
 namespace thomas {

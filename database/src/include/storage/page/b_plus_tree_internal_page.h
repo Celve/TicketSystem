@@ -1,7 +1,5 @@
 #pragma once
 
-#include <queue>
-
 #include "storage/page/b_plus_tree_page.h"
 #include "type/string.h"
 #include "type/string_any.h"

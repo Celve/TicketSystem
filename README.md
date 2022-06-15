@@ -121,7 +121,7 @@ class BPlusTreeInternalPage : public BPlusTreePage {
 3. `b_plus_tree_leaf_page.h`
 
 ```cpp
-// the license is included in the source files 
+// the license is included in the source files
 class BPlusTreeLeafPage : public BPlusTreePage {
  public:
   void Init(page_id_t page_id, page_id_t parent_id = INVALID_PAGE_ID, int max_size = LEAF_PAGE_SIZE);
@@ -153,20 +153,20 @@ class BPlusTreeLeafPage : public BPlusTreePage {
 4. `buffer_pool_manager.h`：缓存池
 
 ```cpp
-// the license is included in the source files 
+// the license is included in the source files
 class BufferPoolManager {
  public:
   BufferPoolManager(size_t pool_size, DiskManager *disk_manager, LogManager *log_manager = nullptr);
 
   ~BufferPoolManager();
 
-  Page *FetchPage(page_id_t page_id, bufferpool_callback_fn callback = nullptr); 
+  Page *FetchPage(page_id_t page_id, bufferpool_callback_fn callback = nullptr);
 
   bool UnpinPage(page_id_t page_id, bool is_dirty, bufferpool_callback_fn callback = nullptr);
 
   bool FlushPage(page_id_t page_id, bufferpool_callback_fn callback = nullptr);
 
-  Page *NewPage(page_id_t *page_id, bufferpool_callback_fn callback = nullptr); 
+  Page *NewPage(page_id_t *page_id, bufferpool_callback_fn callback = nullptr);
 
   bool DeletePage(page_id_t page_id, bufferpool_callback_fn callback = nullptr);
 
@@ -254,6 +254,7 @@ class User {
         string get_id();
     };
 ```
+
 
 3. `TrainSystem.h`：列车本体、车次、车票、车站的存储
 
@@ -557,7 +558,7 @@ public:
 
     string transfer() const { //转化为形如：Month-Day Hour:Minute 的字符串
     }
-
+    
     TimeType operator+(const TimeType &rhs) const {}
 
     TimeType operator+(const int &x) const {}
