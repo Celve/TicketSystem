@@ -4,7 +4,7 @@
 
 #include "Management.h"
 
-const int modify_threshold = 500;
+const int modify_threshold = 1e6;
 
 namespace thomas {
 
@@ -130,6 +130,11 @@ namespace thomas {
 
     template<typename T>
     Record_stack<T>::Record_stack(const Record_stack<T> &rhs) : stack(rhs.stack) {}
+
+    template<typename T>
+    void Record_stack<T>::init(const string &file_name) {
+        stack.Init(file_name);
+    }
 
     template<typename T>
     void Record_stack<T>::add(const int &_type, const int &_time, const T &_data) {
@@ -1308,12 +1313,12 @@ namespace thomas {
                 StringIntIntComparator<24>>(
                 "pending_order_database", cmp5);
 
-//        accounts.user_stack = Record_stack<User>("user_stack");
-//        train_stack = Record_stack<Train>("train_stack");
-//        station_stack = Record_stack<Station>("station_stack");
-//        daytrain_stack = Record_stack<DayTrain>("daytrain_stack");
-//        order_stack = Record_stack<Order>("order_stack");
-//        station_stack = Record_stack<Station>("station_stack");
+        accounts.user_stack.init("user_stack");
+        train_stack.init("train_stack");
+        station_stack.init("station_stack");
+        daytrain_stack.init("daytrain_stack");
+        order_stack.init("order_stack");
+        station_stack.init("station_stack");
         order_num = order_database->Size();
 
         accounts.cnt = accounts.user_stack.size();
@@ -1325,7 +1330,7 @@ namespace thomas {
     }
 
     string TrainManagement::Backup(AccountManagement &accounts) {
-        Export(accounts, total);
+        Export(accounts);
         return "succeed";
     }
 
@@ -1336,7 +1341,7 @@ namespace thomas {
 
         if (diff > modify_threshold) { //修改次数超出上界，封装为新的版本
             //找出最新的版本编号
-            Export(accounts, total);
+            Export(accounts);
         }
     }
 

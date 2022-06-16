@@ -77,10 +77,10 @@ int main() {
             printf("%s\n", trains.Import(accounts, time).c_str());
         }
         else if (s == "backup") {
-            trains.Backup(accounts);
+            printf("%s\n", trains.Backup(accounts).c_str());
         }
 
-        trains.Auto_backup(accounts);
+        trains.Auto_backup(accounts); //定时自动备份
     }
 
     return 0;

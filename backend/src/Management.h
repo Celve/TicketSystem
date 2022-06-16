@@ -20,7 +20,7 @@ namespace thomas {
 
     template<typename T>
     class Record_stack {
-        //        template<typename T>
+        // template<typename T>
         class Record { //内置
         public:
             int type, time; // type=0:insert, 1:delete, 2:modify
@@ -49,6 +49,8 @@ namespace thomas {
         bool empty();
 
         size_t size();
+
+        void init(const string &file_name);
     };
 
     class AccountManagement {
