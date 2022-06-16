@@ -16,6 +16,8 @@ class StackManager {
  public:
   explicit StackManager(const std::string &stack_name);
 
+  StackManager(const StackManager<T> &rhs);
+
   ~StackManager();
 
   void Push(const T &value);
@@ -51,6 +53,11 @@ STACK_TYPE::StackManager(const std::string &stack_name) : file_name_(stack_name)
     stack_io_.seekp(offset);
     stack_io_.read(reinterpret_cast<char *>(&sum_), sizeof(size_t));
   }
+}
+
+STACK_TEMPLATE
+STACK_TYPE::StackManager(const StackManager<T> &rhs) {
+
 }
 
 STACK_TEMPLATE

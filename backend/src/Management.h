@@ -12,6 +12,9 @@
 #include "type/string_int_int.h"
 
 #include "stack/stack_manager.hpp"
+#include "FileStorage.h"
+
+#include <cstdlib>
 
 namespace thomas {
 
@@ -37,11 +40,15 @@ namespace thomas {
 
         Record_stack(const string &file_name);
 
+        Record_stack(const Record_stack<T> &rhs); //复制构造
+
         void add(const int &_type, const int &_time, const T &_data);
 
         Record pop(); //后退到t时刻
 
         bool empty();
+
+        size_t size();
     };
 
     class AccountManagement {
@@ -61,10 +68,12 @@ namespace thomas {
 
         Record_stack<User> user_stack; //用于 rollback
 
+        long long cnt; //距离上一次备份的修改操作数
+
     public:
         AccountManagement();
 
-        //        AccountManagement(const string &file_name);
+        //AccountManagement(const string &file_name);
 
         ~AccountManagement();
 
@@ -113,6 +122,10 @@ namespace thomas {
         Record_stack<Order> order_stack;
         Record_stack<PendingOrder> pending_order_stack;
 
+        long long cnt; //距离上一次备份的修改操作数
+        int total; //目前的总版本数
+        MemoryRiver<int, 2> extra_info;
+
     public:
         friend void OUTPUT(TrainManagement &all, const string &train_ID);
 
@@ -131,14 +144,15 @@ namespace thomas {
         string buy_ticket(Command &line, AccountManagement &accounts);
 
         string query_order(Command &line, AccountManagement &accounts);
-
         string refund_ticket(Command &line, AccountManagement &accounts);
-
         string rollback(Command &line, AccountManagement &accounts);
-
         string clean(AccountManagement &accounts);
-
         string exit(AccountManagement &accounts); //退出系统，所有用户下线
+
+        string Export(AccountManagement &accounts, int num = -1);        //导出数据
+        string Import(AccountManagement &accounts, const int &num);        //导入
+        string Backup(AccountManagement &accounts);        //备份
+        void Auto_backup(AccountManagement &accounts);   //自动检查是否需要备份
     };
 
 } // namespace thomas

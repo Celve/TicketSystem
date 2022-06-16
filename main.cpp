@@ -17,8 +17,8 @@ TrainManagement trains;
 int main() {
     string input;
 
-//    freopen("test_data/roll_back/basic_extra/11.in", "r", stdin);
-//    freopen("output.txt", "w", stdout);
+    freopen("test_data/normal/basic_3/1.in", "r", stdin);
+    freopen("output.txt", "w", stdout);
 
     while (getline(cin, input)) {
         Command cmd(input);
@@ -65,6 +65,22 @@ int main() {
             printf("%s\n", trains.clean(accounts).c_str());
         else if (s == "exit")
             trains.exit(accounts);
+
+        else if (s == "export") {
+            cmd.next_token(); //过滤 -n
+            int time = string_to_int(cmd.next_token());
+            printf("%s\n", trains.Export(accounts, time).c_str());
+        }
+        else if (s == "import") {
+            cmd.next_token(); //过滤 -n
+            int time = string_to_int(cmd.next_token());
+            printf("%s\n", trains.Import(accounts, time).c_str());
+        }
+        else if (s == "backup") {
+            trains.Backup(accounts);
+        }
+
+        trains.Auto_backup(accounts);
     }
 
     return 0;

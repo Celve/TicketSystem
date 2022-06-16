@@ -4,6 +4,8 @@
 
 #include "Management.h"
 
+const int modify_threshold = 500;
+
 namespace thomas {
 
     template<typename T>
@@ -127,6 +129,9 @@ namespace thomas {
     Record_stack<T>::Record_stack(const string &file_name) : stack(file_name) {}
 
     template<typename T>
+    Record_stack<T>::Record_stack(const Record_stack<T> &rhs) : stack(rhs.stack) {}
+
+    template<typename T>
     void Record_stack<T>::add(const int &_type, const int &_time, const T &_data) {
         stack.Push(Record(_type, _time, _data));
     }
@@ -143,6 +148,11 @@ namespace thomas {
         return stack.IsEmpty();
     }
 
+    template<typename T>
+    size_t Record_stack<T>::size() {
+        return stack.Size();
+    }
+
     //----------------------------------------------class AccountManagement
 
     AccountManagement::AccountManagement() : user_stack("user_stack.db") {
@@ -150,6 +160,7 @@ namespace thomas {
         //    username_to_pos.init("username_to_pos");
         user_database = new BPlusTreeIndexNTS<String<24>, User, StringComparator<24>>(
                 "user_database", cmp1);
+        cnt = user_stack.size();
     }
 
 //    AccountManagement::AccountManagement(const string &file_name) {
@@ -189,7 +200,7 @@ namespace thomas {
             //操作失败：未登录/权限不足/用户名已存在
             if (!login_pool.count(cur)) return "user is not logged in";
             else if (login_pool.at(cur) <= privilege) return "permission denied";
-            else if (ans.empty()) return "user already exists";
+            else if (!ans.empty()) return "user already exists";
             else {
                 User u(username, name, mail, password, privilege);
                 user_database->InsertEntry(String<24>(username), u);
@@ -342,6 +353,10 @@ namespace thomas {
                 "pending_order_database", cmp5);
 
         order_num = order_database->Size();
+
+        cnt = train_stack.size() + station_stack.size() + daytrain_stack.size() + order_stack.size() + pending_order_stack.size();
+        extra_info.initialise("extra_info");
+        extra_info.read(total, 1);
     }
 
     TrainManagement::~TrainManagement() {
@@ -1214,4 +1229,115 @@ namespace thomas {
         printf("bye\n");
         std::exit(0); //可以有 \n 因为直接结束程序
     }
+
+    string TrainManagement::Export(AccountManagement &accounts, int num) {
+        total++;
+        extra_info.update(total, 1);
+        if (num == -1) num = total;
+
+        string tp = std::to_string(num);
+
+        //新建备份版本，若已存在，则报错
+        if (system(string("mkdir backup/" + tp).c_str())) return "backup/" + tp + " already exists!";
+
+        system(string("cp daytrain_database.db backup/" + tp + "/daytrain_database.db").c_str());
+        system(string("cp order_database.db backup/" + tp + "/order_database.db").c_str());
+        system(string("cp pending_order_database.db backup/" + tp + "/pending_order_database.db").c_str());
+        system(string("cp station_database.db backup/" + tp + "/station_database.db").c_str());
+        system(string("cp train_database.db backup/" + tp + "/train_database.db").c_str());
+        system(string("cp user_database.db backup/" + tp + "/user_database.db").c_str());
+
+        system(string("cp daytrain_stack.db backup/" + tp + "/daytrain_stack.db").c_str());
+        system(string("cp order_stack.db backup/" + tp + "/order_stack.db").c_str());
+        system(string("cp pending_order_stack.db backup/" + tp + "/pending_order_stack.db").c_str());
+        system(string("cp station_stack.db backup/" + tp + "/station_stack.db").c_str());
+        system(string("cp train_stack.db backup/" + tp + "/train_stack.db").c_str());
+        system(string("cp user_stack.db backup/" + tp + "/user_stack.db").c_str());
+
+        system(string("cp extra_info backup/" + tp + "/extra_info").c_str());
+
+        //修改当前的 cnt
+        accounts.cnt = accounts.user_stack.size();
+        cnt = train_stack.size() + station_stack.size() + daytrain_stack.size() + order_stack.size() + pending_order_stack.size();
+
+        return "export backup/" + tp + " successfully!";
+    }
+
+    string TrainManagement::Import(AccountManagement &accounts, const int &num) {
+        string tp = std::to_string(num);
+
+        system(string("cp backup/" + tp + "/daytrain_database.db daytrain_database.db").c_str());
+        system(string("cp backup/" + tp + "/order_database.db order_database.db").c_str());
+        system(string("cp backup/" + tp + "/pending_order_database.db pending_order_database.db").c_str());
+        system(string("cp backup/" + tp + "/station_database.db station_database.db").c_str());
+        system(string("cp backup/" + tp + "/train_database.db train_database.db").c_str());
+        system(string("cp backup/" + tp + "/user_database.db user_database.db").c_str());
+
+        system(string("cp backup/" + tp + "/daytrain_stack.db daytrain_stack.db").c_str());
+        system(string("cp backup/" + tp + "/order_stack.db order_stack.db").c_str());
+        system(string("cp backup/" + tp + "/pending_order_stack.db pending_order_stack.db").c_str());
+        system(string("cp backup/" + tp + "/station_stack.db station_stack.db").c_str());
+        system(string("cp backup/" + tp + "/train_stack.db train_stack.db").c_str());
+        system(string("cp backup/" + tp + "/user_stack.db user_stack.db").c_str());
+        system(string("cp backup/" + tp + "/extra_info extra_info").c_str());
+
+        // 修改内存中的数据
+//        clean(accounts);
+        delete accounts.user_database;
+        delete train_database;
+        delete station_database;
+        delete daytrain_database;
+        delete order_database;
+        delete pending_order_database;
+
+        accounts.user_database = new BPlusTreeIndexNTS<String<24>, User, StringComparator<24>>(
+                "user_database", cmp1);
+        train_database =
+                new BPlusTreeIndexNTS<String<24>, Train, StringComparator<24>>(
+                        "train_database", cmp1);
+        station_database = new BPlusTreeIndexNTS<DualString<32, 24>, Station,
+                DualStringComparator<32, 24>>(
+                "station_database", cmp2);
+        daytrain_database = new BPlusTreeIndexNTS<StringAny<24, int>, DayTrain,
+                StringAnyComparator<24, int>>(
+                "daytrain_database", cmp3);
+        order_database = new BPlusTreeIndexNTS<StringAny<24, int>, Order,
+                StringAnyComparator<24, int>>(
+                "order_database", cmp4);
+        pending_order_database = new BPlusTreeIndexNTS<StringIntInt<24>, PendingOrder,
+                StringIntIntComparator<24>>(
+                "pending_order_database", cmp5);
+
+//        accounts.user_stack = Record_stack<User>("user_stack");
+//        train_stack = Record_stack<Train>("train_stack");
+//        station_stack = Record_stack<Station>("station_stack");
+//        daytrain_stack = Record_stack<DayTrain>("daytrain_stack");
+//        order_stack = Record_stack<Order>("order_stack");
+//        station_stack = Record_stack<Station>("station_stack");
+        order_num = order_database->Size();
+
+        accounts.cnt = accounts.user_stack.size();
+        cnt = train_stack.size() + station_stack.size() + daytrain_stack.size() + order_stack.size() + pending_order_stack.size();
+        extra_info.initialise("extra_info");
+        extra_info.read(total, 1);
+
+        return "import backup/" + tp + " successfully!";
+    }
+
+    string TrainManagement::Backup(AccountManagement &accounts) {
+        Export(accounts, total);
+        return "succeed";
+    }
+
+    void TrainManagement::Auto_backup(AccountManagement &accounts) {
+        long long diff = accounts.user_stack.size() - accounts.cnt;
+        diff += train_stack.size() + station_stack.size() + daytrain_stack.size() +
+                order_stack.size() + pending_order_stack.size() - cnt;
+
+        if (diff > modify_threshold) { //修改次数超出上界，封装为新的版本
+            //找出最新的版本编号
+            Export(accounts, total);
+        }
+    }
+
 } // namespace thomas
