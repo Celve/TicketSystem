@@ -158,7 +158,6 @@ namespace thomas {
 //    }
 
     string AccountManagement::add_user(Command &line) {
-        //    line.set_delimiter(' ');
         string opt = line.next_token(), cur, username, password, name, mail;
         int privilege;
         while (!opt.empty()) {
@@ -188,10 +187,10 @@ namespace thomas {
             return "0";
         } else {
             //操作失败：未登录/权限不足/用户名已存在
-            if (!login_pool.count(cur) || login_pool.at(cur) <= privilege ||
-                !ans.empty()) {
-                return "-1";
-            } else {
+            if (!login_pool.count(cur)) return "user is not logged in";
+            else if (login_pool.at(cur) <= privilege) return "permission denied";
+            else if (ans.empty()) return "user already exists";
+            else {
                 User u(username, name, mail, password, privilege);
                 user_database->InsertEntry(String<24>(username), u);
                 user_stack.add(0, line.timestamp, u);
@@ -214,11 +213,10 @@ namespace thomas {
         vector<User> ans;
         user_database->SearchKey(String<24>(username), &ans);
         //用户不存在/用户已登录
-        if (ans.empty() || login_pool.count(username))
-            return "-1";
+        if (ans.empty()) return "user does not exist";
+        if (login_pool.count(username)) return "user has logged in";
 
-        if (strcmp(ans[0].password, password.c_str()))
-            return "-1"; //密码错误
+        if (strcmp(ans[0].password, password.c_str())) return "wrong password"; //密码错误
 
         login_pool.insert(sjtu::pair<string, int>(username, ans[0].privilege));
         return "0";
@@ -228,8 +226,7 @@ namespace thomas {
         string opt = line.next_token(), username = line.next_token();
 
         //用户未登录
-        if (!login_pool.count(username))
-            return "-1";
+        if (!login_pool.count(username)) return "user is not logged in";
 
         login_pool.erase(login_pool.find(username));
         return "0";
@@ -257,16 +254,15 @@ namespace thomas {
 
         vector<User> ans;
         user_database->SearchKey(String<24>(username), &ans);
-        if (ans.empty())
-            return "-1"; // user不存在
+        if (ans.empty()) return "user does not exist"; // user不存在
 
         User u = ans[0];
         //cur未登录
-        if (!login_pool.count(cur)) return "-1";
+        if (!login_pool.count(cur)) return "user is not logged in";
         // cur权限<=u的权限 且 cur != u
         if ((login_pool.at(cur) <= u.privilege) && (cur != username) ||
             privilege >= login_pool.at(cur)) //要修改的权限太大
-            return "-1";
+            return "permission denied";
 
         //todo: 注意：应该要保存的是修改前的元素
         user_stack.add(2, line.timestamp, u);
@@ -307,13 +303,13 @@ namespace thomas {
         vector<User> ans;
         user_database->SearchKey(String<24>(username), &ans);
         if (ans.empty())
-            return "-1"; // u不存在
+            return "user does not exist"; // u不存在
         User u = ans[0];
 
         // cur未登录/cur权限<=u的权限 且 cur != u
         if (!login_pool.count(cur) ||
             (login_pool.at(cur) <= u.privilege) && (cur != username))
-            return "-1";
+            return "permission denied";
 
         return (string) u.user_name + " " + (string) u.name + " " +
                (string) u.mail_addr + " " + to_string(u.privilege);
@@ -389,7 +385,7 @@ namespace thomas {
         vector<Train> ans;
         train_database->SearchKey(String<24>(train_id), &ans);
         if (!ans.empty())
-            return "-1"; // train_ID 已存在，添加失败
+            return "train already exists"; // train_ID 已存在，添加失败
 
         Train new_train(train_id, station_num, seat_num, stations, prices, start_time,
                         travel_times, stop_over_times, sale_date, type);
@@ -406,10 +402,10 @@ namespace thomas {
         vector<Train> ans;
         train_database->SearchKey(String<24>(t_id), &ans);
         if (ans.empty())
-            return "-1"; //车次不存在，失败
+            return "train does not exist"; //车次不存在，失败
         Train target_train = ans[0];
         if (target_train.is_released)
-            return "-1"; //重复发布，失败
+            return "train has been released"; //重复发布，失败
 
         train_stack.add(2, line.timestamp, target_train); //相当于modify
         target_train.is_released = true;
@@ -455,18 +451,18 @@ namespace thomas {
             opt = line.next_token();
         }
         if (!is_legal(date + " 00:00"))
-            return "-1"; //查询，要判断读入的日期是否合法
+            return "illegal date"; //查询，要判断读入的日期是否合法
 
         vector<Train> ans;
         TimeType day(date + " 00:00");
         train_database->SearchKey(String<24>(t_id), &ans);
         if (ans.empty())
-            return "-1"; //没有车
+            return "train does not exist"; //没有车
         Train target_train = ans[0];
 
         //不在售票日期内，不存在
         if (day < target_train.start_sale_date || day > target_train.end_sale_date)
-            return "-1";
+            return "out of sale date";
 
         vector<DayTrain> ans2;
         daytrain_database->SearchKey(StringAny<24, int>(t_id, day.get_value()),
@@ -523,11 +519,11 @@ namespace thomas {
         vector<Train> ans;
         train_database->SearchKey(String<24>(t_id), &ans);
         if (ans.empty())
-            return "-1"; //不存在，不能删
+            return "train does not exist"; //不存在，不能删
 
         Train target_train = ans[0];
         if (target_train.is_released)
-            return "-1"; //已发布，不能删
+            return "train has been released"; //已发布，不能删
 
         train_stack.add(1, line.timestamp, target_train);
         train_database->DeleteEntry(String<24>(t_id));
@@ -578,12 +574,9 @@ namespace thomas {
                 i1++, i2++; // 注意到，一列火车只会经过站点一次
                 //如果s1在t1前，不满足，说明这列火车不可能从s走到t，所以两个都要++，去找下一列火车
             } else { //合法情况
-                TimeType start_day =
-                        day -
-                        s1.leaving_time.get_date(); //要在day这一天上车，对应车次的首发时间
+                TimeType start_day = day - s1.leaving_time.get_date(); //要在day这一天上车，对应车次的首发时间
                 //也就是从第一站出发的日期
-                if (s1.start_sale_time <= start_day &&
-                    start_day <= s1.end_sale_time) { //能买到
+                if (s1.start_sale_time <= start_day && start_day <= s1.end_sale_time) { //能买到
                     tickets.push_back(Ticket(s1, t1));
                 }
                 i1++, i2++;
@@ -819,18 +812,18 @@ namespace thomas {
         }
 
         if (!accounts.login_pool.count(user_name))
-            return "-1"; //用户未登录
+            return "user is not logged in"; //用户未登录
 
         vector<Train> ans;
         train_database->SearchKey(String<24>(train_ID), &ans);
         if (ans.empty())
-            return "-1"; //车次不存在
+            return "train does not exist"; //车次不存在
         Train target_train = ans[0];
 
         if (!target_train.is_released)
-            return "-1"; //车次未发布，不能购票
+            return "train is not released"; //车次未发布，不能购票
         if (target_train.total_seat_num < num)
-            return "-1"; //座位不够
+            return "seat is not enough"; //座位不够
 
         int s = 0, t = 0;
         for (int i = 1; i <= target_train.station_num && !(s && t);
@@ -841,13 +834,13 @@ namespace thomas {
                 t = i;
         }
         if (!s || !t || s >= t)
-            return "-1"; //车站不合要求
+            return "illegal station"; //车站不合要求
 
         TimeType start_day =
                 TimeType(date + " 00:00") - target_train.leaving_times[s].get_date();
         if (start_day < target_train.start_sale_date ||
             start_day > target_train.end_sale_date)
-            return "-1"; //不在售票日期
+            return "out of sale date"; //不在售票日期
 
         vector<DayTrain> ans2;
         daytrain_database->SearchKey(
@@ -856,7 +849,7 @@ namespace thomas {
 
         int remain_seat = tp.query_seat(s, t - 1);
         if (!is_pending && remain_seat < num)
-            return "-1"; //不补票且座位不够
+            return "seat is not enough"; //不补票且座位不够
 
         int price = target_train.price_sum[t] - target_train.price_sum[s]; //刚好不是 s-1
 
@@ -906,7 +899,7 @@ namespace thomas {
         line.next_token();
         string user_name = line.next_token();
         if (!accounts.login_pool.count(user_name))
-            return "-1"; //未登录
+            return "user is not logged in"; //未登录
         int cnt = 0;
 
         // todo : 修改为区间查找，查找所有关键字包含 user_name 的 order
@@ -956,7 +949,7 @@ namespace thomas {
         }
 
         if (!accounts.login_pool.count(user_name))
-            return "-1"; //未登录
+            return "user is not logged in"; //未登录
 
         // todo: 区间查询
         int cnt = 0;
@@ -965,17 +958,17 @@ namespace thomas {
         // todo: 分析真正的含义，只考虑user_name
         order_database->ScanKey(StringAny<24, int>(user_name, 0), &orders, tp_cmp);
         if (orders.empty())
-            return "-1"; //没有订单
+            return "no orders"; //没有订单
         cnt = orders.size();
         //从新到旧排序（大到小） , 可能不需要？
         // todo: 修改为 bpt 后，按照关键字 Order_ID 读取，就不用排序
         // 事实上，目前的bpt做不到，所以还是要 sort
         Sort(orders, 0, cnt - 1, order_cmp);
         if (x > cnt)
-            return "-1"; //显然超出订单总数
+            return "illegal order"; //显然超出订单总数
         x--;           // 1-base--->0-base
         if (orders[x].status == refunded)
-            return "-1"; //重复退款
+            return "order has been refunded"; //重复退款
 
         Order refund_order = orders[x]; //临时存储
         order_stack.add(2, line.timestamp, refund_order);
@@ -1082,7 +1075,7 @@ namespace thomas {
         int to = string_to_int(line.next_token()), now = line.timestamp;
 
         //回滚的时间不存在
-        if (to > now) return "-1";
+        if (to > now) return "illegal time";
 
         //清空登录池
         accounts.login_pool.clear();
