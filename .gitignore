@@ -21,3 +21,7 @@ testdata
 diff.log
 judge.py
 .cz.json
+database/*.out
+database/*.in
+database/datamaker
+database/*.cpp

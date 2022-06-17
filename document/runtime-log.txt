@@ -214,3 +214,33 @@ final cost:11.6948
 1000000 16384 150000 8 pre insert the same number, insert : find : delete = 4 : 8 : 0, only count the last
 half cost:4.35122
 final cost:8.43587
+
+3000000 16384 80000 8
+insert cost: sec_cost: 12.7322
+find cost: sec_cost: 11.8132
+delete cost: sec_cost: 12.7732
+insert cost: sec_cost: 16.9223
+find cost: sec_cost: 13.796
+delete random cost: sec_cost: 13.928
+find cost: sec_cost: 14.1352
+all cost: sec_cost: 96.1001
+
+1000000 16384 80000 8
+insert cost: sec_cost: 3.71197
+find cost: sec_cost: 3.34044
+delete cost: sec_cost: 3.52436
+insert cost: sec_cost: 4.73395
+find cost: sec_cost: 3.99453
+delete random cost: sec_cost: 3.93251
+find cost: sec_cost: 4.13927
+all cost: sec_cost: 27.377
+
+1000000 16384 80000 1
+insert cost: sec_cost: 6.77463
+find cost: sec_cost: 4.18218
+delete cost: sec_cost: 4.5081
+insert cost: sec_cost: 8.24933
+find cost: sec_cost: 4.46545
+delete random cost: sec_cost: 4.82708
+find cost: sec_cost: 4.59464
+all cost: sec_cost: 37.6014
