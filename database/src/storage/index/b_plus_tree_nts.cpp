@@ -184,7 +184,7 @@ bool BPLUSTREENTS_TYPE::InsertIntoLeaf(const KeyType &key, const ValueType &valu
 
   if (leaf_node->Insert(key, value, comparator_) == -1) {
     /* unpin */
-    buffer_pool_manager_->UnpinPage(leaf_node->GetPageId(), false);
+    buffer_pool_manager_->UnpinPage(leaf_node->GetPageId(), true);
     return false;
   }
 

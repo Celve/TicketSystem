@@ -250,7 +250,7 @@ bool BPLUSTREETS_TYPE::InsertIntoLeaf(const KeyType &key, const ValueType &value
     /* unlatch and unpin */
     ReleasePages(TransactionType::INSERT, transaction);
     UnlatchPage(leaf_page, TransactionType::INSERT);
-    buffer_pool_manager_->UnpinPage(leaf_node->GetPageId(), false);
+    buffer_pool_manager_->UnpinPage(leaf_node->GetPageId(), true);
 
     return false;
   }
