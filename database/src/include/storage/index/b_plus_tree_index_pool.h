@@ -33,7 +33,7 @@ class BPlusTreeIndexPool {
 
   void Debug();
 
-  int Time();
+  int TimeStamp();
 
   void Clear();
 

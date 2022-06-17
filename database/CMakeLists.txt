@@ -24,6 +24,7 @@ set(SOURCE_CPPS
     src/storage/index/b_plus_tree_ts.cpp
     src/storage/index/b_plus_tree_index_ts.cpp
     src/storage/index/b_plus_tree_index_nts.cpp
+    src/storage/index/b_plus_tree_index_pool.cpp
     src/storage/page/header_page.cpp
 
     src/thread/thread_pool.cpp

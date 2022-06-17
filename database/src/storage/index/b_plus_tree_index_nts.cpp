@@ -45,6 +45,9 @@ BPLUSTREEINDEXNTS_TYPE::BPlusTreeIndexNTS(const std::string &index_name, const K
     if (!header_page_->SearchRecord("size", &size_)) {
       throw metadata_error();
     }
+    if (!header_page_->SearchRecord("time_stamp", &time_stamp_)) {
+      throw metadata_error();
+    }
   } catch (read_less_then_a_page &error) {
     /* complicated here, because the page is not fetched successfully */
     bpm_->UnpinPage(HEADER_PAGE_ID, false);
@@ -53,7 +56,8 @@ BPLUSTREEINDEXNTS_TYPE::BPlusTreeIndexNTS(const std::string &index_name, const K
     header_page_ = static_cast<HeaderPage *>(bpm_->NewPage(&header_page_id));
     header_page_->InsertRecord("index", -1);
     header_page_->InsertRecord("page_amount", 1);
-    header_page_->InsertRecord("size", 0);
+    header_page_->InsertRecord("size", size_ = 0);
+    header_page_->InsertRecord("time_stamp", time_stamp_ = 0);
   }
   tree_ = new BPLUSTREENTS_TYPE("index", bpm_, key_comparator_);
 }
@@ -62,6 +66,7 @@ INDEX_TEMPLATE_ARGUMENTS
 BPLUSTREEINDEXNTS_TYPE::~BPlusTreeIndexNTS() {
   header_page_->UpdateRecord("page_amount", disk_manager_->GetNextPageId());
   header_page_->UpdateRecord("size", size_);
+  header_page_->UpdateRecord("time_stamp", time_stamp_);
   bpm_->UnpinPage(HEADER_PAGE_ID, true);
   bpm_->FlushAllPages();
   disk_manager_->ShutDown();
@@ -86,6 +91,7 @@ void BPLUSTREEINDEXNTS_TYPE::Debug() { tree_->Print(bpm_); }
  */
 INDEX_TEMPLATE_ARGUMENTS
 void BPLUSTREEINDEXNTS_TYPE::InsertEntry(const KeyType &key, const ValueType &value) {
+  ++time_stamp_;
   size_ += tree_->Insert(key, value);
 }
 
@@ -96,7 +102,10 @@ void BPLUSTREEINDEXNTS_TYPE::InsertEntry(const KeyType &key, const ValueType &va
  * @return INDEX_TEMPLATE_ARGUMENTS
  */
 INDEX_TEMPLATE_ARGUMENTS
-void BPLUSTREEINDEXNTS_TYPE::DeleteEntry(const KeyType &key) { size_ -= tree_->Remove(key); }
+void BPLUSTREEINDEXNTS_TYPE::DeleteEntry(const KeyType &key) {
+  ++time_stamp_;
+  size_ -= tree_->Remove(key);
+}
 
 /**
  * @brief
@@ -128,12 +137,16 @@ void BPLUSTREEINDEXNTS_TYPE::Clear() {
   header_page_ = static_cast<HeaderPage *>(bpm_->NewPage(&header_page_id));
   header_page_->InsertRecord("index", -1);
   header_page_->InsertRecord("page_amount", 1);
-  header_page_->InsertRecord("size", 0);
+  header_page_->InsertRecord("size", size_ = 0);
+  header_page_->InsertRecord("time_stamp", time_stamp_ = 0);
   tree_ = new BPLUSTREENTS_TYPE("index", bpm_, key_comparator_);
 }
 
 INDEX_TEMPLATE_ARGUMENTS
 int BPLUSTREEINDEXNTS_TYPE::Size() { return size_; }
+
+INDEX_TEMPLATE_ARGUMENTS
+int BPLUSTREEINDEXNTS_TYPE::TimeStamp() { return time_stamp_; }
 
 DECLARE(BPlusTreeIndexNTS)
 

@@ -31,6 +31,8 @@ class BPlusTreeIndexNTS {
 
   int Size();
 
+  int TimeStamp();
+
   void Clear();
 
   void Debug();
@@ -42,6 +44,7 @@ class BPlusTreeIndexNTS {
   HeaderPage *header_page_;
   int buffer_pool_size_;
   int size_;
+  int time_stamp_;
 
   KeyComparator key_comparator_;
 

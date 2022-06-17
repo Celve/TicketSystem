@@ -119,7 +119,6 @@ void BPLUSTREEINDEXPOOL_TYPE::InsertEntry(KeyType *key, ValueType *value) {
 
 INDEX_TEMPLATE_ARGUMENTS
 void BPLUSTREEINDEXPOOL_TYPE::DeleteEntry(KeyType *key) {
-  --time_stamp_;
   pool_->Join([&, key]() {
     AcquireWLatch(*key);
     Transaction *transaction = new Transaction(pool_->GetLock());
@@ -185,7 +184,7 @@ void BPLUSTREEINDEXPOOL_TYPE::Clear() {
 }
 
 INDEX_TEMPLATE_ARGUMENTS
-int BPLUSTREEINDEXPOOL_TYPE::Time() { return time_stamp_; }
+int BPLUSTREEINDEXPOOL_TYPE::TimeStamp() { return time_stamp_; }
 
 DECLARE(BPlusTreeIndexPool)
 

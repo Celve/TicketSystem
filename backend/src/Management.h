@@ -8,6 +8,7 @@
 #include "Account.h"
 #include "TrainSystem.h"
 #include "storage/index/b_plus_tree_index_nts.h"
+#include "storage/index/b_plus_tree_index_pool.h"
 #include "type/string_any.h"
 #include "type/string_int_int.h"
 
@@ -24,7 +25,7 @@ private:
   //    Ull username_to_pos; //索引，暂时用 Ull 完成，最后要改为 BpTree
 
   // Memory_river与 ull 的复合
-  BPlusTreeIndexNTS<String<24>, User, StringComparator<24>> *user_database;
+  BPlusTreeIndexPool<String<24>, User, StringComparator<24>> *user_database;
   StringComparator<24> cmp1;
 
 public:
@@ -57,14 +58,14 @@ private:
   StringAnyComparator<24, int> cmp4;
   StringIntIntComparator<24> cmp5; //
 
-  BPlusTreeIndexNTS<String<24>, Train, StringComparator<24>> *train_database;
-  BPlusTreeIndexNTS<DualString<32, 24>, Station, DualStringComparator<32, 24>>
+  BPlusTreeIndexPool<String<24>, Train, StringComparator<24>> *train_database;
+  BPlusTreeIndexPool<DualString<32, 24>, Station, DualStringComparator<32, 24>>
       *station_database;
-  BPlusTreeIndexNTS<StringAny<24, int>, DayTrain, StringAnyComparator<24, int>>
+  BPlusTreeIndexPool<StringAny<24, int>, DayTrain, StringAnyComparator<24, int>>
       *daytrain_database;
-  BPlusTreeIndexNTS<StringAny<24, int>, Order, StringAnyComparator<24, int>>
+  BPlusTreeIndexPool<StringAny<24, int>, Order, StringAnyComparator<24, int>>
       *order_database;
-  BPlusTreeIndexNTS<StringIntInt<24>, PendingOrder, StringIntIntComparator<24>>
+  BPlusTreeIndexPool<StringIntInt<24>, PendingOrder, StringIntIntComparator<24>>
       *pending_order_database;
 
   //临时数组的大小不是110

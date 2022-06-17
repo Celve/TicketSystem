@@ -25,3 +25,4 @@ database/*.out
 database/*.in
 database/datamaker
 database/*.cpp
+speed_test

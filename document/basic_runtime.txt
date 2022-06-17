@@ -1,0 +1,14 @@
+---run baseline---
+run basic_1 total use 0.017569303512573242s
+run basic_2 total use 0.03420400619506836s
+run basic_3 total use 0.12478923797607422s
+run basic_4 total use 0.4775388240814209s
+run basic_5 total use 0.9591476917266846s
+run basic_6 total use 2.778298854827881s
+mrun basic_extra total use 52.4365553855896s
+run pressure_1_easy total use 32.451080083847046s
+run pressure_1_hard total use 32.15787672996521s
+run pressure_2_easy total use 67.52238464355469s
+run pressure_2_hard total use 68.29192543029785s
+run pressure_3_easy total use 92.35799026489258s
+run pressure_3_hard total use 93.58118152618408s
