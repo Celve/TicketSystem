@@ -36,12 +36,12 @@ bool BPLUSTREENTS_TYPE::IsEmpty() const { return root_page_id_ == INVALID_PAGE_I
  * @return : true means key exists
  */
 INDEX_TEMPLATE_ARGUMENTS
-bool BPLUSTREENTS_TYPE::GetValue(const KeyType &key, vector<ValueType> *result, Transaction *transaction) {
+bool BPLUSTREENTS_TYPE::GetValue(const KeyType &key, std::vector<ValueType> *result, Transaction *transaction) {
   Page *leaf_page = FindLeafPage(key, false);
   if (leaf_page == nullptr) {
     return false;
   }
-  LeafPage *leaf_node = reinterpret_cast<LeafPage *>(leaf_page);
+  LeafPage *leaf_node = reinterpret_cast<LeafPage *>(leaf_page->GetData());
   ValueType value;
   bool flag = false;
   if (leaf_node->Lookup(key, &value, comparator_)) {
@@ -63,13 +63,13 @@ bool BPLUSTREENTS_TYPE::GetValue(const KeyType &key, vector<ValueType> *result, 
  * NOTE: need to be modified
  */
 INDEX_TEMPLATE_ARGUMENTS
-bool BPLUSTREENTS_TYPE::GetValue(const KeyType &key, vector<ValueType> *result, const KeyComparator &new_comparator,
-                                 Transaction *transaction) {
+bool BPLUSTREENTS_TYPE::GetValue(const KeyType &key, std::vector<ValueType> *result,
+                                 const KeyComparator &new_comparator, Transaction *transaction) {
   Page *leaf_page = FindLeafPage(key, false);
   if (leaf_page == nullptr) {
     return false;
   }
-  LeafPage *leaf_node = reinterpret_cast<LeafPage *>(leaf_page);
+  LeafPage *leaf_node = reinterpret_cast<LeafPage *>(leaf_page->GetData());
   ValueType value;
 
   int index = leaf_node->KeyIndex(key, comparator_);

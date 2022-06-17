@@ -30,6 +30,8 @@ class DualString {
     second_str_.SetValue(str2);
   }
 
+  size_t Hash() const { return first_str_.Hash(); }
+
   /**
    * @brief Set the Value object
    * @param str1 please no overflow

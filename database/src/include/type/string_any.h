@@ -2,6 +2,7 @@
 
 #include <cstdio>
 #include <cstring>
+#include <functional>
 #include <iostream>
 
 namespace thomas {
@@ -34,6 +35,14 @@ class StringAny {
     return data_t_ < rhs.data_t_ ? -1 : (data_t_ == rhs.data_t_ ? 0 : 1);
   }
 
+  size_t Hash() const {
+    size_t hash_value = 0;
+    for (int i = 0; data_str_[i] != '\0'; ++i) {
+      hash_value = hash_value * 31 + data_str_[i];
+    }
+    return hash_value;
+  }
+
   int CompareStringWith(const StringAny &rhs) const { return strcmp(data_str_, rhs.data_str_); }
 
   inline int64_t ToString() const { return *reinterpret_cast<int64_t *>(const_cast<char *>(data_str_)); }
@@ -47,6 +56,8 @@ class StringAny {
     os << ", " << src.data_t_ << ")";
     return os;
   }
+
+  bool operator==(const StringAny &rhs) const { return !CompareStringWith(rhs) && !CompareAnyWith(rhs); }
 
  private:
   char data_str_[StringSize];
@@ -91,3 +102,13 @@ class StringAnyComparator {
 };
 
 }  // namespace thomas
+
+namespace std {
+
+template <size_t StringSize, typename T>
+struct hash<thomas::StringAny<StringSize, T>> {
+  using KeyType = thomas::StringAny<StringSize, T>;
+  size_t operator()(const KeyType &src) const { return src.Hash(); }
+};
+
+}  // namespace std

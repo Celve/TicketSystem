@@ -1,10 +1,10 @@
 #pragma once
 
+#include <list>
 #include <mutex>  // NOLINT
+#include <vector>
 
 #include "buffer/lru_replacer.h"
-#include "container/linked_hashmap.hpp"
-#include "container/vector.hpp"
 #include "storage/disk/disk_manager.h"
 #include "storage/page/page.h"
 #include "thread/thread_safe.h"
@@ -114,7 +114,7 @@ class BufferPoolManager {
   /** Replacer to find unpinned pages for replacement. */
   Replacer *replacer_;
   /** List of free pages. */
-  vector<frame_id_t> free_list_;
+  std::list<frame_id_t> free_list_;
   /** This latch protects shared data structures. We recommend updating this comment to describe what it protects. */
   std::mutex latch_;
   /** Whether it needs to be thread safe*/

@@ -26,6 +26,16 @@ class String {
 
   int CompareWith(const String &rhs) const { return strcmp(data_, rhs.data_); }
 
+  size_t Hash() const {
+    size_t hash_value = 0;
+    for (int i = 0; data_[i] != '\0'; ++i) {
+      hash_value = hash_value * 31 + data_[i];
+    }
+    return hash_value;
+  }
+
+  bool operator<(const String &rhs) const { return CompareWith(rhs) < 0; }
+
   inline int64_t ToString() const { return *reinterpret_cast<int64_t *>(const_cast<char *>(data_)); }
 
   friend std::ostream &operator<<(std::ostream &os, const String &src) {

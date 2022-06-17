@@ -40,9 +40,9 @@ class BPlusTreeNTS {
   bool Remove(const KeyType &key, Transaction *transaction = nullptr);
 
   // return the value associated with a given key
-  bool GetValue(const KeyType &key, vector<ValueType> *result, Transaction *transaction = nullptr);
+  bool GetValue(const KeyType &key, std::vector<ValueType> *result, Transaction *transaction = nullptr);
 
-  bool GetValue(const KeyType &key, vector<ValueType> *result, const KeyComparator &new_comparator,
+  bool GetValue(const KeyType &key, std::vector<ValueType> *result, const KeyComparator &new_comparator,
                 Transaction *transaction = nullptr);
 
   // index iterator

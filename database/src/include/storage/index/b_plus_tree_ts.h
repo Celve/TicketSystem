@@ -1,5 +1,7 @@
 #pragma once
 
+#include <atomic>
+
 #include "concurrency/transaction.h"
 #include "storage/index/index_iterator.h"
 #include "storage/page/b_plus_tree_internal_page.h"
@@ -43,16 +45,16 @@ class BPlusTreeTS {
   bool OptimisticInsert(const KeyType &key, const ValueType &value, Transaction *transaction = nullptr);
 
   // Remove a key and its value from this B+ tree.
-  void Remove(const KeyType &key, Transaction *transaction = nullptr, bool isCalled = false);
+  bool Remove(const KeyType &key, Transaction *transaction = nullptr, bool isCalled = false);
 
   // Remove a key and its value from this B+ tree. It's fater. But it might get the wrong answer.
-  void OptimisticRemove(const KeyType &key, Transaction *transaction = nullptr);
+  bool OptimisticRemove(const KeyType &key, Transaction *transaction = nullptr);
 
   // return the value associated with a given key
-  bool GetValue(const KeyType &key, vector<ValueType> *result, Transaction *transaction = nullptr);
+  bool GetValue(const KeyType &key, std::vector<ValueType> *result, Transaction *transaction = nullptr);
 
   // return the value that equal to a given key using the given rule
-  bool GetValue(const KeyType &key, vector<ValueType> *result, const KeyComparator &new_comparator,
+  bool GetValue(const KeyType &key, std::vector<ValueType> *result, const KeyComparator &new_comparator,
                 Transaction *transaction = nullptr);
 
   // index iterator
@@ -137,6 +139,7 @@ class BPlusTreeTS {
   void ToString(BPlusTreePage *page, BufferPoolManager *bpm) const;
 
   // member variable
+  std::atomic<int> processed_;
   std::string index_name_;
   page_id_t root_page_id_;
   ReaderWriterLatch root_latch_;

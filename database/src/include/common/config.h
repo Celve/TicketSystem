@@ -3,6 +3,9 @@
 
 #include <atomic>
 
+#include "Account.h"
+#include "TrainSystem.h"
+
 namespace thomas {
 
 static constexpr int INVALID_PAGE_ID = -1;                                    // invalid page id
@@ -10,7 +13,9 @@ static constexpr int INVALID_TXN_ID = -1;                                     //
 static constexpr int INVALID_LSN = -1;                                        // invalid log sequence number
 static constexpr int HEADER_PAGE_ID = 0;                                      // the header page id
 static constexpr int PAGE_SIZE = 32768;                                       // size of a data page in byte
-static constexpr int BUFFER_POOL_SIZE = 96;                                   // size of buffer pool
+static constexpr int BUFFER_POOL_SIZE = 32767 * 2;                            // size of buffer pool
+static constexpr int THREAD_NUMBER = 8;                                       // size of thread number
+static constexpr int MUTEX_NUMBER = 8192;                                     // size of mutex number
 static constexpr int LOG_BUFFER_SIZE = ((BUFFER_POOL_SIZE + 1) * PAGE_SIZE);  // size of a log buffer in byte
 static constexpr int BUCKET_SIZE = 50;                                        // size of extendible hash bucket
 

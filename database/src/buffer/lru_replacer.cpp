@@ -26,13 +26,9 @@ void LRUReplacer::Pin(frame_id_t frame_id) {
 }
 
 void LRUReplacer::Unpin(frame_id_t frame_id) {
-  /* avoid being too large */
-  if (queue_.size() >= num_pages_) {
-    return;
-  }
-
   /* maybe it's existed, maybe it's not */
   auto iter = queue_.find(frame_id);
+
   if (iter != queue_.end()) {
     queue_.erase(iter);
   }

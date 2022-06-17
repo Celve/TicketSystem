@@ -109,13 +109,15 @@ void BPLUSTREEINDEXNTS_TYPE::DeleteEntry(const KeyType &key) { size_ -= tree_->R
  * @return INDEX_TEMPLATE_ARGUMENTS
  */
 INDEX_TEMPLATE_ARGUMENTS
-void BPLUSTREEINDEXNTS_TYPE::ScanKey(const KeyType &key, vector<ValueType> *result,
+void BPLUSTREEINDEXNTS_TYPE::ScanKey(const KeyType &key, std::vector<ValueType> *result,
                                      const KeyComparator &standby_comparator) {
   tree_->GetValue(key, result, standby_comparator);
 }
 
 INDEX_TEMPLATE_ARGUMENTS
-void BPLUSTREEINDEXNTS_TYPE::SearchKey(const KeyType &key, vector<ValueType> *result) { tree_->GetValue(key, result); }
+void BPLUSTREEINDEXNTS_TYPE::SearchKey(const KeyType &key, std::vector<ValueType> *result) {
+  tree_->GetValue(key, result);
+}
 
 INDEX_TEMPLATE_ARGUMENTS
 void BPLUSTREEINDEXNTS_TYPE::Clear() {

@@ -32,6 +32,11 @@ class StringIntInt {
     second_int_ = second_int;
   }
 
+  size_t Hash() const {
+    size_t hash_value = str_.Hash() + first_int_;
+    return hash_value;
+  }
+
   int CompareStringWith(const StringIntInt &rhs) const { return str_.CompareWith(rhs.str_); }
 
   int CompareFirstIntWith(const StringIntInt &rhs) const {

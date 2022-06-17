@@ -1,53 +1,54 @@
 #ifndef TICKETSYSTEM_COMMAND_H
 #define TICKETSYSTEM_COMMAND_H
 
-#include <string>
 #include <istream>
 #include <ostream>
+#include <string>
 
-using std::string;
+
 using std::istream;
 using std::ostream;
+using std::string;
 
 namespace thomas {
 
-    class Command {
-        friend class AccountManagement;
-        friend class TrainManagement;
+class Command {
+  friend class AccountManagement;
+  friend class TrainManagement;
 
-    private:
-        string buffer = "";//存储字符串的缓冲区
-        int cur = 0;//当前指针的位置
-        char delimiter = ' ';//分隔符
+private:
+  string buffer = "";   //存储字符串的缓冲区
+  int cur = 0;          //当前指针的位置
+  char delimiter = ' '; //分隔符
 
-    public:
-        int cnt = 0, timestamp = 0;//时间戳
+public:
+  int cnt = 0, timestamp = 0; //时间戳
 
-        Command() = default; //构造函数
+  Command() = default; //构造函数
 
-        Command(const Command &rhs);
+  Command(const Command &rhs);
 
-        Command(char _delimiter);
+  Command(char _delimiter);
 
-        Command(const std::string &in, char _delimiter = ' ');
+  Command(const std::string &in, char _delimiter = ' ');
 
-        ~Command() = default;
+  ~Command() = default;
 
-        void count(); //统计参数个数
+  void count(); //统计参数个数
 
-        string next_token();//取出下一个Token,更新cur
+  string next_token(); //取出下一个Token,更新cur
 
-        void clear();
+  void clear();
 
-        friend istream &operator>>(istream &input, Command &obj);
+  friend istream &operator>>(istream &input, Command &obj);
 
-        friend ostream &operator<<(ostream &os, const Command &command);
+  friend ostream &operator<<(ostream &os, const Command &command);
 
-        void set_delimiter(char new_delimiter); //修改分隔符
-    };
+  void set_delimiter(char new_delimiter); //修改分隔符
+};
 
-    //因为用 namespace，所以友元函数要在类外面声明一次
+//因为用 namespace，所以友元函数要在类外面声明一次
 //    istream &operator>>(istream &input, Command &obj);
 //    ostream &operator<<(ostream &os, const Command &command);
-}
-#endif //TICKETSYSTEM_COMMAND_H
+} // namespace thomas
+#endif // TICKETSYSTEM_COMMAND_H

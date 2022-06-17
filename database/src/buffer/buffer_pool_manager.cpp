@@ -34,8 +34,8 @@ frame_id_t BufferPoolManager::FindFrame() {
 
   if (!free_list_.empty()) {
     /* find it from free list */
-    frame_id = free_list_.back();
-    free_list_.pop_back();
+    frame_id = free_list_.front();
+    free_list_.pop_front();
   } else {
     /* find it from queue */
     Page *page = &pages_[frame_id];
@@ -162,7 +162,7 @@ bool BufferPoolManager::FlushPage(page_id_t page_id) {
 Page *BufferPoolManager::NewPage(page_id_t *page_id) {
   std::unique_lock<std::mutex> lock =
       IsThreadSafe() ? std::unique_lock<std::mutex>(latch_) : std::unique_lock<std::mutex>();
-  //  std::scoped_lock lock{latch_};
+  // std::scoped_lock lock{latch_};
 
   // 0.   Make sure you call DiskManager::AllocatePage!
   // 2.   Pick a victim page P from either the free list or the replacer. Always pick from the free list first.

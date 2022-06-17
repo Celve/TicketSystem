@@ -1,6 +1,8 @@
 #include "storage/index/b_plus_tree_ts.h"
 
+#include <chrono>
 #include <string>
+#include <thread>
 
 #include "common/macros.h"
 #include "storage/index/b_plus_tree_nts.h"
@@ -20,6 +22,7 @@ BPLUSTREETS_TYPE::BPlusTreeTS(std::string name, BufferPoolManager *buffer_pool_m
   HeaderPage *header_page = static_cast<HeaderPage *>(buffer_pool_manager_->FetchPage(HEADER_PAGE_ID));
   header_page->SearchRecord(index_name_, &root_page_id_);
   buffer_pool_manager_->UnpinPage(HEADER_PAGE_ID, true);
+  processed_ = 0;
 }
 
 /**
@@ -37,12 +40,12 @@ bool BPLUSTREETS_TYPE::IsEmpty() const { return root_page_id_ == INVALID_PAGE_ID
  * @return : true means key exists
  */
 INDEX_TEMPLATE_ARGUMENTS
-bool BPLUSTREETS_TYPE::GetValue(const KeyType &key, vector<ValueType> *result, Transaction *transaction) {
+bool BPLUSTREETS_TYPE::GetValue(const KeyType &key, std::vector<ValueType> *result, Transaction *transaction) {
   Page *leaf_page = CrabToLeaf(key, TransactionType::FIND, false, false, true, transaction);
   if (leaf_page == nullptr) {
     return false;
   }
-  LeafPage *leaf_node = reinterpret_cast<LeafPage *>(leaf_page);
+  LeafPage *leaf_node = reinterpret_cast<LeafPage *>(leaf_page->GetData());
   ValueType value;
   bool flag = false;
 
@@ -54,6 +57,7 @@ bool BPLUSTREETS_TYPE::GetValue(const KeyType &key, vector<ValueType> *result, T
   /* unlatch and unpin */
   UnlatchPage(leaf_page, TransactionType::FIND);
   buffer_pool_manager_->UnpinPage(leaf_node->GetPageId(), false);
+  --processed_;
 
   return flag;
 }
@@ -68,14 +72,18 @@ bool BPLUSTREETS_TYPE::GetValue(const KeyType &key, vector<ValueType> *result, T
  * @return INDEX_TEMPLATE_ARGUMENTS
  */
 INDEX_TEMPLATE_ARGUMENTS
-bool BPLUSTREETS_TYPE::GetValue(const KeyType &key, vector<ValueType> *result, const KeyComparator &new_comparator,
+bool BPLUSTREETS_TYPE::GetValue(const KeyType &key, std::vector<ValueType> *result, const KeyComparator &new_comparator,
                                 Transaction *transaction) {
+  while (processed_ != 0) {
+    std::this_thread::sleep_for(std::chrono::microseconds(10));
+  }
   Page *leaf_page = CrabToLeaf(key, TransactionType::MULTIFIND, false, false, false, transaction);
   if (leaf_page == nullptr) {
     transaction->Unlock();
     return false;
   }
-  LeafPage *leaf_node = reinterpret_cast<LeafPage *>(leaf_page);
+
+  LeafPage *leaf_node = reinterpret_cast<LeafPage *>(leaf_page->GetData());
   ValueType value;
 
   int index = leaf_node->KeyIndex(key, comparator_);
@@ -89,8 +97,7 @@ bool BPLUSTREETS_TYPE::GetValue(const KeyType &key, vector<ValueType> *result, c
     if (index != -1) {
       if (new_comparator(key, leaf_node->KeyAt(index))) {
         clear_up();
-        transaction->Unlock();
-        return true;
+        break;
       }
       result->push_back(leaf_node->GetItem(index++).second);
     }
@@ -129,10 +136,12 @@ INDEX_TEMPLATE_ARGUMENTS
 bool BPLUSTREETS_TYPE::Insert(const KeyType &key, const ValueType &value, Transaction *transaction, bool isCalled) {
   root_latch_.WLock();
   if (!isCalled) {
+    ++processed_;
     transaction->Unlock();
   }
   if (IsEmpty()) {
     StartNewTree(key, value);
+    --processed_;
     root_latch_.WUnlock();
     return true;
   }
@@ -145,9 +154,11 @@ bool BPLUSTREETS_TYPE::OptimisticInsert(const KeyType &key, const ValueType &val
   TentativeInsert(key, value, flag, transaction);
   switch (flag) {
     case InsertState::SUCCESS:
+      --processed_;
       return true;
 
     case InsertState::DUPLICATE_KEY:
+      --processed_;
       return false;
 
     default:
@@ -251,27 +262,26 @@ bool BPLUSTREETS_TYPE::InsertIntoLeaf(const KeyType &key, const ValueType &value
     ReleasePages(TransactionType::INSERT, transaction);
     UnlatchPage(leaf_page, TransactionType::INSERT);
     buffer_pool_manager_->UnpinPage(leaf_node->GetPageId(), false);
+    --processed_;
 
     return false;
   }
 
   /* whether to split or not, according to the size */
-  if (leaf_node->GetSize() < leaf_node->GetMaxSize()) {
-    /* unlatch and unpin */
-    UnlatchPage(leaf_page, TransactionType::INSERT);
-    buffer_pool_manager_->UnpinPage(leaf_page->GetPageId(), true);  // should be done immediately
-  } else {
+  if (leaf_node->GetSize() >= leaf_node->GetMaxSize()) {
     /* split and create a new node */
     /* NOTE: something should be updated here, the node can never be full */
     LeafPage *extra_node = Split<LeafPage>(leaf_node);
     extra_node->SetNextPageId(leaf_node->GetNextPageId());
     leaf_node->SetNextPageId(extra_node->GetPageId());
-
+    buffer_pool_manager_->FetchPage(leaf_page->GetPageId());
     /* insert the smallest key value into parent */
     InsertIntoParent(leaf_node, extra_node->KeyAt(0), extra_node, transaction);
-    ReleasePages(TransactionType::INSERT, transaction);
-    UnlatchPage(leaf_page, TransactionType::INSERT);
   }
+  UnlatchPage(leaf_page, TransactionType::INSERT);
+  buffer_pool_manager_->UnpinPage(leaf_page->GetPageId(), true);  // should be done immediately
+  ReleasePages(TransactionType::INSERT, transaction);
+  --processed_;
   return true;
 }
 
@@ -373,17 +383,19 @@ void BPLUSTREETS_TYPE::InsertIntoParent(BPlusTreePage *old_node, const KeyType &
  * necessary.
  */
 INDEX_TEMPLATE_ARGUMENTS
-void BPLUSTREETS_TYPE::Remove(const KeyType &key, Transaction *transaction, bool isCalled) {
+bool BPLUSTREETS_TYPE::Remove(const KeyType &key, Transaction *transaction, bool isCalled) {
   Page *leaf_page =
       CrabToLeaf(key, TransactionType::DELETE, false, false, !isCalled, transaction);  // leaf_page is pinned
   if (leaf_page == nullptr) {
-    return;
+    --processed_;
+    return false;
   }
 
   LeafPage *leaf_node = reinterpret_cast<LeafPage *>(leaf_page->GetData());
-
+  bool flag = false;
   if (leaf_node->RemoveAndDeleteRecord(key, comparator_) != -1) {
     CoalesceOrRedistribute(leaf_node, transaction);
+    flag = true;
   } else {
     /* don't forget to do such a job */
     buffer_pool_manager_->UnpinPage(leaf_node->GetPageId(), false);
@@ -391,26 +403,32 @@ void BPLUSTREETS_TYPE::Remove(const KeyType &key, Transaction *transaction, bool
   ReleasePages(TransactionType::DELETE, transaction);
   UnlatchPage(leaf_page, TransactionType::DELETE);
   DeletePages(transaction);
+  --processed_;
+  return flag;
 }
 
 INDEX_TEMPLATE_ARGUMENTS
-void BPLUSTREETS_TYPE::OptimisticRemove(const KeyType &key, Transaction *transaction) {
+bool BPLUSTREETS_TYPE::OptimisticRemove(const KeyType &key, Transaction *transaction) {
   DeleteState flag = DeleteState::UNSAFE;
   TentativeRemove(key, flag, transaction);
   switch (flag) {
     case DeleteState::SUCCESS:
-      break;
+      --processed_;
+      return true;
 
     case DeleteState::NO_ENTRY:
-      break;
+      --processed_;
+      return false;
 
     case DeleteState::PAGE_FAULT:
-      break;
+      --processed_;
+      return false;
 
     case DeleteState::UNSAFE:
-      Remove(key, transaction, true);
-      break;
+      return Remove(key, transaction, true);
   }
+  /* it should never be here */
+  return false;
 }
 
 INDEX_TEMPLATE_ARGUMENTS void BPLUSTREETS_TYPE::TentativeRemove(const KeyType &key, DeleteState &delete_state,
@@ -619,8 +637,8 @@ bool BPLUSTREETS_TYPE::AdjustRoot(BPlusTreePage *old_root_node, Transaction *tra
 
     /* unlatch the root_page_id */
     /* TODO: I think the root latch should not be unlocked here, because it would be released in the
-     * releasepage function */
-    root_latch_.WUnlock();
+     * release page function */
+    // root_latch_.WUnlock();
 
     return true;
   }
@@ -635,7 +653,7 @@ bool BPLUSTREETS_TYPE::AdjustRoot(BPlusTreePage *old_root_node, Transaction *tra
     UpdateRootPageId(0);
     /* TODO: I think the root latch should not be unlocked here, because it would be released in the
      * releasepage function */
-    root_latch_.WUnlock();
+    // root_latch_.WUnlock();
 
     return true;
   }
@@ -701,6 +719,7 @@ Page *BPLUSTREETS_TYPE::CrabToLeaf(const KeyType &key, TransactionType transacti
   if (!rootLatched) {
     LockRoot(transaction_type);
     if (isLocked) {
+      ++processed_;
       transaction->Unlock();
     }
   }
