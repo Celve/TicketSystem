@@ -27,7 +27,7 @@ void Sort(T *a, int l, int r, bool cmp(const T &u, const T &v)) { //对数组
 }
 
 template <typename T>
-void Sort(vector<T> &a, int l, int r,
+void Sort(std::vector<T> &a, int l, int r,
           bool cmp(const T &u, const T &v)) { //对vector
   if (l >= r)
     return;
@@ -104,7 +104,7 @@ void OUTPUT(TrainManagement &all, const string &train_ID) { //用来调试
     string key = a.train_ID + i.transfer();
 
     DayTrain tp;
-    vector<int> ans;
+    std::vector<int> ans;
     //            all.daytrain_id_to_pos.find_node(key, ans);
     //            all.day_train_data.read(tp, ans[0]);
 
@@ -156,7 +156,7 @@ string AccountManagement::add_user(Command &line) {
     opt = line.next_token();
   }
 
-  vector<User> ans;
+  std::vector<User> ans;
   user_database->SearchKey(String<24>(username), &ans);
 
   if (user_database->IsEmpty()) { //首次添加用户
@@ -187,7 +187,7 @@ string AccountManagement::login(Command &line) {
     opt = line.next_token();
   }
 
-  vector<User> ans;
+  std::vector<User> ans;
   user_database->SearchKey(String<24>(username), &ans);
   //用户不存在/用户已登录
   if (ans.empty() || login_pool.count(username))
@@ -231,7 +231,7 @@ string AccountManagement::modify_profile(Command &line) {
     opt = line.next_token();
   }
 
-  vector<User> ans;
+  std::vector<User> ans;
   user_database->SearchKey(String<24>(username), &ans);
   if (ans.empty())
     return "-1"; // user不存在
@@ -270,7 +270,7 @@ string AccountManagement::query_profile(Command &line) {
     opt = line.next_token();
   }
 
-  vector<User> ans;
+  std::vector<User> ans;
   user_database->SearchKey(String<24>(username), &ans);
   if (ans.empty())
     return "-1"; // u不存在
@@ -349,7 +349,7 @@ string TrainManagement::add_train(Command &line) {
     opt = line.next_token();
   }
 
-  vector<Train> ans;
+  std::vector<Train> ans;
   train_database->SearchKey(String<24>(train_id), &ans);
   if (!ans.empty())
     return "-1"; // train_ID 已存在，添加失败
@@ -364,7 +364,7 @@ string TrainManagement::release_train(Command &line) {
   line.next_token(); //过滤-i
   string t_id = line.next_token();
 
-  vector<Train> ans;
+  std::vector<Train> ans;
   train_database->SearchKey(String<24>(t_id), &ans);
   if (ans.empty())
     return "-1"; //车次不存在，失败
@@ -413,7 +413,7 @@ string TrainManagement::query_train(Command &line) {
   if (!is_legal(date + " 00:00"))
     return "-1"; //查询，要判断读入的日期是否合法
 
-  vector<Train> ans;
+  std::vector<Train> ans;
   TimeType day(date + " 00:00");
   train_database->SearchKey(String<24>(t_id), &ans);
   if (ans.empty())
@@ -424,7 +424,7 @@ string TrainManagement::query_train(Command &line) {
   if (day < target_train.start_sale_date || day > target_train.end_sale_date)
     return "-1";
 
-  vector<DayTrain> ans2;
+  std::vector<DayTrain> ans2;
   daytrain_database->SearchKey(StringAny<24, int>(t_id, day.get_value()),
                                &ans2);
 
@@ -476,7 +476,7 @@ string TrainManagement::query_train(Command &line) {
 string TrainManagement::delete_train(Command &line) {
   line.next_token();
   string t_id = line.next_token();
-  vector<Train> ans;
+  std::vector<Train> ans;
   train_database->SearchKey(String<24>(t_id), &ans);
   if (ans.empty())
     return "-1"; //不存在，不能删
@@ -509,7 +509,7 @@ string TrainManagement::query_ticket(Command &line) {
   if (s == t)
     return "0"; //起点等于终点，显然无票
   TimeType day(date + " 00:00");
-  vector<Station> ans1, ans2;
+  std::vector<Station> ans1, ans2;
 
   DualStringComparator<32, 24> tp_cmp(1);
   // todo:区间查找，查找所有 站点为 s 和 t 的 station 车站
@@ -521,7 +521,7 @@ string TrainManagement::query_ticket(Command &line) {
   int cnt = 0;
   Station s1, t1; //起点和终点
 
-  vector<Ticket> tickets;
+  std::vector<Ticket> tickets;
   for (int i1 = 0, i2 = 0; i1 < ans1.size() && i2 < ans2.size();) {
     s1 = ans1[i1], t1 = ans2[i2];
     //判断是否为同一辆车
@@ -556,7 +556,7 @@ string TrainManagement::query_ticket(Command &line) {
   string output = to_string(cnt);
   for (int i = 0; i <= cnt - 1; ++i) {
     TimeType start_day = day - tickets[i].s.leaving_time.get_date();
-    vector<DayTrain> all;
+    std::vector<DayTrain> all;
     daytrain_database->SearchKey(
         StringAny<24, int>(tickets[i].s.train_ID, start_day.get_value()), &all);
     DayTrain tp_daytrain = all[0];
@@ -600,7 +600,7 @@ string TrainManagement::query_transfer(Command &line) {
 
   DualStringComparator<32, 24> tp_cmp(1);
   // todo:区间查找，查找所有 站点为 s 和 t 的 station 车站
-  vector<Station> ans1, ans2;
+  std::vector<Station> ans1, ans2;
   station_database->ScanKey(DualString<32, 24>(s, ""), &ans1, tp_cmp);
   station_database->ScanKey(DualString<32, 24>(t, ""), &ans2, tp_cmp);
 
@@ -615,7 +615,7 @@ string TrainManagement::query_transfer(Command &line) {
     if (start_day1 < s1.start_sale_time || start_day1 > s1.end_sale_time)
       continue; //买不到票
 
-    vector<Train> all;
+    std::vector<Train> all;
     train_database->SearchKey(String<24>(s1.train_ID), &all);
     Train train1 = all[0];
 
@@ -624,14 +624,14 @@ string TrainManagement::query_transfer(Command &line) {
       if (!strcmp(s1.train_ID, t1.train_ID))
         continue; //换乘要求不同车次
 
-      vector<Train> pos2;
+      std::vector<Train> pos2;
       train_database->SearchKey(String<24>(t1.train_ID), &pos2);
       Train train2 = pos2[0]; //到达的车次
 
       //把可能途径的车站全部读取出来，方便查询
       //注意循环的范围
       int cnt1 = 0, cnt2 = 0;
-      vector<std::pair<string, int>> starts, ends;
+      std::vector<std::pair<string, int>> starts, ends;
       for (int k = s1.index + 1; k <= train1.station_num; ++k)
         starts.push_back(std::make_pair(train1.stations[k], k));
       for (int k = 1; k < t1.index; ++k)
@@ -718,7 +718,7 @@ string TrainManagement::query_transfer(Command &line) {
           }
           if (updated) { //如果更新答案，就保存结果
             output.clear();
-            vector<DayTrain> f1, f2;
+            std::vector<DayTrain> f1, f2;
             daytrain_database->SearchKey(
                 StringAny<24, int>(train1.train_ID, start_day1.get_value()),
                 &f1);
@@ -776,7 +776,7 @@ string TrainManagement::buy_ticket(Command &line, AccountManagement &accounts) {
   if (!accounts.login_pool.count(user_name))
     return "-1"; //用户未登录
 
-  vector<Train> ans;
+  std::vector<Train> ans;
   train_database->SearchKey(String<24>(train_ID), &ans);
   if (ans.empty())
     return "-1"; //车次不存在
@@ -804,7 +804,7 @@ string TrainManagement::buy_ticket(Command &line, AccountManagement &accounts) {
       start_day > target_train.end_sale_date)
     return "-1"; //不在售票日期
 
-  vector<DayTrain> ans2;
+  std::vector<DayTrain> ans2;
   daytrain_database->SearchKey(
       StringAny<24, int>(train_ID, start_day.get_value()), &ans2);
   DayTrain tp = ans2[0];
@@ -861,7 +861,7 @@ string TrainManagement::query_order(Command &line,
   int cnt = 0;
 
   // todo : 修改为区间查找，查找所有关键字包含 user_name 的 order
-  vector<Order> orders;
+  std::vector<Order> orders;
   StringAnyComparator<24, int> tp_cmp(1);
   // todo: 分析真正的含义，只考虑user_name
   order_database->ScanKey(StringAny<24, int>(user_name, 0), &orders, tp_cmp);
@@ -911,7 +911,7 @@ string TrainManagement::refund_ticket(Command &line,
 
   // todo: 区间查询
   int cnt = 0;
-  vector<Order> orders;
+  std::vector<Order> orders;
   StringAnyComparator<24, int> tp_cmp(1);
   // todo: 分析真正的含义，只考虑user_name
   order_database->ScanKey(StringAny<24, int>(user_name, 0), &orders, tp_cmp);
@@ -949,7 +949,7 @@ string TrainManagement::refund_ticket(Command &line,
   //如果原来的订单success，要修改座位，增加
   //        string key = string(refund_order.train_ID) +
   //        refund_order.start_day.transfer();
-  vector<DayTrain> ans;
+  std::vector<DayTrain> ans;
   daytrain_database->SearchKey(
       StringAny<24, int>(refund_order.train_ID,
                          refund_order.start_day.get_value()),
@@ -961,7 +961,7 @@ string TrainManagement::refund_ticket(Command &line,
   //退票后有空缺，判断候补的订单现在是否能买
   int CNT = 0;
   // todo: 同样是区间查找
-  vector<PendingOrder> pending_orders;
+  std::vector<PendingOrder> pending_orders;
   StringIntIntComparator<24> tp_cmp2(1);
   pending_order_database->ScanKey(
       StringIntInt<24>(refund_order.train_ID,
@@ -992,7 +992,7 @@ string TrainManagement::refund_ticket(Command &line,
       //修改 order 中的状态
       //                key = string(pending_orders[i].user_name) +
       //                to_string(pending_orders[i].order_ID);
-      vector<Order> tmp;
+      std::vector<Order> tmp;
       order_database->SearchKey(StringAny<24, int>(pending_orders[i].user_name,
                                                    pending_orders[i].order_ID),
                                 &tmp);

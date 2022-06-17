@@ -48,7 +48,7 @@ int main() {
     } else if (strcmp(opt, "find") == 0) {
       scanf("%s", index);
       key.SetValue(index, -2147483648);
-      vector<int> result;
+      std::vector<int> result;
       index_tree->ScanKey(key, &result, standby_comparator);
       if (result.empty()) {
         puts("null");
