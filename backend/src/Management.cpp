@@ -126,15 +126,13 @@ void OUTPUT(TrainManagement &all, const string &train_ID) { //用来调试
 AccountManagement::AccountManagement() {
   //    user_data.initialise("user_data");
   //    username_to_pos.init("username_to_pos");
-  user_database =
-      new BPlusTreeIndexPool<String<24>, User, StringComparator<24>>(
-          "user_database", cmp1);
+  user_database = new BPlusTreeIndexNTS<String<24>, User, StringComparator<24>>(
+      "user_database", cmp1);
 }
 
 AccountManagement::AccountManagement(const string &file_name) {
-  user_database =
-      new BPlusTreeIndexPool<String<24>, User, StringComparator<24>>(file_name,
-                                                                     cmp1);
+  user_database = new BPlusTreeIndexNTS<String<24>, User, StringComparator<24>>(
+      file_name, cmp1);
 }
 
 string AccountManagement::add_user(Command &line) {
@@ -158,13 +156,12 @@ string AccountManagement::add_user(Command &line) {
     opt = line.next_token();
   }
 
-  auto *copy_username = new String<24>(username);
-  std::vector<User> ans = user_database->SearchKey(copy_username).get();
+  std::vector<User> ans;
+  user_database->SearchKey(String<24>(username), &ans);
 
-  if (user_database->TimeStamp() == 0) { //首次添加用户
-    auto *copy_u = new User(username, name, mail, password, 10);
-    auto *copy_username = new String<24>(username);
-    user_database->InsertEntry(copy_username, copy_u);
+  if (user_database->IsEmpty()) { //首次添加用户
+    User u(username, name, mail, password, 10);
+    user_database->InsertEntry(String<24>(username), u);
     return "0";
   } else {
     //操作失败：未登录/权限不足/用户名已存在
@@ -172,9 +169,8 @@ string AccountManagement::add_user(Command &line) {
         !ans.empty()) {
       return "-1";
     } else {
-      auto *copy_u = new User(username, name, mail, password, privilege);
-      auto *copy_username = new String<24>(username);
-      user_database->InsertEntry(copy_username, copy_u);
+      User u(username, name, mail, password, privilege);
+      user_database->InsertEntry(String<24>(username), u);
       return "0";
     }
   }
@@ -192,8 +188,7 @@ string AccountManagement::login(Command &line) {
   }
 
   std::vector<User> ans;
-  auto *copy_username = new String<24>(username);
-  ans = user_database->SearchKey(copy_username).get();
+  user_database->SearchKey(String<24>(username), &ans);
   //用户不存在/用户已登录
   if (ans.empty() || login_pool.count(username))
     return "-1";
@@ -236,8 +231,8 @@ string AccountManagement::modify_profile(Command &line) {
     opt = line.next_token();
   }
 
-  auto *copy_username = new String<24>(username);
-  std::vector<User> ans = user_database->SearchKey(copy_username).get();
+  std::vector<User> ans;
+  user_database->SearchKey(String<24>(username), &ans);
   if (ans.empty())
     return "-1"; // user不存在
 
@@ -258,9 +253,7 @@ string AccountManagement::modify_profile(Command &line) {
     u.privilege = privilege;
 
   //    user_data.update(u, ans[0]);
-  copy_username = new String<24>(username);
-  auto *copy_u = new User(u);
-  user_database->InsertEntry(copy_username, copy_u);
+  user_database->InsertEntry(String<24>(username), u);
 
   return (string)u.user_name + " " + (string)u.name + " " +
          (string)u.mail_addr + " " + to_string(u.privilege);
@@ -277,8 +270,8 @@ string AccountManagement::query_profile(Command &line) {
     opt = line.next_token();
   }
 
-  auto *copy_username = new String<24>(username);
-  std::vector<User> ans = user_database->SearchKey(copy_username).get();
+  std::vector<User> ans;
+  user_database->SearchKey(String<24>(username), &ans);
   if (ans.empty())
     return "-1"; // u不存在
   User u = ans[0];
@@ -300,23 +293,22 @@ TrainManagement::TrainManagement() : cmp2(2), cmp3(3), cmp4(3), cmp5(2) {
   //先指定 cmp 的类型
 
   train_database =
-      new BPlusTreeIndexPool<String<24>, Train, StringComparator<24>>(
+      new BPlusTreeIndexNTS<String<24>, Train, StringComparator<24>>(
           "train_database", cmp1);
-  station_database = new BPlusTreeIndexPool<DualString<32, 24>, Station,
-                                            DualStringComparator<32, 24>>(
+  station_database = new BPlusTreeIndexNTS<DualString<32, 24>, Station,
+                                           DualStringComparator<32, 24>>(
       "station_database", cmp2);
-  daytrain_database = new BPlusTreeIndexPool<StringAny<24, int>, DayTrain,
-                                             StringAnyComparator<24, int>>(
+  daytrain_database = new BPlusTreeIndexNTS<StringAny<24, int>, DayTrain,
+                                            StringAnyComparator<24, int>>(
       "daytrain_database", cmp3);
-  order_database = new BPlusTreeIndexPool<StringAny<24, int>, Order,
-                                          StringAnyComparator<24, int>>(
+  order_database = new BPlusTreeIndexNTS<StringAny<24, int>, Order,
+                                         StringAnyComparator<24, int>>(
       "order_database", cmp4);
-  pending_order_database =
-      new BPlusTreeIndexPool<StringIntInt<24>, PendingOrder,
-                             StringIntIntComparator<24>>(
-          "pending_order_database", cmp5);
+  pending_order_database = new BPlusTreeIndexNTS<StringIntInt<24>, PendingOrder,
+                                                 StringIntIntComparator<24>>(
+      "pending_order_database", cmp5);
 
-  order_num = order_database->TimeStamp();
+  order_num = order_database->Size();
 }
 
 TrainManagement::~TrainManagement() {
@@ -357,16 +349,14 @@ string TrainManagement::add_train(Command &line) {
     opt = line.next_token();
   }
 
-  auto *copy_train_id = new String<24>(train_id);
-  std::vector<Train> ans = train_database->SearchKey(copy_train_id).get();
+  std::vector<Train> ans;
+  train_database->SearchKey(String<24>(train_id), &ans);
   if (!ans.empty())
     return "-1"; // train_ID 已存在，添加失败
 
-  Train *copy_new_train =
-      new Train(train_id, station_num, seat_num, stations, prices, start_time,
-                travel_times, stop_over_times, sale_date, type);
-  copy_train_id = new String<24>(train_id);
-  train_database->InsertEntry(copy_train_id, copy_new_train);
+  Train new_train(train_id, station_num, seat_num, stations, prices, start_time,
+                  travel_times, stop_over_times, sale_date, type);
+  train_database->InsertEntry(String<24>(train_id), new_train);
   return "0";
 }
 
@@ -374,39 +364,37 @@ string TrainManagement::release_train(Command &line) {
   line.next_token(); //过滤-i
   string t_id = line.next_token();
 
-  auto *copy_t_id = new String<24>(t_id);
-  std::vector<Train> ans = train_database->SearchKey(copy_t_id).get();
+  std::vector<Train> ans;
+  train_database->SearchKey(String<24>(t_id), &ans);
   if (ans.empty())
     return "-1"; //车次不存在，失败
-  Train *copy_target_train = new Train(ans[0]);
-  if (copy_target_train->is_released)
+  Train target_train = ans[0];
+  if (target_train.is_released)
     return "-1"; //重复发布，失败
-  copy_target_train->is_released = true;
-  copy_t_id = new String<24>(t_id);
-  train_database->InsertEntry(copy_t_id, copy_target_train);
-  auto &target_train = ans[0];
+  target_train.is_released = true;
+  train_database->InsertEntry(String<24>(t_id), target_train);
 
   //维护 每天的车次座位数
   for (auto i = target_train.start_sale_date; i <= target_train.end_sale_date;
        i += 1440) {
-    DayTrain *copy_tp_daytrain = new DayTrain; // todo: 可能要开在外面，不然会炸
+    DayTrain tp_daytrain; // todo: 可能要开在外面，不然会炸
     for (int j = 1; j <= target_train.station_num; ++j)
-      copy_tp_daytrain->seat_num[j] = target_train.total_seat_num;
+      tp_daytrain.seat_num[j] = target_train.total_seat_num;
 
     //目前直接用 train_id + time 替代
-    auto *copy_key = new StringAny<24, int>(t_id, i.get_value());
-    daytrain_database->InsertEntry(copy_key, copy_tp_daytrain);
+    daytrain_database->InsertEntry(StringAny<24, int>(t_id, i.get_value()),
+                                   tp_daytrain);
   }
 
   //维护 沿途的每个车站
   for (int i = 1; i <= target_train.station_num; ++i) {
-    Station *copy_tp_station = new Station(
+    Station tp_station(
         t_id, target_train.stations[i], target_train.price_sum[i],
         target_train.start_sale_date, target_train.end_sale_date,
         target_train.arriving_times[i], target_train.leaving_times[i], i);
     //同理，目前直接用 train_id + station_name 替代
-    auto *copy_key = new DualString<32, 24>(target_train.stations[i], t_id);
-    station_database->InsertEntry(copy_key, copy_tp_station);
+    station_database->InsertEntry(
+        DualString<32, 24>(target_train.stations[i], t_id), tp_station);
   }
 
   return "0";
@@ -425,9 +413,9 @@ string TrainManagement::query_train(Command &line) {
   if (!is_legal(date + " 00:00"))
     return "-1"; //查询，要判断读入的日期是否合法
 
+  std::vector<Train> ans;
   TimeType day(date + " 00:00");
-  auto *copy_key = new String<24>(t_id);
-  std::vector<Train> ans = train_database->SearchKey(copy_key).get();
+  train_database->SearchKey(String<24>(t_id), &ans);
   if (ans.empty())
     return "-1"; //没有车
   Train target_train = ans[0];
@@ -436,8 +424,9 @@ string TrainManagement::query_train(Command &line) {
   if (day < target_train.start_sale_date || day > target_train.end_sale_date)
     return "-1";
 
-  auto *new_copy_key = new StringAny<24, int>(t_id, day.get_value());
-  std::vector<DayTrain> ans2 = daytrain_database->SearchKey(new_copy_key).get();
+  std::vector<DayTrain> ans2;
+  daytrain_database->SearchKey(StringAny<24, int>(t_id, day.get_value()),
+                               &ans2);
 
   //第一行
   output = t_id + " " + target_train.type + "\n";
@@ -487,8 +476,8 @@ string TrainManagement::query_train(Command &line) {
 string TrainManagement::delete_train(Command &line) {
   line.next_token();
   string t_id = line.next_token();
-  auto *copy_key = new String<24>(t_id);
-  std::vector<Train> ans = train_database->SearchKey(copy_key).get();
+  std::vector<Train> ans;
+  train_database->SearchKey(String<24>(t_id), &ans);
   if (ans.empty())
     return "-1"; //不存在，不能删
 
@@ -496,8 +485,7 @@ string TrainManagement::delete_train(Command &line) {
   if (target_train.is_released)
     return "-1"; //已发布，不能删
 
-  copy_key = new String<24>(t_id);
-  train_database->DeleteEntry(copy_key);
+  train_database->DeleteEntry(String<24>(t_id));
   return "0";
 }
 
@@ -525,10 +513,8 @@ string TrainManagement::query_ticket(Command &line) {
 
   DualStringComparator<32, 24> tp_cmp(1);
   // todo:区间查找，查找所有 站点为 s 和 t 的 station 车站
-  auto *copy_s = new DualString<32, 24>(s, "");
-  auto *copy_t = new DualString<32, 24>(t, "");
-  ans1 = station_database->ScanKey(copy_s, tp_cmp).get();
-  ans2 = station_database->ScanKey(copy_t, tp_cmp).get();
+  station_database->ScanKey(DualString<32, 24>(s, ""), &ans1, tp_cmp);
+  station_database->ScanKey(DualString<32, 24>(t, ""), &ans2, tp_cmp);
 
   if (ans1.empty() || ans2.empty())
     return "0"; //无票
@@ -570,9 +556,9 @@ string TrainManagement::query_ticket(Command &line) {
   string output = to_string(cnt);
   for (int i = 0; i <= cnt - 1; ++i) {
     TimeType start_day = day - tickets[i].s.leaving_time.get_date();
-    auto *copy_key =
-        new StringAny<24, int>(tickets[i].s.train_ID, start_day.get_value());
-    std::vector<DayTrain> all = daytrain_database->SearchKey(copy_key).get();
+    std::vector<DayTrain> all;
+    daytrain_database->SearchKey(
+        StringAny<24, int>(tickets[i].s.train_ID, start_day.get_value()), &all);
     DayTrain tp_daytrain = all[0];
 
     string seat = to_string(tp_daytrain.query_seat(
@@ -615,10 +601,8 @@ string TrainManagement::query_transfer(Command &line) {
   DualStringComparator<32, 24> tp_cmp(1);
   // todo:区间查找，查找所有 站点为 s 和 t 的 station 车站
   std::vector<Station> ans1, ans2;
-  auto *copy_s = new DualString<32, 24>(s, "");
-  auto *copy_t = new DualString<32, 24>(t, "");
-  ans1 = station_database->ScanKey(copy_s, tp_cmp).get();
-  ans2 = station_database->ScanKey(copy_t, tp_cmp).get();
+  station_database->ScanKey(DualString<32, 24>(s, ""), &ans1, tp_cmp);
+  station_database->ScanKey(DualString<32, 24>(t, ""), &ans2, tp_cmp);
 
   if (ans1.empty() || ans2.empty())
     return "0"; //无票
@@ -631,9 +615,8 @@ string TrainManagement::query_transfer(Command &line) {
     if (start_day1 < s1.start_sale_time || start_day1 > s1.end_sale_time)
       continue; //买不到票
 
-    auto *copy_key = new String<24>(s1.train_ID);
-    std::vector<Train> all = train_database->SearchKey(copy_key).get();
-    // TODO: why do not judge whether it's empty?
+    std::vector<Train> all;
+    train_database->SearchKey(String<24>(s1.train_ID), &all);
     Train train1 = all[0];
 
     for (int j = 0; j < ans2.size(); ++j) { //枚举经过终点t1的不同车次
@@ -641,8 +624,8 @@ string TrainManagement::query_transfer(Command &line) {
       if (!strcmp(s1.train_ID, t1.train_ID))
         continue; //换乘要求不同车次
 
-      auto *copy_key = new String<24>(t1.train_ID);
-      std::vector<Train> pos2 = train_database->SearchKey(copy_key).get();
+      std::vector<Train> pos2;
+      train_database->SearchKey(String<24>(t1.train_ID), &pos2);
       Train train2 = pos2[0]; //到达的车次
 
       //把可能途径的车站全部读取出来，方便查询
@@ -735,13 +718,13 @@ string TrainManagement::query_transfer(Command &line) {
           }
           if (updated) { //如果更新答案，就保存结果
             output.clear();
-            auto *copy_key1 =
-                new StringAny<24, int>(train1.train_ID, start_day1.get_value());
-            auto *copy_key2 =
-                new StringAny<24, int>(train2.train_ID, start_day2.get_value());
             std::vector<DayTrain> f1, f2;
-            f1 = daytrain_database->SearchKey(copy_key1).get();
-            f2 = daytrain_database->SearchKey(copy_key2).get();
+            daytrain_database->SearchKey(
+                StringAny<24, int>(train1.train_ID, start_day1.get_value()),
+                &f1);
+            daytrain_database->SearchKey(
+                StringAny<24, int>(train2.train_ID, start_day2.get_value()),
+                &f2);
             DayTrain S = f1[0], T = f2[0]; //读出当前的座位
 
             output += string(s1.train_ID) + " " + string(s1.station_name) +
@@ -793,8 +776,8 @@ string TrainManagement::buy_ticket(Command &line, AccountManagement &accounts) {
   if (!accounts.login_pool.count(user_name))
     return "-1"; //用户未登录
 
-  auto *copy_key = new String<24>(train_ID);
-  std::vector<Train> ans = train_database->SearchKey(copy_key).get();
+  std::vector<Train> ans;
+  train_database->SearchKey(String<24>(train_ID), &ans);
   if (ans.empty())
     return "-1"; //车次不存在
   Train target_train = ans[0];
@@ -821,12 +804,12 @@ string TrainManagement::buy_ticket(Command &line, AccountManagement &accounts) {
       start_day > target_train.end_sale_date)
     return "-1"; //不在售票日期
 
-  auto *new_copy_key = new StringAny<24, int>(train_ID, start_day.get_value());
-  std::vector<DayTrain> ans2 = daytrain_database->SearchKey(new_copy_key).get();
-  // TODO: should here be judged too?
-  DayTrain *tp = new DayTrain(ans2[0]);
+  std::vector<DayTrain> ans2;
+  daytrain_database->SearchKey(
+      StringAny<24, int>(train_ID, start_day.get_value()), &ans2);
+  DayTrain tp = ans2[0];
 
-  int remain_seat = tp->query_seat(s, t - 1);
+  int remain_seat = tp.query_seat(s, t - 1);
   if (!is_pending && remain_seat < num)
     return "-1"; //不补票且座位不够
 
@@ -837,30 +820,30 @@ string TrainManagement::buy_ticket(Command &line, AccountManagement &accounts) {
   order_num++; //不能用 get_info
   int order_ID = order_num;
 
-  Order *copy_new_order =
-      new Order(user_name, train_ID, num, price, order_ID, start_day,
-                target_train.leaving_times[s], target_train.arriving_times[t],
-                Status(success), s, t, target_train.stations[s],
-                target_train.stations[t]);
+  Order new_order(user_name, train_ID, num, price, order_ID, start_day,
+                  target_train.leaving_times[s], target_train.arriving_times[t],
+                  Status(success), s, t, target_train.stations[s],
+                  target_train.stations[t]);
   //    strcpy(new_order.id, (user_name + to_string(order_ID)).c_str());
 
   if (remain_seat >= num) { //座位足够
-    tp->modify_seat(s, t - 1, -num);
-    auto *copy_key = new StringAny<24, int>(train_ID, start_day.get_value());
-    daytrain_database->InsertEntry(copy_key, tp);
-    auto *new_copy_key = new StringAny<24, int>(user_name, order_ID);
-    order_database->InsertEntry(new_copy_key, copy_new_order);
+    tp.modify_seat(s, t - 1, -num);
+    daytrain_database->InsertEntry(
+        StringAny<24, int>(train_ID, start_day.get_value()), tp);
+    order_database->InsertEntry(StringAny<24, int>(user_name, order_ID),
+                                new_order);
     long long total = num * price;
     return to_string(total);
   } else { //要候补
-    copy_new_order->status = pending;
-    PendingOrder *copy_pending_order =
-        new PendingOrder(train_ID, user_name, start_day, num, s, t, order_ID);
-    auto *copy_key = new StringAny<24, int>(user_name, order_ID);
-    order_database->InsertEntry(copy_key, copy_new_order);
-    auto *copy_new_key =
-        new StringIntInt<24>(train_ID, start_day.get_value(), order_ID);
-    pending_order_database->InsertEntry(copy_new_key, copy_pending_order);
+    new_order.status = pending;
+    PendingOrder pending_order(train_ID, user_name, start_day, num, s, t,
+                               order_ID);
+
+    order_database->InsertEntry(StringAny<24, int>(user_name, order_ID),
+                                new_order);
+    pending_order_database->InsertEntry(
+        StringIntInt<24>(train_ID, start_day.get_value(), order_ID),
+        pending_order);
 
     //        cout << "queue" << endl;
     //        OUTPUT(*this, target_train.train_ID);
@@ -878,11 +861,10 @@ string TrainManagement::query_order(Command &line,
   int cnt = 0;
 
   // todo : 修改为区间查找，查找所有关键字包含 user_name 的 order
-  auto *copy_key = new StringAny<24, int>(user_name, 0);
+  std::vector<Order> orders;
   StringAnyComparator<24, int> tp_cmp(1);
-  std::vector<Order> orders = order_database->ScanKey(copy_key, tp_cmp).get();
   // todo: 分析真正的含义，只考虑user_name
-
+  order_database->ScanKey(StringAny<24, int>(user_name, 0), &orders, tp_cmp);
   if (orders.empty())
     return "0"; //没有订单
 
@@ -929,10 +911,10 @@ string TrainManagement::refund_ticket(Command &line,
 
   // todo: 区间查询
   int cnt = 0;
+  std::vector<Order> orders;
   StringAnyComparator<24, int> tp_cmp(1);
-  auto *copy_key = new StringAny<24, int>(user_name, 0);
   // todo: 分析真正的含义，只考虑user_name
-  std::vector<Order> orders = order_database->ScanKey(copy_key, tp_cmp).get();
+  order_database->ScanKey(StringAny<24, int>(user_name, 0), &orders, tp_cmp);
   if (orders.empty())
     return "0"; //没有订单
   cnt = orders.size();
@@ -948,18 +930,16 @@ string TrainManagement::refund_ticket(Command &line,
 
   Order refund_order = orders[x]; //临时存储
   orders[x].status = refunded;
-  Order *copy_order = new Order(orders[x]);
-  auto *new_copy_key = new StringAny<24, int>(user_name, orders[x].order_ID);
-  order_database->InsertEntry(new_copy_key, copy_order);
+  order_database->InsertEntry(StringAny<24, int>(user_name, orders[x].order_ID),
+                              orders[x]);
 
   if (refund_order.status == pending) { //候补的票要修改 pending_database
     //            string key = string(refund_order.train_ID) +
     //            refund_order.start_day.transfer()
     //                         + to_string(refund_order.order_ID);
-    auto *copy_key = new StringIntInt<24>(refund_order.train_ID,
-                                          refund_order.start_day.get_value(),
-                                          refund_order.order_ID);
-    pending_order_database->DeleteEntry(copy_key);
+    pending_order_database->DeleteEntry(StringIntInt<24>(
+        refund_order.train_ID, refund_order.start_day.get_value(),
+        refund_order.order_ID));
 
     //        cout << "0" << endl;
     //        OUTPUT(*this, refund_order.train_ID);
@@ -969,10 +949,11 @@ string TrainManagement::refund_ticket(Command &line,
   //如果原来的订单success，要修改座位，增加
   //        string key = string(refund_order.train_ID) +
   //        refund_order.start_day.transfer();
-  auto *new_new_copy_key = new StringAny<24, int>(
-      refund_order.train_ID, refund_order.start_day.get_value());
-  std::vector<DayTrain> ans =
-      daytrain_database->SearchKey(new_new_copy_key).get();
+  std::vector<DayTrain> ans;
+  daytrain_database->SearchKey(
+      StringAny<24, int>(refund_order.train_ID,
+                         refund_order.start_day.get_value()),
+      &ans);
   DayTrain tp_daytrain = ans[0];
   tp_daytrain.modify_seat(refund_order.from, refund_order.to - 1,
                           refund_order.num);
@@ -980,12 +961,13 @@ string TrainManagement::refund_ticket(Command &line,
   //退票后有空缺，判断候补的订单现在是否能买
   int CNT = 0;
   // todo: 同样是区间查找
-  auto *new_new_new_copy_key = new StringIntInt<24>(
-      refund_order.train_ID, refund_order.start_day.get_value(),
-      refund_order.order_ID);
+  std::vector<PendingOrder> pending_orders;
   StringIntIntComparator<24> tp_cmp2(1);
-  std::vector<PendingOrder> pending_orders =
-      pending_order_database->ScanKey(new_new_new_copy_key, tp_cmp2).get();
+  pending_order_database->ScanKey(
+      StringIntInt<24>(refund_order.train_ID,
+                       refund_order.start_day.get_value(),
+                       refund_order.order_ID),
+      &pending_orders, tp_cmp2);
   CNT = pending_orders.size();
 
   // todo: 同理的排序修改，但是是从小到大，因为早买票就早补票
@@ -1003,29 +985,30 @@ string TrainManagement::refund_ticket(Command &line,
       tp_daytrain.modify_seat(pending_orders[i].from, pending_orders[i].to - 1,
                               -pending_orders[i].num);
       //相应地删除pending_database
-      auto *copy_key = new StringIntInt<24>(
+      pending_order_database->DeleteEntry(StringIntInt<24>(
           pending_orders[i].train_ID, pending_orders[i].start_day.get_value(),
-          pending_orders[i].order_ID);
-      pending_order_database->DeleteEntry(copy_key);
+          pending_orders[i].order_ID));
 
       //修改 order 中的状态
       //                key = string(pending_orders[i].user_name) +
       //                to_string(pending_orders[i].order_ID);
-      auto *new_copy_key = new StringAny<24, int>(pending_orders[i].user_name,
-                                                  pending_orders[i].order_ID);
-      std::vector<Order> tmp = order_database->SearchKey(new_copy_key).get();
-      Order *success_order = new Order(tmp[0]);
-      success_order->status = success;
-      auto *new_new_copy_key = new StringAny<24, int>(
-          pending_orders[i].user_name, pending_orders[i].order_ID);
-      order_database->InsertEntry(new_new_copy_key, success_order);
+      std::vector<Order> tmp;
+      order_database->SearchKey(StringAny<24, int>(pending_orders[i].user_name,
+                                                   pending_orders[i].order_ID),
+                                &tmp);
+      Order success_order = tmp[0];
+      success_order.status = success;
+      order_database->InsertEntry(
+          StringAny<24, int>(pending_orders[i].user_name,
+                             pending_orders[i].order_ID),
+          success_order);
     }
   }
   //把新补票后减少的座位，写入文件中
-  auto *n_copy_key = new StringAny<24, int>(refund_order.train_ID,
-                                            refund_order.start_day.get_value());
-  auto *copy_tp = new DayTrain(tp_daytrain);
-  daytrain_database->InsertEntry(n_copy_key, copy_tp);
+  daytrain_database->InsertEntry(
+      StringAny<24, int>(refund_order.train_ID,
+                         refund_order.start_day.get_value()),
+      tp_daytrain);
 
   //    cout << "0" << endl;
   //    OUTPUT(*this, refund_order.train_ID);
@@ -1058,7 +1041,6 @@ string TrainManagement::exit(AccountManagement &accounts) {
   //其实可以省略，因为在内存中的变量会自动清除？
 
   printf("bye\n");
-
   std::exit(0); //可以有 \n 因为直接结束程序
 }
 } // namespace thomas
