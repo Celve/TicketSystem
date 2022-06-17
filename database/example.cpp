@@ -58,10 +58,10 @@ int main() {
         }
         puts("");
       }
-    } else if (strcmp(opt, "clear") == 0) {
-      index_tree->Clear();
-    } else if (strcmp(opt, "size") == 0) {
-      printf("%d\n", index_tree->Size());
+      // } else if (strcmp(opt, "clear") == 0) {
+      // index_tree->Clear();
+      // } else if (strcmp(opt, "size") == 0) {
+      // printf("%d\n", index_tree->Size());
     }
 
     /* a debug function is provided */

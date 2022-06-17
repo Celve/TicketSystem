@@ -3,6 +3,7 @@
 //
 
 #include "Management.h"
+#include "future/future.hpp"
 
 namespace thomas {
 
@@ -135,7 +136,7 @@ AccountManagement::AccountManagement(const string &file_name) {
       file_name, cmp1);
 }
 
-string AccountManagement::add_user(Command &line) {
+RETURN_TYPE AccountManagement::add_user(Command &line) {
   //    line.set_delimiter(' ');
   string opt = line.next_token(), cur, username, password, name, mail;
   int privilege;
@@ -162,21 +163,21 @@ string AccountManagement::add_user(Command &line) {
   if (user_database->IsEmpty()) { //首次添加用户
     User u(username, name, mail, password, 10);
     user_database->InsertEntry(String<24>(username), u);
-    return "0";
+    return MakeFuture(std::string("0"));
   } else {
     //操作失败：未登录/权限不足/用户名已存在
     if (!login_pool.count(cur) || login_pool.at(cur) <= privilege ||
         !ans.empty()) {
-      return "-1";
+      return MakeFuture(std::string("-1"));
     } else {
       User u(username, name, mail, password, privilege);
       user_database->InsertEntry(String<24>(username), u);
-      return "0";
+      return MakeFuture(std::string("0"));
     }
   }
 }
 
-string AccountManagement::login(Command &line) {
+RETURN_TYPE AccountManagement::login(Command &line) {
   string opt = line.next_token(), username, password;
   while (!opt.empty()) {
     if (opt == "-u")
@@ -191,27 +192,28 @@ string AccountManagement::login(Command &line) {
   user_database->SearchKey(String<24>(username), &ans);
   //用户不存在/用户已登录
   if (ans.empty() || login_pool.count(username))
-    return "-1";
+    return MakeFuture(std::string("-1"));
 
   if (strcmp(ans[0].password, password.c_str()))
-    return "-1"; //密码错误
+    return MakeFuture(std::string("-1"));
+  ; //密码错误
 
   login_pool.insert(sjtu::pair<string, int>(username, ans[0].privilege));
-  return "0";
+  return MakeFuture(std::string("0"));
 }
 
-string AccountManagement::logout(Command &line) {
+RETURN_TYPE AccountManagement::logout(Command &line) {
   string opt = line.next_token(), username = line.next_token();
 
   //用户未登录
   if (!login_pool.count(username))
-    return "-1";
+    return MakeFuture(std::string("-1"));
 
   login_pool.erase(login_pool.find(username));
-  return "0";
+  return MakeFuture(std::string("0"));
 }
 
-string AccountManagement::modify_profile(Command &line) {
+RETURN_TYPE AccountManagement::modify_profile(Command &line) {
   string opt = line.next_token(), cur, username, password, name, mail;
   int privilege = 0; //记得赋初值！
   while (!opt.empty()) {
@@ -234,14 +236,14 @@ string AccountManagement::modify_profile(Command &line) {
   std::vector<User> ans;
   user_database->SearchKey(String<24>(username), &ans);
   if (ans.empty())
-    return "-1"; // user不存在
+    return MakeFuture(std::string("-1")); // user不存在
 
   User u = ans[0];
   // cur未登录/cur权限<=u的权限 且 cur != u
   if (!login_pool.count(cur) ||
       (login_pool.at(cur) <= u.privilege) && (cur != username) ||
       privilege >= login_pool.at(cur))
-    return "-1";
+    return MakeFuture(std::string("-1"));
 
   if (!password.empty())
     strcpy(u.password, password.c_str());
@@ -255,11 +257,11 @@ string AccountManagement::modify_profile(Command &line) {
   //    user_data.update(u, ans[0]);
   user_database->InsertEntry(String<24>(username), u);
 
-  return (string)u.user_name + " " + (string)u.name + " " +
-         (string)u.mail_addr + " " + to_string(u.privilege);
+  return MakeFuture((string)u.user_name + " " + (string)u.name + " " +
+                    (string)u.mail_addr + " " + to_string(u.privilege));
 }
 
-string AccountManagement::query_profile(Command &line) {
+RETURN_TYPE AccountManagement::query_profile(Command &line) {
   string opt = line.next_token(), cur, username, password, name, mail;
   while (!opt.empty()) {
     if (opt == "-c")
@@ -273,16 +275,16 @@ string AccountManagement::query_profile(Command &line) {
   std::vector<User> ans;
   user_database->SearchKey(String<24>(username), &ans);
   if (ans.empty())
-    return "-1"; // u不存在
+    return MakeFuture(std::string("-1")); // u不存在
   User u = ans[0];
 
   // cur未登录/cur权限<=u的权限 且 cur != u
   if (!login_pool.count(cur) ||
       (login_pool.at(cur) <= u.privilege) && (cur != username))
-    return "-1";
+    return MakeFuture(std::string("-1"));
 
-  return (string)u.user_name + " " + (string)u.name + " " +
-         (string)u.mail_addr + " " + to_string(u.privilege);
+  return MakeFuture((string)u.user_name + " " + (string)u.name + " " +
+                    (string)u.mail_addr + " " + to_string(u.privilege));
 }
 
 AccountManagement::~AccountManagement() { delete user_database; }
@@ -319,7 +321,7 @@ TrainManagement::~TrainManagement() {
   delete pending_order_database;
 }
 
-string TrainManagement::add_train(Command &line) {
+RETURN_TYPE TrainManagement::add_train(Command &line) {
   string opt = line.next_token(), train_id, stations, prices, type;
   string start_time, travel_times, stop_over_times, sale_date;
   int seat_num = 0, station_num = 0;
@@ -352,25 +354,25 @@ string TrainManagement::add_train(Command &line) {
   std::vector<Train> ans;
   train_database->SearchKey(String<24>(train_id), &ans);
   if (!ans.empty())
-    return "-1"; // train_ID 已存在，添加失败
+    return MakeFuture(std::string("-1")); // train_ID 已存在，添加失败
 
   Train new_train(train_id, station_num, seat_num, stations, prices, start_time,
                   travel_times, stop_over_times, sale_date, type);
   train_database->InsertEntry(String<24>(train_id), new_train);
-  return "0";
+  return MakeFuture(std::string("0"));
 }
 
-string TrainManagement::release_train(Command &line) {
+RETURN_TYPE TrainManagement::release_train(Command &line) {
   line.next_token(); //过滤-i
   string t_id = line.next_token();
 
   std::vector<Train> ans;
   train_database->SearchKey(String<24>(t_id), &ans);
   if (ans.empty())
-    return "-1"; //车次不存在，失败
+    return MakeFuture(std::string("-1")); //车次不存在，失败
   Train target_train = ans[0];
   if (target_train.is_released)
-    return "-1"; //重复发布，失败
+    return MakeFuture(std::string("-1")); //重复发布，失败
   target_train.is_released = true;
   train_database->InsertEntry(String<24>(t_id), target_train);
 
@@ -397,10 +399,10 @@ string TrainManagement::release_train(Command &line) {
         DualString<32, 24>(target_train.stations[i], t_id), tp_station);
   }
 
-  return "0";
+  return MakeFuture(std::string("0"));
 }
 
-string TrainManagement::query_train(Command &line) {
+RETURN_TYPE TrainManagement::query_train(Command &line) {
   string opt = line.next_token(), t_id, date, output;
   while (!opt.empty()) {
     if (opt == "-i")
@@ -411,18 +413,18 @@ string TrainManagement::query_train(Command &line) {
     opt = line.next_token();
   }
   if (!is_legal(date + " 00:00"))
-    return "-1"; //查询，要判断读入的日期是否合法
+    return MakeFuture(std::string("-1")); //查询，要判断读入的日期是否合法
 
   std::vector<Train> ans;
   TimeType day(date + " 00:00");
   train_database->SearchKey(String<24>(t_id), &ans);
   if (ans.empty())
-    return "-1"; //没有车
+    return MakeFuture(std::string("-1")); //没有车
   Train target_train = ans[0];
 
   //不在售票日期内，不存在
   if (day < target_train.start_sale_date || day > target_train.end_sale_date)
-    return "-1";
+    return MakeFuture(std::string("-1"));
 
   std::vector<DayTrain> ans2;
   daytrain_database->SearchKey(StringAny<24, int>(t_id, day.get_value()),
@@ -470,26 +472,26 @@ string TrainManagement::query_train(Command &line) {
               to_string(target_train.price_sum[target_train.station_num]) +
               " x";
   }
-  return output;
+  return MakeFuture(std::move(output));
 }
 
-string TrainManagement::delete_train(Command &line) {
+RETURN_TYPE TrainManagement::delete_train(Command &line) {
   line.next_token();
   string t_id = line.next_token();
   std::vector<Train> ans;
   train_database->SearchKey(String<24>(t_id), &ans);
   if (ans.empty())
-    return "-1"; //不存在，不能删
+    return MakeFuture(std::string("-1")); //不存在，不能删
 
   Train target_train = ans[0];
   if (target_train.is_released)
-    return "-1"; //已发布，不能删
+    return MakeFuture(std::string("-1")); //已发布，不能删
 
   train_database->DeleteEntry(String<24>(t_id));
-  return "0";
+  return MakeFuture(std::string("0"));
 }
 
-string TrainManagement::query_ticket(Command &line) {
+RETURN_TYPE TrainManagement::query_ticket(Command &line) {
   string opt = line.next_token(), s, t, date, type = "time"; //默认按时间排序
   while (!opt.empty()) {
     if (opt == "-s")
@@ -504,10 +506,10 @@ string TrainManagement::query_ticket(Command &line) {
     opt = line.next_token();
   }
   if (!is_legal(date + " 00:00"))
-    return "0"; //查询，要判断读入的日期是否合法
+    return MakeFuture(std::string("0")); //查询，要判断读入的日期是否合法
 
   if (s == t)
-    return "0"; //起点等于终点，显然无票
+    return MakeFuture(std::string("0")); //起点等于终点，显然无票
   TimeType day(date + " 00:00");
   std::vector<Station> ans1, ans2;
 
@@ -517,7 +519,7 @@ string TrainManagement::query_ticket(Command &line) {
   station_database->ScanKey(DualString<32, 24>(t, ""), &ans2, tp_cmp);
 
   if (ans1.empty() || ans2.empty())
-    return "0"; //无票
+    return MakeFuture(std::string("0")); //无票
   int cnt = 0;
   Station s1, t1; //起点和终点
 
@@ -546,7 +548,7 @@ string TrainManagement::query_ticket(Command &line) {
   }
   cnt = tickets.size();
   if (!cnt)
-    return "0"; //无符合条件的车票
+    return MakeFuture(std::string("0")); //无符合条件的车票
 
   if (type == "time")
     Sort(tickets, 0, cnt - 1, time_cmp);
@@ -572,10 +574,10 @@ string TrainManagement::query_ticket(Command &line) {
               to_string(tickets[i].cost()) + " " + seat;
   }
 
-  return output;
+  return MakeFuture(std::move(output));
 }
 
-string TrainManagement::query_transfer(Command &line) {
+RETURN_TYPE TrainManagement::query_transfer(Command &line) {
   string opt = line.next_token(), s, t, date, type = "time",
          output; //默认按时间排序
   while (!opt.empty()) {
@@ -591,9 +593,9 @@ string TrainManagement::query_transfer(Command &line) {
     opt = line.next_token();
   }
   if (!is_legal(date + " 00:00"))
-    return "0"; //查询，要判断读入的日期是否合法
+    return MakeFuture(std::string("0")); //查询，要判断读入的日期是否合法
   if (s == t)
-    return "0"; //起点和终点相同
+    return MakeFuture(std::string("0")); //起点和终点相同
   TimeType day(date + " 00:00");
   int COST = MAX_INT, TIME = MAX_INT, FIRST_TIME = MAX_INT; //用来比较答案
   //总花费，总时间，第一段列车的运行时间（越小表示 Train1_ID 也越小）
@@ -605,7 +607,7 @@ string TrainManagement::query_transfer(Command &line) {
   station_database->ScanKey(DualString<32, 24>(t, ""), &ans2, tp_cmp);
 
   if (ans1.empty() || ans2.empty())
-    return "0"; //无票
+    return MakeFuture(std::string("0")); //无票
   int cnt = 0;
   Station s1, t1; //起点，终点
 
@@ -745,11 +747,12 @@ string TrainManagement::query_transfer(Command &line) {
     }
   }
   if (FIRST_TIME != MAX_INT)
-    return output;
-  return "0";
+    return MakeFuture(std::move(output));
+  return MakeFuture(std::string("0"));
 }
 
-string TrainManagement::buy_ticket(Command &line, AccountManagement &accounts) {
+RETURN_TYPE TrainManagement::buy_ticket(Command &line,
+                                        AccountManagement &accounts) {
   string opt = line.next_token(), user_name, train_ID, S, T, date;
   int num, is_pending = 0;
   while (!opt.empty()) {
@@ -774,18 +777,18 @@ string TrainManagement::buy_ticket(Command &line, AccountManagement &accounts) {
   }
 
   if (!accounts.login_pool.count(user_name))
-    return "-1"; //用户未登录
+    return MakeFuture(std::string("-1")); //用户未登录
 
   std::vector<Train> ans;
   train_database->SearchKey(String<24>(train_ID), &ans);
   if (ans.empty())
-    return "-1"; //车次不存在
+    return MakeFuture(std::string("-1")); //车次不存在
   Train target_train = ans[0];
 
   if (!target_train.is_released)
-    return "-1"; //车次未发布，不能购票
+    return MakeFuture(std::string("-1")); //车次未发布，不能购票
   if (target_train.total_seat_num < num)
-    return "-1"; //座位不够
+    return MakeFuture(std::string("-1")); //座位不够
 
   int s = 0, t = 0;
   for (int i = 1; i <= target_train.station_num && !(s && t);
@@ -796,13 +799,13 @@ string TrainManagement::buy_ticket(Command &line, AccountManagement &accounts) {
       t = i;
   }
   if (!s || !t || s >= t)
-    return "-1"; //车站不合要求
+    return MakeFuture(std::string("-1")); //车站不合要求
 
   TimeType start_day =
       TimeType(date + " 00:00") - target_train.leaving_times[s].get_date();
   if (start_day < target_train.start_sale_date ||
       start_day > target_train.end_sale_date)
-    return "-1"; //不在售票日期
+    return MakeFuture(std::string("-1")); //不在售票日期
 
   std::vector<DayTrain> ans2;
   daytrain_database->SearchKey(
@@ -811,7 +814,7 @@ string TrainManagement::buy_ticket(Command &line, AccountManagement &accounts) {
 
   int remain_seat = tp.query_seat(s, t - 1);
   if (!is_pending && remain_seat < num)
-    return "-1"; //不补票且座位不够
+    return MakeFuture(std::string("-1")); //不补票且座位不够
 
   int price =
       target_train.price_sum[t] - target_train.price_sum[s]; //刚好不是 s-1
@@ -833,7 +836,7 @@ string TrainManagement::buy_ticket(Command &line, AccountManagement &accounts) {
     order_database->InsertEntry(StringAny<24, int>(user_name, order_ID),
                                 new_order);
     long long total = num * price;
-    return to_string(total);
+    return MakeFuture(to_string(total));
   } else { //要候补
     new_order.status = pending;
     PendingOrder pending_order(train_ID, user_name, start_day, num, s, t,
@@ -848,16 +851,16 @@ string TrainManagement::buy_ticket(Command &line, AccountManagement &accounts) {
     //        cout << "queue" << endl;
     //        OUTPUT(*this, target_train.train_ID);
 
-    return "queue";
+    return MakeFuture(std::string("queue"));
   }
 }
 
-string TrainManagement::query_order(Command &line,
-                                    AccountManagement &accounts) {
+RETURN_TYPE TrainManagement::query_order(Command &line,
+                                         AccountManagement &accounts) {
   line.next_token();
   string user_name = line.next_token();
   if (!accounts.login_pool.count(user_name))
-    return "-1"; //未登录
+    return MakeFuture(std::string("-1")); //未登录
   int cnt = 0;
 
   // todo : 修改为区间查找，查找所有关键字包含 user_name 的 order
@@ -866,7 +869,7 @@ string TrainManagement::query_order(Command &line,
   // todo: 分析真正的含义，只考虑user_name
   order_database->ScanKey(StringAny<24, int>(user_name, 0), &orders, tp_cmp);
   if (orders.empty())
-    return "0"; //没有订单
+    return MakeFuture(std::string("0")); //没有订单
 
   cnt = orders.size();
   //从新到旧排序（大到小） , 可能不需要？
@@ -890,11 +893,11 @@ string TrainManagement::query_order(Command &line,
               (orders[i].arriving_time + orders[i].start_day).transfer() + " " +
               to_string(orders[i].price) + " " + to_string(orders[i].num);
   }
-  return output;
+  return MakeFuture(std::move(output));
 }
 
-string TrainManagement::refund_ticket(Command &line,
-                                      AccountManagement &accounts) {
+RETURN_TYPE TrainManagement::refund_ticket(Command &line,
+                                           AccountManagement &accounts) {
   string opt = line.next_token(), user_name;
   int x = 1;
   while (!opt.empty()) {
@@ -907,7 +910,7 @@ string TrainManagement::refund_ticket(Command &line,
   }
 
   if (!accounts.login_pool.count(user_name))
-    return "-1"; //未登录
+    return MakeFuture(std::string("-1")); //未登录
 
   // todo: 区间查询
   int cnt = 0;
@@ -916,17 +919,17 @@ string TrainManagement::refund_ticket(Command &line,
   // todo: 分析真正的含义，只考虑user_name
   order_database->ScanKey(StringAny<24, int>(user_name, 0), &orders, tp_cmp);
   if (orders.empty())
-    return "0"; //没有订单
+    return MakeFuture(std::string("0")); //没有订单
   cnt = orders.size();
   //从新到旧排序（大到小） , 可能不需要？
   // todo: 修改为 bpt 后，按照关键字 Order_ID 读取，就不用排序
   // 事实上，目前的bpt做不到，所以还是要 sort
   Sort(orders, 0, cnt - 1, order_cmp);
   if (x > cnt)
-    return "-1"; //显然超出订单总数
-  x--;           // 1-base--->0-base
+    return MakeFuture(std::string("-1")); //显然超出订单总数
+  x--;                                    // 1-base--->0-base
   if (orders[x].status == refunded)
-    return "-1"; //重复退款
+    return MakeFuture(std::string("-1")); //重复退款
 
   Order refund_order = orders[x]; //临时存储
   orders[x].status = refunded;
@@ -943,7 +946,7 @@ string TrainManagement::refund_ticket(Command &line,
 
     //        cout << "0" << endl;
     //        OUTPUT(*this, refund_order.train_ID);
-    return "0";
+    return MakeFuture(std::string("0"));
   }
 
   //如果原来的订单success，要修改座位，增加
@@ -1012,16 +1015,17 @@ string TrainManagement::refund_ticket(Command &line,
 
   //    cout << "0" << endl;
   //    OUTPUT(*this, refund_order.train_ID);
-  return "0";
+  return MakeFuture(std::string("0"));
 }
 
 //-------------------todo: special command
 
-string TrainManagement::rollback(Command &line, AccountManagement &accounts) {
-  return "0";
+RETURN_TYPE TrainManagement::rollback(Command &line,
+                                      AccountManagement &accounts) {
+  return MakeFuture(std::string("0"));
 }
 
-string TrainManagement::clean(AccountManagement &accounts) {
+RETURN_TYPE TrainManagement::clean(AccountManagement &accounts) {
   //        accounts.user_data.clear();
   //        accounts.username_to_pos.clear();
   accounts.user_database->Clear();
@@ -1033,10 +1037,10 @@ string TrainManagement::clean(AccountManagement &accounts) {
   order_database->Clear();
   pending_order_database->Clear();
 
-  return "0";
+  return MakeFuture(std::string("0"));
 }
 
-string TrainManagement::exit(AccountManagement &accounts) {
+RETURN_TYPE TrainManagement::exit(AccountManagement &accounts) {
   accounts.login_pool.clear(); //用户下线
   //其实可以省略，因为在内存中的变量会自动清除？
 

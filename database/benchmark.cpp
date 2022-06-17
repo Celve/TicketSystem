@@ -238,7 +238,7 @@ void Test5() {
       key = new String<48>;
       key->SetValue(key_string);
       results.emplace_back(pool->Join([&, key]() {
-        vector<size_t> res;
+        std::vector<size_t> res;
         index_tree->SearchKey(*key, &res);
         size_t temp = res.empty() ? -1 : res[0];
         delete key;

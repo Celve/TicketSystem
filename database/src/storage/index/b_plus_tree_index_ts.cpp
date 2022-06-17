@@ -20,8 +20,8 @@ namespace thomas {
 
 INDEX_TEMPLATE_ARGUMENTS
 BPLUSTREEINDEXTS_TYPE::BPlusTreeIndexTS(const std::string &index_name, const KeyComparator &key_comparator,
-                                        ThreadPool *pool, int buffer_pool_size)
-    : key_comparator_(key_comparator), pool_(pool), buffer_pool_size_(buffer_pool_size) {
+                                        int buffer_pool_size)
+    : key_comparator_(key_comparator), buffer_pool_size_(buffer_pool_size) {
   assert(index_name.size() < 32);
   strcpy(index_name_, index_name.c_str());
   disk_manager_ = new DiskManager(index_name + ".db");
@@ -73,33 +73,9 @@ INDEX_TEMPLATE_ARGUMENTS
 void BPLUSTREEINDEXTS_TYPE::Debug() { tree_->Print(bpm_); }
 
 INDEX_TEMPLATE_ARGUMENTS
-void BPLUSTREEINDEXTS_TYPE::AcquireRLatch(const KeyType &key) {
-  auto hash_key = key.Hash();
-  map_latch_[hash_key % MUTEX_NUMBER].RLock();
-}
-
-INDEX_TEMPLATE_ARGUMENTS
-void BPLUSTREEINDEXTS_TYPE::ReleaseRLatch(const KeyType &key) {
-  auto hash_key = key.Hash();
-  map_latch_[hash_key % MUTEX_NUMBER].RUnlock();
-}
-
-INDEX_TEMPLATE_ARGUMENTS
-void BPLUSTREEINDEXTS_TYPE::AcquireWLatch(const KeyType &key) {
-  auto hash_key = key.Hash();
-  map_latch_[hash_key % MUTEX_NUMBER].WLock();
-}
-
-INDEX_TEMPLATE_ARGUMENTS
-void BPLUSTREEINDEXTS_TYPE::ReleaseWLatch(const KeyType &key) {
-  auto hash_key = key.Hash();
-  map_latch_[hash_key % MUTEX_NUMBER].WUnlock();
-}
-
-INDEX_TEMPLATE_ARGUMENTS
 void BPLUSTREEINDEXTS_TYPE::InsertEntry(const KeyType &key, const ValueType &value) {
   // AcquireWLatch(key);
-  Transaction *transaction = new Transaction(pool_->GetLock());
+  Transaction *transaction = new Transaction();
   size_ += tree_->OptimisticInsert(key, value, transaction);
   // size_ += tree_->Insert(key, value, transaction));
   // ReleaseWLatch(key);
@@ -109,7 +85,7 @@ void BPLUSTREEINDEXTS_TYPE::InsertEntry(const KeyType &key, const ValueType &val
 INDEX_TEMPLATE_ARGUMENTS
 void BPLUSTREEINDEXTS_TYPE::DeleteEntry(const KeyType &key) {
   // AcquireWLatch(key);
-  Transaction *transaction = new Transaction(pool_->GetLock());
+  Transaction *transaction = new Transaction();
   size_ -= tree_->OptimisticRemove(key, transaction);
   // size_ -= tree_->Remove(key, transaction);
   // ReleaseWLatch(key);
@@ -119,30 +95,17 @@ void BPLUSTREEINDEXTS_TYPE::DeleteEntry(const KeyType &key) {
 INDEX_TEMPLATE_ARGUMENTS
 void BPLUSTREEINDEXTS_TYPE::ScanKey(const KeyType &key, std::vector<ValueType> *result,
                                     const KeyComparator &standby_comparator) {
-  // AcquireRLatch(key);
-  Transaction *transaction = new Transaction(pool_->GetLock());
+  Transaction *transaction = new Transaction();
   tree_->GetValue(key, result, standby_comparator, transaction);
-  // ReleaseRLatch(key);
   delete transaction;
 }
 
 INDEX_TEMPLATE_ARGUMENTS
 void BPLUSTREEINDEXTS_TYPE::SearchKey(const KeyType &key, std::vector<ValueType> *result) {
-  // AcquireRLatch(key);
-  Transaction *transaction = new Transaction(pool_->GetLock());
+  Transaction *transaction = new Transaction();
   tree_->GetValue(key, result, transaction);
-  // ReleaseRLatch(key);
   delete transaction;
 }
-
-/**
- * @brief
- * make sure that the operation should be done before using the thread pool
- * @param pool
- * @return INDEX_TEMPLATE_ARGUMENTS
- */
-INDEX_TEMPLATE_ARGUMENTS
-void BPLUSTREEINDEXTS_TYPE::ResetPool(ThreadPool *pool) { pool_ = pool; }
 
 DECLARE(BPlusTreeIndexTS)
 

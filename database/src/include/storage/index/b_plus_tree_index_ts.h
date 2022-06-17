@@ -16,7 +16,7 @@ namespace thomas {
 INDEX_TEMPLATE_ARGUMENTS
 class BPlusTreeIndexTS {
  public:
-  explicit BPlusTreeIndexTS(const std::string &index_name, const KeyComparator &key_comparator, ThreadPool *pool,
+  explicit BPlusTreeIndexTS(const std::string &index_name, const KeyComparator &key_comparator,
                             int buffer_pool_size = BUFFER_POOL_SIZE);
   ~BPlusTreeIndexTS();
 
@@ -30,27 +30,17 @@ class BPlusTreeIndexTS {
 
   void Debug();
 
-  void ResetPool(ThreadPool *pool);
-
  private:
-  void AcquireRLatch(const KeyType &key);
-  void ReleaseRLatch(const KeyType &key);
-  void AcquireWLatch(const KeyType &key);
-  void ReleaseWLatch(const KeyType &key);
-
   char index_name_[32];
   DiskManager *disk_manager_;
   BufferPoolManager *bpm_;
   HeaderPage *header_page_;
-  ThreadPool *pool_;
   int buffer_pool_size_;
   int size_;
 
   KeyComparator key_comparator_;
 
   BPLUSTREETS_TYPE *tree_;
-
-  ReaderWriterLatch map_latch_[MUTEX_NUMBER];
   // std::unordered_map<KeyType, bool> map_;
 };
 

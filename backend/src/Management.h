@@ -5,6 +5,8 @@
 #ifndef TICKETSYSTEM_MANAGEMENT_H
 #define TICKETSYSTEM_MANAGEMENT_H
 
+#include <future>
+
 #include "Account.h"
 #include "TrainSystem.h"
 #include "storage/index/b_plus_tree_index_nts.h"
@@ -12,6 +14,9 @@
 #include "type/string_int_int.h"
 
 namespace thomas {
+
+#define RETURN_TYPE std::future<std::string>
+
 class AccountManagement {
   friend class TrainManagement;
 
@@ -32,11 +37,11 @@ public:
   AccountManagement(const string &file_name);
   ~AccountManagement();
 
-  string add_user(Command &line);       //增加用户
-  string login(Command &line);          //登录
-  string logout(Command &line);         //登出
-  string query_profile(Command &line);  //查询用户信息
-  string modify_profile(Command &line); //修改用户信息
+  RETURN_TYPE add_user(Command &line);       //增加用户
+  RETURN_TYPE login(Command &line);          //登录
+  RETURN_TYPE logout(Command &line);         //登出
+  RETURN_TYPE query_profile(Command &line);  //查询用户信息
+  RETURN_TYPE modify_profile(Command &line); //修改用户信息
 };
 
 class TrainManagement {
@@ -78,18 +83,18 @@ public:
   ~TrainManagement();
 
   //返回值设计为string，可以传递报错信息
-  string add_train(Command &line);      //增加列车
-  string release_train(Command &line);  //发布列车，可售票
-  string query_train(Command &line);    //查询车次
-  string delete_train(Command &line);   //删除列车
-  string query_ticket(Command &line);   //查询车票
-  string query_transfer(Command &line); //查询换乘
-  string buy_ticket(Command &line, AccountManagement &accounts);
-  string query_order(Command &line, AccountManagement &accounts);
-  string refund_ticket(Command &line, AccountManagement &accounts);
-  string rollback(Command &line, AccountManagement &accounts);
-  string clean(AccountManagement &accounts);
-  string exit(AccountManagement &accounts); //退出系统，所有用户下线
+  RETURN_TYPE add_train(Command &line);      //增加列车
+  RETURN_TYPE release_train(Command &line);  //发布列车，可售票
+  RETURN_TYPE query_train(Command &line);    //查询车次
+  RETURN_TYPE delete_train(Command &line);   //删除列车
+  RETURN_TYPE query_ticket(Command &line);   //查询车票
+  RETURN_TYPE query_transfer(Command &line); //查询换乘
+  RETURN_TYPE buy_ticket(Command &line, AccountManagement &accounts);
+  RETURN_TYPE query_order(Command &line, AccountManagement &accounts);
+  RETURN_TYPE refund_ticket(Command &line, AccountManagement &accounts);
+  RETURN_TYPE rollback(Command &line, AccountManagement &accounts);
+  RETURN_TYPE clean(AccountManagement &accounts);
+  RETURN_TYPE exit(AccountManagement &accounts); //退出系统，所有用户下线
 };
 
 } // namespace thomas

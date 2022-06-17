@@ -58,9 +58,9 @@ class BPlusTreeTS {
                 Transaction *transaction = nullptr);
 
   // index iterator
-  INDEXITERATOR_TYPE begin();
+  INDEXITERATOR_TYPE begin();  // NOLINT
   INDEXITERATOR_TYPE Begin(const KeyType &key);
-  INDEXITERATOR_TYPE end();
+  INDEXITERATOR_TYPE end();  // NOLINT
 
   void Print(BufferPoolManager *bpm) {
     ToString(reinterpret_cast<BPlusTreePage *>(bpm->FetchPage(root_page_id_)->GetData()), bpm);
@@ -74,11 +74,6 @@ class BPlusTreeTS {
     out.close();
   }
 
-  // read data from file and insert one by one
-  void InsertFromFile(const std::string &file_name, Transaction *transaction = nullptr);
-
-  // read data from file and remove one by one
-  void RemoveFromFile(const std::string &file_name, Transaction *transaction = nullptr);
   // expose for test purpose
   Page *FindLeafPage(const KeyType &key, bool leftMost = false, Transaction *transaction = nullptr);
 
@@ -99,7 +94,7 @@ class BPlusTreeTS {
   void TentativeRemove(const KeyType &key, DeleteState &delete_state, Transaction *transaction);
 
   Page *CrabToLeaf(const KeyType &key, TransactionType transaction_type, bool leafMost = false,
-                   bool rootLatched = false, bool isLocked = true, Transaction *transaction = nullptr);
+                   bool rootLatched = false, Transaction *transaction = nullptr);
 
   void ReleasePages(TransactionType transaction_type, Transaction *transaction);
 

@@ -9,9 +9,7 @@ namespace thomas {
 
 class Transaction {
  public:
-  explicit Transaction(std::unique_lock<std::mutex> *latch) : latch_(latch) {}
-
-  void Unlock() { latch_->unlock(); }
+  explicit Transaction() = default;
 
   void AddIntoPageSet(Page *page) { page_set_.push_back(page); }
   void AddIntoDeletedPageSet(page_id_t page_id) { deleted_page_set_.push_back(page_id); }

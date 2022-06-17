@@ -8,7 +8,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS True)
 
 project(Database)
 
-set(CMAKE_CXX_FLAGS "-pthread -g")
+set(CMAKE_CXX_FLAGS "-pthread")
 
 set(SOURCE_CPPS
     src/storage/disk/disk_manager.cpp
@@ -24,7 +24,6 @@ set(SOURCE_CPPS
     src/storage/index/b_plus_tree_ts.cpp
     src/storage/index/b_plus_tree_index_ts.cpp
     src/storage/index/b_plus_tree_index_nts.cpp
-    src/storage/index/b_plus_tree_index_pool.cpp
     src/storage/page/header_page.cpp
 
     src/thread/thread_pool.cpp
@@ -33,8 +32,10 @@ set(SOURCE_CPPS
 include_directories(../backend/src ../backend/libs)
 # include_directories(src/include)
 
+add_executable(main main.cpp ${SOURCE_CPPS})
 add_executable(example example.cpp ${SOURCE_CPPS})
 add_library(database STATIC ${SOURCE_CPPS})
 
+target_include_directories(main PUBLIC src/include)
 target_include_directories(database PUBLIC src/include)
 target_include_directories(example PRIVATE src/include)
