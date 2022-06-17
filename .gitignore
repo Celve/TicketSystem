@@ -8,17 +8,14 @@ cmake-build-debug
 code
 Makefile
 .cache
-index.db
-test.out
 Debug_record.md
 Cmake
 test_data
 data
 output.txt
-build.log
 *.db
+*.out
 testdata
-diff.log
 judge.py
 .cz.json
 database/*.out
@@ -26,3 +23,4 @@ database/*.in
 database/datamaker
 database/*.cpp
 speed_test
+*.log
