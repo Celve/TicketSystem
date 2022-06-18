@@ -4,6 +4,7 @@
 
 #include "Management.h"
 #include "future/future.hpp"
+#include "thread/thread_pool.h"
 
 namespace thomas {
 
@@ -124,7 +125,8 @@ void OUTPUT(TrainManagement &all, const string &train_ID) { //用来调试
 
 //----------------------------------------------class AccountManagement
 
-AccountManagement::AccountManagement() {
+AccountManagement::AccountManagement(ThreadPool *thread_pool)
+    : thread_pool_(thread_pool) {
   //    user_data.initialise("user_data");
   //    username_to_pos.init("username_to_pos");
   user_database = new BPlusTreeIndexNTS<String<24>, User, StringComparator<24>>(
@@ -157,24 +159,34 @@ RETURN_TYPE AccountManagement::add_user(Command &line) {
     opt = line.next_token();
   }
 
-  std::vector<User> ans;
-  user_database->SearchKey(String<24>(username), &ans);
+  auto *copy_username = new String<24>(username);
 
-  if (user_database->IsEmpty()) { //首次添加用户
-    User u(username, name, mail, password, 10);
-    user_database->InsertEntry(String<24>(username), u);
-    return MakeFuture(std::string("0"));
-  } else {
-    //操作失败：未登录/权限不足/用户名已存在
-    if (!login_pool.count(cur) || login_pool.at(cur) <= privilege ||
-        !ans.empty()) {
-      return MakeFuture(std::string("-1"));
+  lock_pool_->AcquireWLatch(*copy_username);
+
+  auto result = thread_pool_->Join([&, copy_username]() {
+    std::future<std::string> result;
+    std::vector<User> ans;
+    user_database->SearchKey(*copy_username, &ans);
+
+    if (user_database->IsEmpty()) { //首次添加用户
+      User u(username, name, mail, password, 10);
+      user_database->InsertEntry(*copy_username, u);
+      return std::string("0");
     } else {
-      User u(username, name, mail, password, privilege);
-      user_database->InsertEntry(String<24>(username), u);
-      return MakeFuture(std::string("0"));
+      //操作失败：未登录/权限不足/用户名已存在
+      if (!login_pool.count(cur) || login_pool.at(cur) <= privilege ||
+          !ans.empty()) {
+        return std::string("-1");
+      } else {
+        User u(username, name, mail, password, privilege);
+        user_database->InsertEntry(*copy_username, u);
+        return std::string("0");
+      }
     }
-  }
+  });
+  lock_pool_->ReleaseWLatch(*copy_username);
+  delete copy_username;
+  return result;
 }
 
 RETURN_TYPE AccountManagement::login(Command &line) {
@@ -232,33 +244,45 @@ RETURN_TYPE AccountManagement::modify_profile(Command &line) {
 
     opt = line.next_token();
   }
+  auto *copy_username = new String<24>(username);
+  lock_pool_->AcquireRLatch(*copy_username);
 
-  std::vector<User> ans;
-  user_database->SearchKey(String<24>(username), &ans);
-  if (ans.empty())
-    return MakeFuture(std::string("-1")); // user不存在
+  auto result = thread_pool_->Join([&, copy_username]() {
+    std::vector<User> ans;
+    user_database->SearchKey(*copy_username, &ans);
+    if (ans.empty())
+      return std::string("-1"); // user不存在
 
-  User u = ans[0];
-  // cur未登录/cur权限<=u的权限 且 cur != u
-  if (!login_pool.count(cur) ||
-      (login_pool.at(cur) <= u.privilege) && (cur != username) ||
-      privilege >= login_pool.at(cur))
-    return MakeFuture(std::string("-1"));
+    User u = ans[0];
+    // cur未登录/cur权限<=u的权限 且 cur != u
+    if (!login_pool.count(cur) ||
+        (login_pool.at(cur) <= u.privilege) && (cur != username) ||
+        privilege >= login_pool.at(cur)) {
+      return std::string("-1");
+    }
 
-  if (!password.empty())
-    strcpy(u.password, password.c_str());
-  if (!name.empty())
-    strcpy(u.name, name.c_str());
-  if (!mail.empty())
-    strcpy(u.mail_addr, mail.c_str());
-  if (privilege)
-    u.privilege = privilege;
+    if (!password.empty()) {
+      strcpy(u.password, password.c_str());
+    }
+    if (!name.empty()) {
+      strcpy(u.name, name.c_str());
+    }
+    if (!mail.empty()) {
+      strcpy(u.mail_addr, mail.c_str());
+    }
+    if (privilege) {
+      u.privilege = privilege;
+    }
 
-  //    user_data.update(u, ans[0]);
-  user_database->InsertEntry(String<24>(username), u);
+    //    user_data.update(u, ans[0]);
+    user_database->InsertEntry(*copy_username, u);
 
-  return MakeFuture((string)u.user_name + " " + (string)u.name + " " +
-                    (string)u.mail_addr + " " + to_string(u.privilege));
+    return (string)u.user_name + " " + (string)u.name + " " +
+           (string)u.mail_addr + " " + to_string(u.privilege);
+  });
+  lock_pool_->ReleaseRLatch(*copy_username);
+  delete copy_username;
+  return result;
 }
 
 RETURN_TYPE AccountManagement::query_profile(Command &line) {
@@ -291,7 +315,8 @@ AccountManagement::~AccountManagement() { delete user_database; }
 
 //-------------------------------------------------class TrainManagement
 
-TrainManagement::TrainManagement() : cmp2(2), cmp3(3), cmp4(3), cmp5(2) {
+TrainManagement::TrainManagement(ThreadPool *thread_pool)
+    : cmp2(2), cmp3(3), cmp4(3), cmp5(2), thread_pool_(thread_pool) {
   //先指定 cmp 的类型
 
   train_database =

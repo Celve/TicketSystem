@@ -9,7 +9,10 @@
 
 #include "Account.h"
 #include "TrainSystem.h"
+#include "common/config.h"
 #include "storage/index/b_plus_tree_index_nts.h"
+#include "thread/lock_pool.h"
+#include "thread/thread_pool.h"
 #include "type/string_any.h"
 #include "type/string_int_int.h"
 
@@ -30,10 +33,12 @@ private:
 
   // Memory_river与 ull 的复合
   BPlusTreeIndexNTS<String<24>, User, StringComparator<24>> *user_database;
+  LockPool lock_pool_[MUTEX_NUMBER];
+  ThreadPool *thread_pool_;
   StringComparator<24> cmp1;
 
 public:
-  AccountManagement();
+  AccountManagement(ThreadPool *thread_pool);
   AccountManagement(const string &file_name);
   ~AccountManagement();
 
@@ -75,10 +80,13 @@ private:
   //临时数组的大小不是110
   int order_num; //临时存储 order 总数
 
+  LockPool lock_pool_[MUTEX_NUMBER];
+  ThreadPool *thread_pool_;
+
 public:
   friend void OUTPUT(TrainManagement &all, const string &train_ID);
 
-  TrainManagement();
+  TrainManagement(ThreadPool *thread_pool);
   //    TrainManagement(const string &file_name);
   ~TrainManagement();
 

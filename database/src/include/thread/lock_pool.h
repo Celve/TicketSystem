@@ -10,16 +10,28 @@ namespace thomas {
 class LockPool {
  public:
   LOCK_ARGUMENT_TEMPLATE
-  void AcquireRLatch(const KeyType &key);
+  void AcquireRLatch(const KeyType &key) {
+    auto hash_key = key.Hash();
+    map_latch_[hash_key % MUTEX_NUMBER].RLock();
+  }
 
   LOCK_ARGUMENT_TEMPLATE
-  void ReleaseRLatch(const KeyType &key);
+  void ReleaseRLatch(const KeyType &key) {
+    auto hash_key = key.Hash();
+    map_latch_[hash_key % MUTEX_NUMBER].RUnlock();
+  }
 
   LOCK_ARGUMENT_TEMPLATE
-  void AcquireWLatch(const KeyType &key);
+  void AcquireWLatch(const KeyType &key) {
+    auto hash_key = key.Hash();
+    map_latch_[hash_key % MUTEX_NUMBER].WLock();
+  }
 
   LOCK_ARGUMENT_TEMPLATE
-  void ReleaseWLatch(const KeyType &key);
+  void ReleaseWLatch(const KeyType &key) {
+    auto hash_key = key.Hash();
+    map_latch_[hash_key % MUTEX_NUMBER].WUnlock();
+  }
 
  private:
   ReaderWriterLatch map_latch_[MUTEX_NUMBER];
