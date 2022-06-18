@@ -3,6 +3,7 @@
 //
 
 #include "Management.h"
+#include "Account.h"
 #include "future/future.hpp"
 #include "thread/thread_pool.h"
 
@@ -140,78 +141,90 @@ AccountManagement::AccountManagement(const string &file_name) {
 
 RETURN_TYPE AccountManagement::add_user(Command &line) {
   //    line.set_delimiter(' ');
-  string opt = line.next_token(), cur, username, password, name, mail;
-  int privilege;
+  string opt = line.next_token();
+  std::string *cur, *username, *password, *name, *mail;
+  int *privilege;
   while (!opt.empty()) {
     if (opt == "-c")
-      cur = line.next_token();
+      cur = new std::string(line.next_token());
     else if (opt == "-u")
-      username = line.next_token();
+      username = new std::string(line.next_token());
     else if (opt == "-p")
-      password = line.next_token();
+      password = new std::string(line.next_token());
     else if (opt == "-n")
-      name = line.next_token();
+      name = new std::string(line.next_token());
     else if (opt == "-m")
-      mail = line.next_token();
+      mail = new std::string(line.next_token());
     else
-      privilege = string_to_int(line.next_token());
+      privilege = new int(string_to_int(line.next_token()));
 
     opt = line.next_token();
   }
+  auto result =
+      thread_pool_->Join([&, cur, username, password, name, mail, privilege]() {
+        auto copy_username = String<24>(*username);
+        lock_pool_->AcquireWLatch(copy_username);
+        std::future<std::string> result;
+        std::vector<User> ans;
+        std::string res;
+        user_database->SearchKey(String<24>(*password), &ans);
 
-  auto *copy_username = new String<24>(username);
-
-  lock_pool_->AcquireWLatch(*copy_username);
-
-  auto result = thread_pool_->Join([&, copy_username]() {
-    std::future<std::string> result;
-    std::vector<User> ans;
-    user_database->SearchKey(*copy_username, &ans);
-
-    if (user_database->IsEmpty()) { //首次添加用户
-      User u(username, name, mail, password, 10);
-      user_database->InsertEntry(*copy_username, u);
-      return std::string("0");
-    } else {
-      //操作失败：未登录/权限不足/用户名已存在
-      if (!login_pool.count(cur) || login_pool.at(cur) <= privilege ||
-          !ans.empty()) {
-        return std::string("-1");
-      } else {
-        User u(username, name, mail, password, privilege);
-        user_database->InsertEntry(*copy_username, u);
-        return std::string("0");
-      }
-    }
-  });
-  lock_pool_->ReleaseWLatch(*copy_username);
-  delete copy_username;
+        if (user_database->IsEmpty()) { //首次添加用户
+          User u(*username, *name, *mail, *password, 10);
+          user_database->InsertEntry(copy_username, u);
+          res = std::string("0");
+        } else {
+          //操作失败：未登录/权限不足/用户名已存在
+          if (!login_pool.count(*cur) || login_pool.at(*cur) <= *privilege ||
+              !ans.empty()) {
+            res = std::string("-1");
+          } else {
+            User u(*username, *name, *mail, *password, *privilege);
+            user_database->InsertEntry(copy_username, u);
+            res = std::string("0");
+          }
+        }
+        lock_pool_->ReleaseWLatch(copy_username);
+        delete cur;
+        delete username;
+        delete password;
+        delete name;
+        delete mail;
+        delete privilege;
+        return res;
+      });
   return result;
 }
 
 RETURN_TYPE AccountManagement::login(Command &line) {
-  string opt = line.next_token(), username, password;
+  string opt = line.next_token(), *username, *password;
   while (!opt.empty()) {
     if (opt == "-u")
-      username = line.next_token();
+      username = new std::string(line.next_token());
     else
-      password = line.next_token();
+      password = new std::string(line.next_token());
 
     opt = line.next_token();
   }
 
-  std::vector<User> ans;
-  user_database->SearchKey(String<24>(username), &ans);
-  //用户不存在/用户已登录
-  if (ans.empty() || login_pool.count(username))
-    return MakeFuture(std::string("-1"));
+  auto result = thread_pool_->Join([&, username, password]() {
+    auto copy_username = String<24>(*username);
+    lock_pool_->AcquireRLatch();
+    std::vector<User> ans;
+    user_database->SearchKey(, &ans);
+    //用户不存在/用户已登录
+    if (ans.empty() || login_pool.count(*username)) {
+      return std::string("-1");
+    }
 
-  if (strcmp(ans[0].password, password.c_str()))
-    return MakeFuture(std::string("-1"));
-  ; //密码错误
+    if (strcmp(ans[0].password, password->c_str())) {
+      return std::string("-1");
+    } //密码错误
 
-  login_pool.insert(sjtu::pair<string, int>(username, ans[0].privilege));
-  return MakeFuture(std::string("0"));
+    login_pool.insert(sjtu::pair<string, int>(username, ans[0].privilege));
+    return std::string("0");
+  });
+  return result;
 }
 
 RETURN_TYPE AccountManagement::logout(Command &line) {
@@ -226,89 +239,120 @@ RETURN_TYPE AccountManagement::logout(Command &line) {
 }
 
 RETURN_TYPE AccountManagement::modify_profile(Command &line) {
-  string opt = line.next_token(), cur, username, password, name, mail;
-  int privilege = 0; //记得赋初值！
+  string opt = line.next_token(), *cur = new std::string,
+         *username = new std::string, *password = new std::string,
+         *name = new std::string, *mail = new std::string;
+  int *privilege = new int(0); //记得赋初值！
   while (!opt.empty()) {
     if (opt == "-c")
-      cur = line.next_token();
+      *cur = std::string(line.next_token());
     else if (opt == "-u")
-      username = line.next_token();
+      *username = std::string(line.next_token());
     else if (opt == "-p")
-      password = line.next_token();
+      *password = std::string(line.next_token());
     else if (opt == "-n")
-      name = line.next_token();
+      *name = std::string(line.next_token());
     else if (opt == "-m")
-      mail = line.next_token();
+      *mail = std::string(line.next_token());
     else
-      privilege = string_to_int(line.next_token());
+      *privilege = string_to_int(line.next_token());
 
     opt = line.next_token();
   }
-  auto *copy_username = new String<24>(username);
-  lock_pool_->AcquireRLatch(*copy_username);
 
-  auto result = thread_pool_->Join([&, copy_username]() {
+  auto result = thread_pool_->Join([&, cur, username, password, name, mail]() {
+    auto copy_username = String<24>(*username);
+
+    auto clear_up = [&]() {
+      delete cur;
+      delete username;
+      delete password;
+      delete name;
+      delete mail;
+      lock_pool_->ReleaseWLatch(copy_username);
+    };
+
+    lock_pool_->AcquireWLatch(copy_username);
     std::vector<User> ans;
-    user_database->SearchKey(*copy_username, &ans);
-    if (ans.empty())
+    std::string res;
+    user_database->SearchKey(copy_username, &ans);
+    if (ans.empty()) {
+      clear_up();
       return std::string("-1"); // user不存在
+    }
 
     User u = ans[0];
     // cur未登录/cur权限<=u的权限 且 cur != u
-    if (!login_pool.count(cur) ||
-        (login_pool.at(cur) <= u.privilege) && (cur != username) ||
-        privilege >= login_pool.at(cur)) {
+    if (!login_pool.count(*cur) ||
+        (login_pool.at(*cur) <= u.privilege) && (*cur != *username) ||
+        *privilege >= login_pool.at(*cur)) {
+      clear_up();
       return std::string("-1");
     }
 
-    if (!password.empty()) {
-      strcpy(u.password, password.c_str());
+    if (!password->empty()) {
+      strcpy(u.password, password->c_str());
     }
-    if (!name.empty()) {
-      strcpy(u.name, name.c_str());
+    if (!name->empty()) {
+      strcpy(u.name, name->c_str());
     }
-    if (!mail.empty()) {
-      strcpy(u.mail_addr, mail.c_str());
+    if (!mail->empty()) {
+      strcpy(u.mail_addr, mail->c_str());
     }
     if (privilege) {
-      u.privilege = privilege;
+      u.privilege = *privilege;
     }
 
     //    user_data.update(u, ans[0]);
-    user_database->InsertEntry(*copy_username, u);
+    user_database->InsertEntry(copy_username, u);
+    clear_up();
 
     return (string)u.user_name + " " + (string)u.name + " " +
            (string)u.mail_addr + " " + to_string(u.privilege);
   });
-  lock_pool_->ReleaseRLatch(*copy_username);
-  delete copy_username;
   return result;
 }
 
 RETURN_TYPE AccountManagement::query_profile(Command &line) {
-  string opt = line.next_token(), cur, username, password, name, mail;
+  string opt = line.next_token(), *cur, *username;
   while (!opt.empty()) {
     if (opt == "-c")
-      cur = line.next_token();
+      cur = new std::string(line.next_token());
     else
-      username = line.next_token();
+      username = new std::string(line.next_token());
 
     opt = line.next_token();
   }
 
-  std::vector<User> ans;
-  user_database->SearchKey(String<24>(username), &ans);
-  if (ans.empty())
-    return MakeFuture(std::string("-1")); // u不存在
-  User u = ans[0];
+  auto result = thread_pool_->Join([&, cur, username]() {
+    auto copy_username = String<24>(*username);
+    lock_pool_->AcquireRLatch(copy_username);
+    auto clear_up = [&]() {
+      lock_pool_->ReleaseRLatch(copy_username);
+      delete cur;
+      delete username;
+    };
+    std::string password, name, mail;
+    std::vector<User> ans;
+    user_database->SearchKey(copy_username, &ans);
+    if (ans.empty()) {
+      clear_up();
+      return std::string("-1");
+    }
+    User u = ans[0];
 
-  // cur未登录/cur权限<=u的权限 且 cur != u
-  if (!login_pool.count(cur) ||
-      (login_pool.at(cur) <= u.privilege) && (cur != username))
-    return MakeFuture(std::string("-1"));
+    // cur未登录/cur权限<=u的权限 且 cur != u
+    if (!login_pool.count(*cur) ||
+        (login_pool.at(*cur) <= u.privilege) && (*cur != *username)) {
+      clear_up();
+      return std::string("-1");
+    }
 
-  return MakeFuture((string)u.user_name + " " + (string)u.name + " " +
-                    (string)u.mail_addr + " " + to_string(u.privilege));
+    clear_up();
+    return (string)u.user_name + " " + (string)u.name + " " +
+           (string)u.mail_addr + " " + to_string(u.privilege);
+  });
+  return result;
 }
 
 AccountManagement::~AccountManagement() { delete user_database; }

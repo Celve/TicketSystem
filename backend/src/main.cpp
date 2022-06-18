@@ -28,6 +28,7 @@ void Output() {
 }
 
 int main() {
+  freopen("data/normal/basic_1/1.in", "r", stdin);
   ThreadPool *thread_pool = new ThreadPool(8);
   AccountManagement *accounts =
       new AccountManagement(thread_pool); //声明在外部，防止数组太大，爆栈空间
@@ -46,7 +47,7 @@ int main() {
     //        commands.push_back(cmd);
     timestamps.push_back(cmd.timestamp);
 
-    // cout << "[" << cmd.timestamp << "] "; //输出时间戳，方便调试
+    cout << "[" << cmd.timestamp << "] "; //输出时间戳，方便调试
     string s = cmd.next_token();
     if (s == "add_user")
       results.push_back(accounts->add_user(cmd));
