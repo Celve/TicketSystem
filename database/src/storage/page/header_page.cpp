@@ -105,17 +105,16 @@ bool HeaderPage::GetRootId(const std::string &name, page_id_t *root_id) {
 /**
  * helper functions
  */
-// record count
 int HeaderPage::GetRecordCount() { return *reinterpret_cast<int *>(GetData()); }
 
-void HeaderPage::SetRecordCount(int record_count) { memcpy(GetData(), &record_count, 4); }
+void HeaderPage::SetRecordCount(int record_count) { memcpy(GetData(), &record_count, sizeof(int)); }
 
 int HeaderPage::FindRecord(const std::string &name) {
   int record_num = GetRecordCount();
 
   for (int i = 0; i < record_num; i++) {
-    char *raw_name = reinterpret_cast<char *>(GetData() + (4 + i * 36));
-    if (strcmp(raw_name, name.c_str()) == 0) {
+    char *record_name = reinterpret_cast<char *>(GetData() + (4 + i * 36));
+    if (strcmp(record_name, name.c_str()) == 0) {
       return i;
     }
   }

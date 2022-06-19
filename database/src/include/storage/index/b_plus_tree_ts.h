@@ -11,16 +11,6 @@ namespace thomas {
 
 #define BPLUSTREETS_TYPE BPlusTreeTS<KeyType, ValueType, KeyComparator>
 
-/**
- * Main class providing the API for the Interactive B+ Tree.
- *
- * Implementation of simple b+ tree data structure where internal pages direct
- * the search and leaf pages contain actual data.
- * (1) We only support unique key
- * (2) support insert & remove
- * (3) The structure should shrink and grow dynamically
- * (4) Implement index iterator for range scan
- */
 INDEX_TEMPLATE_ARGUMENTS
 class BPlusTreeTS {
   using InternalPage = BPlusTreeInternalPage<KeyType, page_id_t, KeyComparator>;
@@ -56,27 +46,14 @@ class BPlusTreeTS {
                 Transaction *transaction = nullptr);
 
   // index iterator
-  INDEXITERATOR_TYPE begin();
+  INDEXITERATOR_TYPE begin();  // NOLINT
   INDEXITERATOR_TYPE Begin(const KeyType &key);
-  INDEXITERATOR_TYPE end();
+  INDEXITERATOR_TYPE end();  // NOLINT
 
   void Print(BufferPoolManager *bpm) {
     ToString(reinterpret_cast<BPlusTreePage *>(bpm->FetchPage(root_page_id_)->GetData()), bpm);
   }
 
-  void Draw(BufferPoolManager *bpm, const std::string &outf) {
-    std::ofstream out(outf);
-    out << "digraph G {" << std::endl;
-    ToGraph(reinterpret_cast<BPlusTreePage *>(bpm->FetchPage(root_page_id_)->GetData()), bpm, out);
-    out << "}" << std::endl;
-    out.close();
-  }
-
-  // read data from file and insert one by one
-  void InsertFromFile(const std::string &file_name, Transaction *transaction = nullptr);
-
-  // read data from file and remove one by one
-  void RemoveFromFile(const std::string &file_name, Transaction *transaction = nullptr);
   // expose for test purpose
   Page *FindLeafPage(const KeyType &key, bool leftMost = false, Transaction *transaction = nullptr);
 
@@ -130,9 +107,6 @@ class BPlusTreeTS {
   bool AdjustRoot(BPlusTreePage *node, Transaction *transaction = nullptr);
 
   void UpdateRootPageId(int insert_record = 0);
-
-  /* Debug Routines for FREE!! */
-  void ToGraph(BPlusTreePage *page, BufferPoolManager *bpm, std::ofstream &out) const;
 
   void ToString(BPlusTreePage *page, BufferPoolManager *bpm) const;
 
