@@ -35,6 +35,7 @@ bool BPLUSTREETS_TYPE::IsEmpty() const { return root_page_id_ == INVALID_PAGE_ID
  * SEARCH
  *****************************************************************************/
 /**
+ * @brief
  * Return the only value that associated with input key
  * This method is used for point query
  * @return : true means key exists
@@ -63,7 +64,7 @@ bool BPLUSTREETS_TYPE::GetValue(const KeyType &key, std::vector<ValueType> *resu
 
 /**
  * @brief
- * Find the key-value pairs which greater then the given key using the given rule.
+ * find the key-value pairs which greater then the given key using the given rule
  * @param key
  * @param result
  * @param new_comparator
@@ -128,11 +129,8 @@ bool BPLUSTREETS_TYPE::GetValue(const KeyType &key, std::vector<ValueType> *resu
  * INSERTION
  *****************************************************************************/
 /**
- * Insert constant key & value pair into b+ tree
- * if current tree is empty, start new tree, update root page id and insert
- * entry, otherwise insert into leaf page.
- * @return: since we only support unique key, if user try to insert duplicate
- * keys return false, otherwise return true.
+ * insert constant key & value pair into b+ tree
+ * @return true for insertion; false for modification
  */
 INDEX_TEMPLATE_ARGUMENTS
 bool BPLUSTREETS_TYPE::Insert(const KeyType &key, const ValueType &value, Transaction *transaction, bool isCalled) {
@@ -150,6 +148,11 @@ bool BPLUSTREETS_TYPE::Insert(const KeyType &key, const ValueType &value, Transa
   return InsertIntoLeaf(key, value, transaction);
 }
 
+/**
+ * @brief
+ * insert constant key & value pair into b+ tree using optimistic insertion
+ * @return true for insertion; false for modification
+ */
 INDEX_TEMPLATE_ARGUMENTS
 bool BPLUSTREETS_TYPE::OptimisticInsert(const KeyType &key, const ValueType &value, Transaction *transaction) {
   ++processed_;
@@ -228,10 +231,8 @@ N *BPLUSTREETS_TYPE::NewNode(page_id_t parent_id, IndexPageType page_type) {
 }
 
 /**
+ * @brief
  * Insert constant key & value pair into an empty tree
- * User needs to first ask for new page from buffer pool manager(NOTICE: throw
- * an "out of memory" exception if returned value is nullptr), then update b+
- * tree's root page id and insert entry directly into leaf page.
  */
 INDEX_TEMPLATE_ARGUMENTS
 void BPLUSTREETS_TYPE::StartNewTree(const KeyType &key, const ValueType &value) {
@@ -247,12 +248,9 @@ void BPLUSTREETS_TYPE::StartNewTree(const KeyType &key, const ValueType &value) 
 }
 
 /**
+ * @brief
  * Insert constant key & value pair into leaf page
- * User needs to first find the right leaf page as insertion target, then look
- * through leaf page to see whether insert key exist or not. If exist, return
- * immediately, otherwise insert entry. Remember to deal with split if necessary.
- * @return: since we only support unique key, if user try to insert duplicate
- * keys return false, otherwise return true.
+ * @return: true for insertion; false for modificwation
  */
 INDEX_TEMPLATE_ARGUMENTS
 bool BPLUSTREETS_TYPE::InsertIntoLeaf(const KeyType &key, const ValueType &value, Transaction *transaction) {
@@ -289,11 +287,9 @@ bool BPLUSTREETS_TYPE::InsertIntoLeaf(const KeyType &key, const ValueType &value
 }
 
 /**
+ * @brief
  * Split input page and return newly created page.
  * Using template N to represent either internal page or leaf page.
- * User needs to first ask for new page from buffer pool manager(NOTICE: throw
- * an "out of memory" exception if returned value is nullptr), then move half
- * of key & value pairs from input page to newly created page
  */
 INDEX_TEMPLATE_ARGUMENTS
 template <typename N>
@@ -319,9 +315,6 @@ N *BPLUSTREETS_TYPE::Split(N *node) {
  * @param   old_node      input page from split() method
  * @param   key
  * @param   new_node      returned page from split() method
- * User needs to first find the parent page of old_node, parent node must be
- * adjusted to take info of new_node into account. Remember to deal with split
- * recursively if necessary.
  */
 INDEX_TEMPLATE_ARGUMENTS
 void BPLUSTREETS_TYPE::InsertIntoParent(BPlusTreePage *old_node, const KeyType &key, BPlusTreePage *new_node,
@@ -379,11 +372,9 @@ void BPLUSTREETS_TYPE::InsertIntoParent(BPlusTreePage *old_node, const KeyType &
  * REMOVE
  *****************************************************************************/
 /**
- * Delete key & value pair associated with input key
- * If current tree is empty, return immdiately.
- * If not, User needs to first find the right leaf page as deletion target, then
- * delete entry from leaf page. Remember to deal with redistribute or merge if
- * necessary.
+ * @brief
+ * delete key & value pair associated with input key
+ * remove an non-exist key is allowed
  */
 INDEX_TEMPLATE_ARGUMENTS
 bool BPLUSTREETS_TYPE::Remove(const KeyType &key, Transaction *transaction, bool isCalled) {
@@ -412,6 +403,10 @@ bool BPLUSTREETS_TYPE::Remove(const KeyType &key, Transaction *transaction, bool
   return flag;
 }
 
+/**
+ * @brief
+ * an optimistic try to remove, which could fail for sometime
+ */
 INDEX_TEMPLATE_ARGUMENTS
 bool BPLUSTREETS_TYPE::OptimisticRemove(const KeyType &key, Transaction *transaction) {
   ++processed_;
@@ -437,6 +432,10 @@ bool BPLUSTREETS_TYPE::OptimisticRemove(const KeyType &key, Transaction *transac
   return false;
 }
 
+/**
+ * @brief
+ * the process of optimistic removal
+ */
 INDEX_TEMPLATE_ARGUMENTS void BPLUSTREETS_TYPE::TentativeRemove(const KeyType &key, DeleteState &delete_state,
                                                                 Transaction *transaction) {
   Page *leaf_page = CrabToLeaf(key, TransactionType::OPTIMISTIC_DELETE, false, false, transaction);
@@ -459,11 +458,9 @@ INDEX_TEMPLATE_ARGUMENTS void BPLUSTREETS_TYPE::TentativeRemove(const KeyType &k
 }
 
 /**
- * User needs to first find the sibling of input page. If sibling's size + input
- * page's size > page's max size, then redistribute. Otherwise, merge.
- * Using template N to represent either internal page or leaf page.
- * @return: true means target leaf page should be deleted, false means no
- * deletion happens
+ * @brief
+ * try either coalescing or redistributing
+ * @return: true means target leaf page should be deleted, false means no deletion happens
  */
 INDEX_TEMPLATE_ARGUMENTS
 template <typename N>
@@ -503,16 +500,10 @@ bool BPLUSTREETS_TYPE::CoalesceOrRedistribute(N *node, Transaction *transaction)
 }
 
 /**
- * Move all the key & value pairs from one page to its sibling page, and notify
- * buffer pool manager to delete this page. Parent page must be adjusted to
- * take info of deletion into account. Remember to deal with coalesce or
+ * @brief
+ * Move all the key & value pairs from one page to its sibling page, namely merging
  * redistribute recursively if necessary.
- * Using template N to represent either internal page or leaf page.
- * @param   neighbor_node      sibling page of input "node"
- * @param   node               input from method coalesceOrRedistribute()
- * @param   parent             parent page of input "node"
- * @return  true means parent node should be deleted, false means no deletion
- * happend
+ * @return  true means parent node should be deleted, false means no deletion happend
  */
 INDEX_TEMPLATE_ARGUMENTS
 template <typename N>
@@ -553,13 +544,12 @@ bool BPLUSTREETS_TYPE::Coalesce(N **neighbor_node, N **node,
 }
 
 /**
- * Redistribute key & value pairs from one page to its sibling page. If index ==
- * 0, move sibling page's first key & value pair into end of input "node",
- * otherwise move sibling page's last key & value pair into head of input
- * "node".
- * Using template N to represent either internal page or leaf page.
- * @param   neighbor_node      sibling page of input "node"
- * @param   node               input from method coalesceOrRedistribute()
+ * @brief
+ * redistribute key & value pairs from one page to its sibling page
+ * @param neighbor_node sibling page of input "node"
+ * @param node input from method coalesceOrRedistribute()
+ * @param index 0 for moving sibling page's first key & value pair into end of input "node"
+ * @param index 1 for move sibling page's last key & value pair into head of input "node"
  */
 INDEX_TEMPLATE_ARGUMENTS
 template <typename N>
@@ -609,13 +599,9 @@ void BPLUSTREETS_TYPE::Redistribute(N *neighbor_node, N *node, int index) {
   buffer_pool_manager_->UnpinPage(parent_node->GetPageId(), true);
 }
 
-/*
- * Update root page if necessary
- * NOTE: size of root page can be less than min size and this method is only
- * called within coalesceOrRedistribute() method
- * case 1: when you delete the last element in root page, but root page still
- * has one last child
- * case 2: when you delete the last element in whole b+ tree
+/**
+ * @brief
+ * substitute the root due to removal
  * @return : true means root page should be deleted, false means no deletion
  * happend
  */
@@ -672,8 +658,8 @@ bool BPLUSTREETS_TYPE::AdjustRoot(BPlusTreePage *old_root_node, Transaction *tra
  * INDEX ITERATOR
  *****************************************************************************/
 /**
- * Input parameter is void, find the leaftmost leaf page first, then construct
- * index iterator
+ * @brief
+ * input parameter is void, find the leaftmost leaf page first, then construct index iterator
  * @return : index iterator
  */
 INDEX_TEMPLATE_ARGUMENTS
@@ -685,8 +671,8 @@ INDEXITERATOR_TYPE BPLUSTREETS_TYPE::begin() {
 }
 
 /**
- * Input parameter is low key, find the leaf page that contains the input key
- * first, then construct index iterator
+ * @brief
+ * input parameter is low key, find the leaf page that contains the input key first, then construct index iterator
  * @return : index iterator
  */
 INDEX_TEMPLATE_ARGUMENTS
@@ -699,8 +685,8 @@ INDEXITERATOR_TYPE BPLUSTREETS_TYPE::Begin(const KeyType &key) {
 }
 
 /**
- * Input parameter is void, construct an index iterator representing the end
- * of the key/value pair in the leaf node
+ * @brief
+ * input parameter is void, construct an index iterator representing the end of the key/value pair in the leaf node
  * @return : index iterator
  */
 INDEX_TEMPLATE_ARGUMENTS
