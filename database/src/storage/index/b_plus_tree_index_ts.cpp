@@ -39,6 +39,9 @@ BPLUSTREEINDEXTS_TYPE::BPlusTreeIndexTS(const std::string &index_name, const Key
     if (!header_page_->SearchRecord("size", &size_)) {
       throw metadata_error();
     }
+    if (!header_page_->SearchRecord("timestamp", &timestamp_)) {
+      throw metadata_error();
+    }
   } catch (read_less_then_a_page &error) {
     /* complicated here, because the page is not fetched successfully */
     bpm_->UnpinPage(HEADER_PAGE_ID, false);
@@ -47,7 +50,8 @@ BPLUSTREEINDEXTS_TYPE::BPlusTreeIndexTS(const std::string &index_name, const Key
     header_page_ = static_cast<HeaderPage *>(bpm_->NewPage(&header_page_id));
     header_page_->InsertRecord("index", -1);
     header_page_->InsertRecord("page_amount", 1);
-    header_page_->InsertRecord("size", 0);
+    header_page_->InsertRecord("size", size_ = 0);
+    header_page_->InsertRecord("timestamp", timestamp_ = 0);
   }
   tree_ = new BPLUSTREETS_TYPE("index", bpm_, key_comparator_);
 }
@@ -56,6 +60,7 @@ INDEX_TEMPLATE_ARGUMENTS
 BPLUSTREEINDEXTS_TYPE::~BPlusTreeIndexTS() {
   header_page_->UpdateRecord("page_amount", disk_manager_->GetNextPageId());
   header_page_->UpdateRecord("size", size_);
+  header_page_->UpdateRecord("timestamp", timestamp_);
   page_id_t root_page_id;
   header_page_->SearchRecord("index", &root_page_id);
   if (root_page_id != -1) {
@@ -71,6 +76,9 @@ BPLUSTREEINDEXTS_TYPE::~BPlusTreeIndexTS() {
 
 INDEX_TEMPLATE_ARGUMENTS
 void BPLUSTREEINDEXTS_TYPE::Debug() { tree_->Print(bpm_); }
+
+INDEX_TEMPLATE_ARGUMENTS
+int BPLUSTREEINDEXTS_TYPE::TimeStamp() { return timestamp_; }
 
 INDEX_TEMPLATE_ARGUMENTS
 void BPLUSTREEINDEXTS_TYPE::InsertEntry(const KeyType &key, const ValueType &value) {

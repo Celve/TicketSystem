@@ -11,6 +11,7 @@
 #include "TrainSystem.h"
 #include "common/config.h"
 #include "storage/index/b_plus_tree_index_nts.h"
+#include "storage/index/b_plus_tree_index_ts.h"
 #include "thread/lock_pool.h"
 #include "thread/thread_pool.h"
 #include "type/string_any.h"
@@ -32,7 +33,7 @@ private:
   //    Ull username_to_pos; //索引，暂时用 Ull 完成，最后要改为 BpTree
 
   // Memory_river与 ull 的复合
-  BPlusTreeIndexNTS<String<24>, User, StringComparator<24>> *user_database;
+  BPlusTreeIndexTS<String<24>, User, StringComparator<24>> *user_database;
   LockPool lock_pool_[MUTEX_NUMBER];
   ThreadPool *thread_pool_;
   StringComparator<24> cmp1;

@@ -30,6 +30,8 @@ class BPlusTreeIndexTS {
 
   void Debug();
 
+  int TimeStamp();
+
  private:
   char index_name_[32];
   DiskManager *disk_manager_;
@@ -37,6 +39,7 @@ class BPlusTreeIndexTS {
   HeaderPage *header_page_;
   int buffer_pool_size_;
   int size_;
+  int timestamp_;
 
   KeyComparator key_comparator_;
 

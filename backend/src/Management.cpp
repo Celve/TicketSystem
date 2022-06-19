@@ -130,12 +130,12 @@ AccountManagement::AccountManagement(ThreadPool *thread_pool)
     : thread_pool_(thread_pool) {
   //    user_data.initialise("user_data");
   //    username_to_pos.init("username_to_pos");
-  user_database = new BPlusTreeIndexNTS<String<24>, User, StringComparator<24>>(
+  user_database = new BPlusTreeIndexTS<String<24>, User, StringComparator<24>>(
       "user_database", cmp1);
 }
 
 AccountManagement::AccountManagement(const string &file_name) {
-  user_database = new BPlusTreeIndexNTS<String<24>, User, StringComparator<24>>(
+  user_database = new BPlusTreeIndexTS<String<24>, User, StringComparator<24>>(
       file_name, cmp1);
 }
 
@@ -169,7 +169,7 @@ RETURN_TYPE AccountManagement::add_user(Command &line) {
         std::string res;
         user_database->SearchKey(String<24>(*password), &ans);
 
-        if (user_database->IsEmpty()) { //首次添加用户
+        if (user_database->TimeStamp()) { //首次添加用户
           User u(*username, *name, *mail, *password, 10);
           user_database->InsertEntry(copy_username, u);
           res = std::string("0");
@@ -197,34 +197,34 @@ RETURN_TYPE AccountManagement::add_user(Command &line) {
 }
 
 RETURN_TYPE AccountManagement::login(Command &line) {
-  string opt = line.next_token(), *username, *password;
+  string opt = line.next_token(), username, password;
   while (!opt.empty()) {
     if (opt == "-u")
-      username = new std::string(line.next_token());
+      username = line.next_token();
     else
-      password = new std::string(line.next_token());
+      password = line.next_token();
 
     opt = line.next_token();
   }
 
-  auto result = thread_pool_->Join([&, username, password]() {
-    auto copy_username = String<24>(*username);
-    lock_pool_->AcquireRLatch();
-    std::vector<User> ans;
-    user_database->SearchKey(, &ans);
-    //用户不存在/用户已登录
-    if (ans.empty() || login_pool.count(*username)) {
-      return std::string("-1");
-    }
+  std::vector<User> ans;
+  auto copy_username = String<24>(username);
+  lock_pool_->AcquireRLatch(copy_username);
+  user_database->SearchKey(copy_username, &ans);
+  //用户不存在/用户已登录
+  if (ans.empty() || login_pool.count(username)) {
+    lock_pool_->ReleaseRLatch(copy_username);
+    return MakeFuture(std::string("-1"));
+  }
 
-    if (strcmp(ans[0].password, password->c_str())) {
-      return std::string("-1");
-    } //密码错误
+  if (strcmp(ans[0].password, password.c_str())) {
+    lock_pool_->ReleaseRLatch(copy_username);
+    return MakeFuture(std::string("-1"));
+  }
 
-    login_pool.insert(sjtu::pair<string, int>(username, ans[0].privilege));
-    return std::string("0");
-  });
-  return result;
+  login_pool.insert(sjtu::pair<string, int>(username, ans[0].privilege));
+  lock_pool_->ReleaseRLatch(copy_username);
+  return MakeFuture(std::string("0"));
 }
 
 RETURN_TYPE AccountManagement::logout(Command &line) {
@@ -1097,7 +1097,7 @@ RETURN_TYPE TrainManagement::rollback(Command &line,
 RETURN_TYPE TrainManagement::clean(AccountManagement &accounts) {
   //        accounts.user_data.clear();
   //        accounts.username_to_pos.clear();
-  accounts.user_database->Clear();
+  // accounts.user_database->Clear();
   accounts.login_pool.clear();
 
   train_database->Clear();
