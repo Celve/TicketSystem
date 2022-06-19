@@ -93,7 +93,7 @@ int B_PLUS_TREE_LEAF_PAGE_TYPE::Insert(const KeyType &key, const ValueType &valu
   /* duplicate key, but I just want to modify it */
   if (!comparator(key, KeyAt(index))) {
     array[index] = MappingType{key, value};
-    return GetSize();
+    return -1;
   }
 
   /* shift */
